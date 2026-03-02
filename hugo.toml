@@ -1,0 +1,5 @@
+baseURL = "https://linaltec.com/"
+languageCode = "en-us"
+title = "Linaltec AB"
+theme = "PaperMod"
+[params]  description = "Cybersecurity & Privacy Consulting"
