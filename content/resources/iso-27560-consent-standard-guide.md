@@ -48,6 +48,6 @@ If your organisation processes personal data based on consent, here are practica
 
 ## About my involvement
 
-I served as lead editor of ISO/IEC 27560 within ISO/IEC SC27/WG5. Our team — including co-editors Andrew Hughes and Kelvin Magtalas — also published research on implementing the standard for GDPR and the Data Governance Act (DGA), which won best paper at ENISA's Annual Privacy Forum 2024.
+I served as lead editor of ISO/IEC 27560 within ISO/IEC SC27/WG5. Our team — including co-editors Harsh Pandit, Andrew Hughes and Kelvin Magtalas — also published research on implementing the standard for GDPR and the Data Governance Act (DGA), which won best paper at ENISA's Annual Privacy Forum 2024.
 
 If you need help implementing consent management aligned with ISO 27560 — whether for GDPR compliance, EUDI wallet integration, or as part of a broader privacy programme — [get in touch](/contact/).
