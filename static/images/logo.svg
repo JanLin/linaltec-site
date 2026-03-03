@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 60" fill="none">
+  <!-- LINAL text -->
+  <text x="0" y="48" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="46" fill="#1A1A2E" letter-spacing="2">LINAL</text>
+  <!-- Overlapping squares icon between LINAL and TEC -->
+  <g transform="translate(168, 4)">
+    <!-- Back square - dark navy outline -->
+    <rect x="0" y="0" width="30" height="30" rx="2" fill="none" stroke="#1A1A2E" stroke-width="3"/>
+    <!-- Front square - cyan filled -->
+    <rect x="14" y="10" width="28" height="28" rx="2" fill="#00AEEF"/>
+  </g>
+  <!-- TEC text -->
+  <text x="218" y="48" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="46" fill="#1A1A2E" letter-spacing="2">TEC</text>
+</svg>

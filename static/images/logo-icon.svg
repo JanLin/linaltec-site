@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Back square - dark navy outline -->
+  <rect x="2" y="2" width="65" height="65" rx="3" fill="none" stroke="#1A1A2E" stroke-width="6"/>
+  <!-- Front square - cyan filled -->
+  <rect x="33" y="22" width="58" height="58" rx="3" fill="#00AEEF"/>
+  <!-- Inner outline on front square -->
+  <rect x="40" y="29" width="44" height="44" rx="2" fill="none" stroke="white" stroke-width="2" opacity="0.4"/>
+</svg>

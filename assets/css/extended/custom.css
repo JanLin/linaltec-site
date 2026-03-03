@@ -1,0 +1,179 @@
+/* Linaltec brand overrides for PaperMod */
+
+:root {
+  --color-primary: #00AEEF;
+  --color-heading: #1A1A2E;
+  --color-accent: #4682B4;
+  --color-text: #333333;
+  --color-muted: #666666;
+  --color-bg-alt: #F2F2F2;
+}
+
+/* Primary link color */
+a {
+  color: var(--color-accent);
+}
+
+a:hover {
+  color: var(--color-primary);
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  color: var(--color-heading);
+}
+
+.post-content h2 {
+  color: var(--color-accent);
+}
+
+/* Navigation — active/current page clearly bold */
+#menu a.active,
+#menu a[aria-current="page"] {
+  font-weight: 800;
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 2px;
+}
+
+/* Logo image in nav — hide text since SVG already contains the wordmark */
+.logo a {
+  font-size: 0;
+}
+
+.logo img {
+  height: 35px;
+  width: auto;
+}
+
+/* Dark mode overrides */
+[data-theme="dark"] .logo img {
+  content: url('/images/logo-white.png');
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4 {
+  color: var(--content);
+}
+
+[data-theme="dark"] .post-content h2 {
+  color: #7ab8d4;
+}
+
+/* Search icon in nav — vertical alignment */
+#menu li:last-child a svg {
+  vertical-align: middle;
+}
+
+/* Service blocks — icon + text side by side */
+.service-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.service-icon {
+  flex-shrink: 0;
+}
+
+.service-icon svg {
+  width: 72px;
+  height: 72px;
+}
+
+.service-text h2,
+.service-text h3 {
+  margin-top: 0;
+}
+
+/* Service header on services page — icon above heading */
+.service-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.service-header-icon {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+/* Dark mode: swap navy strokes to light */
+[data-theme="dark"] .service-icon svg [stroke="#1A1A2E"],
+[data-theme="dark"] .service-header-icon [stroke="#1A1A2E"] {
+  stroke: #c8c8d0;
+}
+
+/* Post entries grid — show cards side by side on list pages */
+.main:has(.post-entry) {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.main:has(.post-entry) > :not(article) {
+  grid-column: 1 / -1;
+}
+
+/* Hamburger menu — hidden on desktop */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--content);
+  padding: 4px;
+}
+
+/* Mobile responsive */
+@media (max-width: 720px) {
+  .main:has(.post-entry) {
+    grid-template-columns: 1fr;
+  }
+
+  .service-block {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    flex: 1;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    order: 2;
+  }
+
+  #menu {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    order: 3;
+    padding: 0.5rem 0;
+    gap: 0;
+  }
+
+  #menu.menu-open {
+    display: flex;
+  }
+
+  #menu li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  #menu li:last-child {
+    border-bottom: none;
+  }
+}
