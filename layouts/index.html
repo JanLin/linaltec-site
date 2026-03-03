@@ -8,4 +8,33 @@
 </div>
 {{- end }}
 
+<!-- Latest from Resources -->
+<div class="post-content">
+<div class="latest-resources">
+  <div class="service-block">
+    <div class="service-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+        <path d="M12 62V22c0-2.2 1.8-4 4-4h20l4 4h24c2.2 0 4 1.8 4 4v36c0 2.2-1.8 4-4 4H16c-2.2 0-4-1.8-4-4z" stroke="#1A1A2E" stroke-width="3"/>
+        <line x1="28" y1="38" x2="52" y2="38" stroke="#00AEEF" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="28" y1="46" x2="46" y2="46" stroke="#00AEEF" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="28" y1="54" x2="42" y2="54" stroke="#00AEEF" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="service-text">
+      <h2>Latest from Resources</h2>
+    </div>
+  </div>
+  <div class="latest-posts-row">
+    {{- range first 3 (where .Site.RegularPages "Section" "resources") }}
+    <div class="latest-post-card">
+      <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+      <time>{{ .Date.Format "January 2, 2006" }}</time>
+      <p>{{ .Summary | plainify | truncate 120 }}</p>
+    </div>
+    {{- end }}
+  </div>
+  <p><a href="{{ "resources/" | absURL }}">View all posts →</a></p>
+</div>
+</div>
+
 {{- end }}

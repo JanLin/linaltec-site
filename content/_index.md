@@ -61,24 +61,6 @@ description: "Cybersecurity & Privacy Consulting — Securing digital identity. 
 <div class="service-block">
 <div class="service-icon">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
-  <path d="M12 62V22c0-2.2 1.8-4 4-4h20l4 4h24c2.2 0 4 1.8 4 4v36c0 2.2-1.8 4-4 4H16c-2.2 0-4-1.8-4-4z" stroke="#1A1A2E" stroke-width="3"/>
-  <line x1="28" y1="38" x2="52" y2="38" stroke="#00AEEF" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="28" y1="46" x2="46" y2="46" stroke="#00AEEF" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="28" y1="54" x2="42" y2="54" stroke="#00AEEF" stroke-width="2.5" stroke-linecap="round"/>
-</svg>
-</div>
-<div class="service-text">
-<h2>Latest from Resources</h2>
-<p>Articles, analysis, and practical guides on European digital identity, information security standards, and cybersecurity. New articles are published here first, with summaries shared on <a href="https://www.linkedin.com/in/lindquistjan/">LinkedIn</a>.</p>
-<p><a href="/resources/">Browse all resources →</a></p>
-</div>
-</div>
-
----
-
-<div class="service-block">
-<div class="service-icon">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect x="10" y="18" width="60" height="44" rx="4" stroke="#1A1A2E" stroke-width="3"/>
   <polyline points="10,22 40,44 70,22" stroke="#00AEEF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
