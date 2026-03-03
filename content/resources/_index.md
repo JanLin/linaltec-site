@@ -4,8 +4,6 @@ description: "Articles, analysis, and insights on EUDI wallet security, ISO stan
 layout: list
 ---
 
-Articles, analysis, and practical guides on European digital identity, information security standards, and cybersecurity.
-
 New articles are published here first, with summaries shared on [LinkedIn](https://www.linkedin.com/in/lindquistjan/). Topics span four categories:
 
 - **EUDI & Digital Identity** — Wallet security analysis, eIDAS 2.0 implementation, and access control frameworks
