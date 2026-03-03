@@ -56,18 +56,3 @@ description: "Cybersecurity & Privacy Consulting — Securing digital identity. 
 </div>
 </div>
 
----
-
-<div class="service-block">
-<div class="service-icon">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
-  <rect x="10" y="18" width="60" height="44" rx="4" stroke="#1A1A2E" stroke-width="3"/>
-  <polyline points="10,22 40,44 70,22" stroke="#00AEEF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-</div>
-<div class="service-text">
-<h2>Get in Touch</h2>
-<p>Ready to discuss your security and privacy challenges? Whether you need a wallet security assessment, GDPR compliance guidance, a Data Protection Impact Assessment, ISO certification support, or ongoing security leadership — let's talk.</p>
-<p><a href="/contact/">Contact us →</a></p>
-</div>
-</div>
