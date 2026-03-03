@@ -5,7 +5,7 @@ description: "The global standard for consent records, ISO/IEC 27560, is now fre
 tags: ["ISO 27560", "Privacy by Design", "Data Protection", "Consent Management", "EUDI", "ISO"]
 categories: ["Standards"]
 cover:
-  image: "/images/cover-iso27560-free.jpg"
+  image: "images/cover-iso27560-free.jpg"
   alt: "An open padlock on a keyboard — representing the standard being made freely available"
   caption: "Photo by [Sasun Bughdaryan](https://unsplash.com/@sasun1990) on [Unsplash](https://unsplash.com)"
   relative: false

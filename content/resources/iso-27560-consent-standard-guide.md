@@ -6,7 +6,7 @@ tags: ["ISO 27560", "Standards", "GDPR", "Consent Management", "EUDI"]
 author: "Jan Lindquist"
 summary: "ISO/IEC 27560 defines how organisations should create, store, and manage consent records. As lead editor of this standard — now freely available — I explain what it covers, why it matters for GDPR compliance and EUDI wallet ecosystems, and how to get started with implementation."
 cover:
-  image: "/images/cover-iso27560-guide.jpg"
+  image: "images/cover-iso27560-guide.jpg"
   alt: "A sign reading Privacy Please — representing the need for structured consent management"
   caption: "Photo by [Jason Dent](https://unsplash.com/@jdent) on [Unsplash](https://unsplash.com)"
   relative: false

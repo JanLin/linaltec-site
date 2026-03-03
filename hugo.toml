@@ -1,4 +1,4 @@
-baseURL = "https://linaltec.com/"
+baseURL = "https://janlin.github.io/linaltec-site/"
 languageCode = "en-us"
 title = "Linaltec AB"
 theme = "PaperMod"
@@ -16,7 +16,7 @@ paginate = 10
 
   [params.label]
     text = ""
-    icon = "/images/logo.png"
+    icon = "images/logo.png"
     iconHeight = 35
 
   [[params.socialIcons]]

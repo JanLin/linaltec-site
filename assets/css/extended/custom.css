@@ -48,7 +48,7 @@ h1, h2, h3, h4 {
 
 /* Dark mode overrides */
 [data-theme="dark"] .logo img {
-  content: url('/images/logo-white.png');
+  content: url('../../images/logo-white.png');
 }
 
 [data-theme="dark"] h1,
