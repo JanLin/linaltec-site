@@ -82,4 +82,6 @@ The comments are submitted in a personal technical capacity as Lead Editor of CE
 
 The public consultation on these three Implementing Acts is open until 5 March 2026. Stakeholders can submit responses through the Commission's Have Your Say portal.
 
+<a href="https://ec.europa.eu/info/law/better-regulation/have-your-say/initiatives/16113-European-Digital-Identity-Wallet-registration-of-wallet-relying-parties-update-/F33377000_en" class="consultation-btn" target="_blank" rel="noopener">Download the Full Consultation Response →</a>
+
 If you need help understanding how these regulatory gaps affect your EUDI Wallet implementation, or how CEN/TS 18297 maps to the Implementing Acts, [get in touch](/contact/).
