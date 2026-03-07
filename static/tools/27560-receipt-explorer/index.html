@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISO/IEC 27560 — Privacy Processing Receipts with W3C DPV | Linaltec</title>
+<style>
+  :root {
+    --primary: #1A1A2E;
+    --primary-light: #00AEEF;
+    --accent: #4682B4;
+    --accent-light: #E1F5FE;
+    --success: #38a169;
+    --success-light: #c6f6d5;
+    --warning: #d69e2e;
+    --danger: #e53e3e;
+    --bg: #F5F7FA;
+    --card: #ffffff;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #E2E5EA;
+    --code-bg: #1A1A2E;
+    --code-text: #E2E5EA;
+    --tooltip-bg: #1A1A2E;
+    --icon-identity: #00AEEF;
+    --icon-health: #e53e3e;
+    --icon-education: #805ad5;
+    --icon-payment: #d69e2e;
+    --icon-location: #38a169;
+    --icon-contact: #319795;
+    --icon-device: #718096;
+    --icon-behavior: #dd6b20;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  /* ─── Layout ─── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 64px 0; }
+  .section-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  /* ─── Typography ─── */
+  h1 { font-size: 2.5rem; font-weight: 800; line-height: 1.2; color: var(--primary); }
+  h2 { font-size: 1.75rem; font-weight: 700; color: var(--primary); margin-bottom: 16px; }
+  h3 { font-size: 1.25rem; font-weight: 600; color: var(--primary); margin-bottom: 12px; }
+  .subtitle { font-size: 1.125rem; color: var(--text-light); max-width: 720px; }
+  .badge {
+    display: inline-block; padding: 4px 12px; border-radius: 9999px;
+    font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .badge-blue { background: var(--accent-light); color: var(--primary-light); }
+  .badge-green { background: var(--success-light); color: var(--success); }
+  .badge-orange { background: #fefcbf; color: #b7791f; }
+
+  /* ─── Hero ─── */
+  .hero {
+    background: linear-gradient(135deg, var(--primary) 0%, #0D3B66 50%, #00AEEF 100%);
+    color: #fff; padding: 80px 0 64px; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .hero::after {
+    content: ''; position: absolute; top: -30%; right: -10%; width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,174,239,0.12) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero h1 { color: #fff; font-size: 2.75rem; max-width: 800px; position: relative; }
+  .hero .subtitle { color: rgba(255,255,255,0.85); margin: 20px 0 32px; position: relative; }
+  .hero-badges { display: flex; gap: 12px; flex-wrap: wrap; position: relative; }
+  .hero-badge {
+    background: rgba(255,255,255,0.12); color: #fff; padding: 6px 16px;
+    border-radius: 8px; font-size: 0.875rem; font-weight: 500;
+    backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.18);
+  }
+
+  /* ─── Tabs / Lawful Basis Selector ─── */
+  .tab-group {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px;
+  }
+  .tab-btn {
+    padding: 10px 20px; border: 2px solid var(--border); border-radius: 10px;
+    background: var(--card); color: var(--text); font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .tab-btn:hover { border-color: var(--primary-light); color: var(--primary-light); }
+  .tab-btn.active {
+    border-color: var(--primary-light); background: var(--primary-light); color: #fff;
+  }
+
+  /* ─── Receipt Card ─── */
+  .receipt-wrapper {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;
+  }
+
+  .receipt-card {
+    background: #FEFDFB; border-radius: 6px 6px 0 0; overflow: visible;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.04);
+    border: 1px solid #E8E4DC; position: relative;
+  }
+  .receipt-card::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 12px;
+    background: linear-gradient(45deg, transparent 33.33%, #FEFDFB 33.33%) 0 0 / 12px 100%,
+                linear-gradient(-45deg, transparent 33.33%, #FEFDFB 33.33%) 0 0 / 12px 100%;
+    background-repeat: repeat-x;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.04));
+  }
+  .receipt-header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0D3B66 100%);
+    padding: 24px; color: #fff;
+  }
+  .receipt-header h3 { color: #fff; margin-bottom: 4px; font-size: 1.1rem; }
+  .receipt-header .receipt-id { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem; opacity: 0.8; }
+
+  .receipt-section {
+    padding: 20px 24px; border-bottom: 1px solid #EDE9E3;
+  }
+  .receipt-section:last-child { border-bottom: none; }
+  .receipt-section-title {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-light); margin-bottom: 12px;
+  }
+
+  .receipt-field {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 8px 0; gap: 16px; position: relative;
+  }
+  .receipt-field-label {
+    font-size: 0.8rem; color: var(--text-light); font-weight: 500;
+    cursor: help; border-bottom: 1px dotted var(--text-light);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .receipt-field-value {
+    font-size: 0.875rem; font-weight: 600; color: var(--text); text-align: right;
+    word-break: break-word;
+  }
+  .receipt-field-value a {
+    color: var(--primary-light); text-decoration: none;
+  }
+  .receipt-field-value a:hover { text-decoration: underline; }
+
+  /* DPV tag */
+  .dpv-tag {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 0.7rem; font-family: 'SF Mono', 'Fira Code', monospace;
+    background: var(--accent-light); color: var(--primary-light); margin-left: 4px;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .dpv-tag:hover { background: #B3E5FC; }
+
+  /* ─── Tooltip ─── */
+  .tooltip-container { position: relative; display: inline-block; }
+  .tooltip {
+    display: none; position: absolute; bottom: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%); background: var(--tooltip-bg); color: #fff;
+    padding: 14px 18px; border-radius: 10px; font-size: 0.8rem; line-height: 1.5;
+    width: 320px; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    pointer-events: none;
+  }
+  .tooltip::after {
+    content: ''; position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%); border: 6px solid transparent;
+    border-top-color: var(--tooltip-bg);
+  }
+  .tooltip-container:hover .tooltip { display: block; pointer-events: auto; }
+  .tooltip-container.tooltip-active .tooltip { display: block; pointer-events: auto; }
+  .tooltip .tooltip-title { font-weight: 700; margin-bottom: 4px; color: #7DD3FC; }
+  .tooltip .tooltip-dpv { font-family: monospace; font-size: 0.7rem; color: #7DD3FC; margin-top: 6px; }
+  .tooltip .tooltip-27560 { font-size: 0.7rem; color: #a0aec0; margin-top: 2px; }
+
+  /* Right-aligned tooltips for values on the right side */
+  .tooltip-right .tooltip {
+    left: auto; right: 0; transform: none;
+  }
+  .tooltip-right .tooltip::after {
+    left: auto; right: 24px; transform: none;
+  }
+
+  /* Mobile bottom-sheet tooltips */
+  @media (max-width: 768px) {
+    .tooltip-container.tooltip-active .tooltip {
+      position: fixed; bottom: 0; left: 0; right: 0; top: auto;
+      width: 100%; max-width: 100%; border-radius: 16px 16px 0 0;
+      transform: none; z-index: 1001;
+      box-shadow: 0 -4px 32px rgba(0,0,0,0.3);
+      padding: 24px 20px 32px;
+    }
+    .tooltip-container.tooltip-active .tooltip::after { display: none; }
+  }
+  .tooltip-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.3); z-index: 1000;
+  }
+  .tooltip-overlay.active { display: block; }
+
+  /* ─── Privacy Icons (Apple-style) ─── */
+  .privacy-icons-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px; margin-top: 12px;
+  }
+  .privacy-icon-card {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 16px 8px; border-radius: 14px; background: var(--bg);
+    border: 1px solid var(--border); text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: default;
+    opacity: 0; animation: fadeInUp 0.35s ease-out forwards;
+  }
+  .privacy-icon-card:hover {
+    transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .privacy-icon {
+    width: 44px; height: 44px; border-radius: 12px; display: flex;
+    align-items: center; justify-content: center; margin-bottom: 8px;
+  }
+  .privacy-icon svg { width: 22px; height: 22px; }
+  .privacy-icon-label { font-size: 0.75rem; font-weight: 600; color: var(--text); }
+  .privacy-icon-sub { font-size: 0.65rem; color: var(--text-light); margin-top: 2px; }
+  .privacy-icon-badge {
+    margin-top: 6px; padding: 2px 8px; border-radius: 9999px;
+    font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+  }
+
+  /* icon color variants */
+  .icon-identity .privacy-icon { background: #E1F5FE; color: var(--icon-identity); }
+  .icon-health .privacy-icon { background: #fff5f5; color: var(--icon-health); }
+  .icon-education .privacy-icon { background: #faf5ff; color: var(--icon-education); }
+  .icon-payment .privacy-icon { background: #fffff0; color: var(--icon-payment); }
+  .icon-location .privacy-icon { background: #f0fff4; color: var(--icon-location); }
+  .icon-contact .privacy-icon { background: #e6fffa; color: var(--icon-contact); }
+  .icon-device .privacy-icon { background: #f7fafc; color: var(--icon-device); }
+  .icon-behavior .privacy-icon { background: #fffaf0; color: var(--icon-behavior); }
+
+  .badge-required { background: #fed7d7; color: #c53030; }
+  .badge-optional { background: #fefcbf; color: #975a16; }
+  .badge-sensitive { background: #fed7d7; color: #c53030; }
+
+  /* ─── Comparison ─── */
+  .comparison-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  }
+
+  .comparison-card {
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06); border: 1px solid var(--border);
+  }
+  .comparison-bad {
+    background: #fff5f5;
+  }
+  .comparison-bad .comparison-header { background: #fc8181; color: #fff; }
+  .comparison-good {
+    background: #f0fff4;
+  }
+  .comparison-good .comparison-header { background: var(--success); color: #fff; }
+  .comparison-header { padding: 20px 24px; font-weight: 700; font-size: 1.1rem; }
+  .comparison-body { padding: 24px; font-size: 0.9rem; }
+  .comparison-body ul { list-style: none; padding: 0; }
+  .comparison-body li { padding: 8px 0; display: flex; align-items: flex-start; gap: 10px; }
+  .comparison-body li .icon { flex-shrink: 0; font-size: 1.1rem; }
+
+  .policy-blur {
+    padding: 20px; background: #fff; border-radius: 8px; margin-top: 16px;
+    font-size: 0.75rem; color: #a0aec0; line-height: 2;
+    filter: blur(1.5px); -webkit-filter: blur(1.5px); user-select: none;
+    max-height: 180px; overflow: hidden; border: 1px solid #e2e8f0;
+  }
+
+  /* ─── Info Cards Row ─── */
+  .info-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 32px; }
+  .info-card {
+    background: var(--card); border-radius: 14px; padding: 28px;
+    border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .info-card:hover {
+    transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+  }
+  .info-card-icon {
+    width: 48px; height: 48px; border-radius: 12px; display: flex;
+    align-items: center; justify-content: center; margin-bottom: 14px;
+    background: var(--accent-light); color: var(--primary-light);
+  }
+  .info-card-icon svg { width: 24px; height: 24px; }
+  .info-card h3 { color: var(--primary); }
+  .info-card p { font-size: 0.9rem; color: var(--text-light); }
+
+  /* Go Deeper cards as links */
+  a.info-card {
+    text-decoration: none; color: inherit; display: block;
+  }
+
+  /* ─── Event Timeline ─── */
+  .timeline { position: relative; padding-left: 28px; margin-top: 12px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px;
+    width: 2px; background: linear-gradient(to bottom, var(--primary-light), var(--border));
+    border-radius: 1px;
+  }
+  .timeline-item { position: relative; padding: 10px 0 10px 20px; }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -22px; top: 16px;
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 2px solid var(--border); background: var(--card);
+    transition: all 0.2s ease;
+  }
+  .timeline-item.active::before {
+    background: var(--primary-light); border-color: var(--primary-light);
+    box-shadow: 0 0 0 4px rgba(0,174,239,0.15);
+  }
+  .timeline-event { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+  .timeline-meta { font-size: 0.7rem; color: var(--text-light); }
+
+  /* ─── Scenario Selector ─── */
+  .scenario-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+  .scenario-card {
+    padding: 20px 16px; border-radius: 14px; border: 2px solid var(--border);
+    background: var(--card); text-align: center; cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .scenario-card:hover { border-color: var(--primary-light); transform: translateY(-2px); }
+  .scenario-card.active { border-color: var(--primary-light); background: var(--accent-light); }
+  .scenario-card .sc-icon {
+    width: 48px; height: 48px; border-radius: 12px; display: flex;
+    align-items: center; justify-content: center; margin: 0 auto 10px;
+    background: var(--bg);
+  }
+  .scenario-card .sc-icon svg { width: 24px; height: 24px; color: var(--primary-light); }
+  .scenario-card.active .sc-icon { background: rgba(0,174,239,0.15); }
+  .scenario-card .sc-label { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+  .scenario-card .sc-sub { font-size: 0.7rem; color: var(--text-light); margin-top: 4px; }
+
+  /* ─── Lawful Basis Indicator ─── */
+  .lawful-basis-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;
+  }
+  .lb-consent { background: #c6f6d5; color: #22543d; }
+  .lb-contract { background: #bee3f8; color: #2a4365; }
+  .lb-legitimate { background: #fefcbf; color: #744210; }
+  .lb-legal { background: #fed7e2; color: #702459; }
+  .lb-public { background: #e9d8fd; color: #44337a; }
+  .lb-vital { background: #feebc8; color: #7b341e; }
+
+  /* ─── Footer ─── */
+  footer {
+    background: var(--primary); color: rgba(255,255,255,0.7); padding: 40px 0;
+    font-size: 0.85rem; text-align: center;
+  }
+  footer a { color: rgba(255,255,255,0.9); }
+
+  /* ─── Go Deeper Section ─── */
+  .go-deeper { background: #EDF2F7; }
+  .go-deeper .info-card-icon { background: #fff; }
+
+  /* ─── Accessibility ─── */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); border: 0;
+  }
+
+  /* ─── Animations ─── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes receiptFade {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: receiptFade 0.35s ease-out; }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 900px) {
+    .receipt-wrapper { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.4rem; }
+    .hero h1 { font-size: 2rem; }
+    .hero { padding: 56px 0 48px; }
+    section { padding: 48px 0; }
+    .comparison-grid { grid-template-columns: 1fr; }
+    .info-cards { grid-template-columns: 1fr; }
+    .tab-group {
+      flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px; scrollbar-width: none;
+    }
+    .tab-group::-webkit-scrollbar { display: none; }
+    .tab-btn { white-space: nowrap; flex-shrink: 0; padding: 8px 16px; font-size: 0.8rem; }
+  }
+  @media (max-width: 540px) {
+    .scenario-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .scenario-card { padding: 14px 10px; }
+    .scenario-card .sc-label { font-size: 0.78rem; }
+    .privacy-icons-grid { grid-template-columns: repeat(2, 1fr); }
+    .container { padding: 0 16px; }
+  }
+  @media (max-width: 380px) {
+    .scenario-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════ SVG SPRITE SHEET ════════════════ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <!-- Category icons -->
+  <symbol id="icon-cat-identity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.5 3.6-6.5 8-6.5s8 3 8 6.5"/>
+  </symbol>
+  <symbol id="icon-cat-health" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/>
+  </symbol>
+  <symbol id="icon-cat-education" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3L2 8l10 5 10-5-10-5z"/><path d="M6 10.5v5c0 2 3 3.5 6 3.5s6-1.5 6-3.5v-5"/>
+  </symbol>
+  <symbol id="icon-cat-payment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/>
+  </symbol>
+  <symbol id="icon-cat-location" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+  </symbol>
+  <symbol id="icon-cat-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 4l10 8 10-8"/>
+  </symbol>
+  <symbol id="icon-cat-device" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/>
+  </symbol>
+  <symbol id="icon-cat-behavior" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 20h18"/><path d="M3 20l5-8 4 4 5-8 4 4"/>
+  </symbol>
+  <!-- Section icons -->
+  <symbol id="icon-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 2h6v3H9z"/><path d="M9 11h6M9 15h4"/>
+  </symbol>
+  <symbol id="icon-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+  </symbol>
+  <symbol id="icon-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2l8 4v6c0 5.25-3.5 9.74-8 11-4.5-1.26-8-5.75-8-11V6l8-4z"/><path d="M9 12l2 2 4-4"/>
+  </symbol>
+  <symbol id="icon-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>
+  </symbol>
+  <symbol id="icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+  </symbol>
+  <symbol id="icon-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+  </symbol>
+  <!-- Scenario icons -->
+  <symbol id="icon-sc-identity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8" cy="11" r="2.5" stroke-width="1.5"/><path d="M5 17c0-1.5 1.3-2.5 3-2.5s3 1 3 2.5" stroke-width="1.5"/><path d="M14 9h5M14 12h5M14 15h3" stroke-width="1.5"/>
+  </symbol>
+  <symbol id="icon-sc-health" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19.5 12.572l-7.5 7.428-7.5-7.428A5 5 0 0112 5.006a5 5 0 017.5 7.566z"/><path d="M8 12h2l1-2 2 4 1-2h2" stroke-width="1.5"/>
+  </symbol>
+  <symbol id="icon-sc-education" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3L2 8l10 5 10-5-10-5z"/><path d="M6 10.5v5c0 2 3 3.5 6 3.5s6-1.5 6-3.5v-5"/><path d="M20 8v7"/>
+  </symbol>
+  <symbol id="icon-sc-payment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/><path d="M14 15h4"/>
+  </symbol>
+</svg>
+
+<!-- Tooltip overlay for mobile -->
+<div class="tooltip-overlay" id="tooltipOverlay"></div>
+
+<!-- ════════════════════ HERO ════════════════════ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badges">
+      <span class="hero-badge">ISO/IEC 27560</span>
+      <span class="hero-badge">W3C DPV 2.3</span>
+      <span class="hero-badge">EUDI Wallet Ready</span>
+    </div>
+    <h1 style="margin-top:24px">Privacy Processing Receipts</h1>
+    <p class="subtitle">
+      Moving beyond unreadable privacy policies. ISO/IEC 27560 defines structured, machine-readable
+      PII Processing Records and Privacy Receipts — giving individuals real transparency about how
+      their data is processed, with values powered by the W3C Data Privacy Vocabulary.
+    </p>
+  </div>
+</header>
+
+<!-- ════════════════════ WHY THIS MATTERS ════════════════════ -->
+<section>
+  <div class="container">
+    <h2>Why Privacy Receipts?</h2>
+    <p class="subtitle" style="margin-bottom:32px">
+      Privacy policies are generic documents written for everyone. A privacy receipt is a specific,
+      personal record of <em>your</em> data processing — tied to a purpose, a lawful basis, and
+      actionable rights.
+    </p>
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="info-card-icon"><svg><use href="#icon-clipboard"/></svg></div>
+        <h3>Structured &amp; Specific</h3>
+        <p>Each receipt documents exactly what data is processed, why, by whom, and for how long — per purpose, per lawful basis.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon"><svg><use href="#icon-link"/></svg></div>
+        <h3>Machine-Readable</h3>
+        <p>Using W3C DPV vocabulary, receipts are interoperable across systems, enabling automated compliance checking and rights exercise.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon"><svg><use href="#icon-shield-check"/></svg></div>
+        <h3>Actionable Rights</h3>
+        <p>Receipts include withdrawal methods, privacy choices, and authority contacts — empowering individuals to act, not just read.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════════════════ COMPARISON ════════════════════ -->
+<section>
+  <div class="container">
+    <h2>Privacy Policy vs. Privacy Receipt</h2>
+    <p class="subtitle" style="margin-bottom:32px">
+      What you get today versus what ISO/IEC 27560 makes possible.
+    </p>
+    <div class="comparison-grid">
+      <div class="comparison-card comparison-bad">
+        <div class="comparison-header">&#x274C;  Today's Privacy Policy</div>
+        <div class="comparison-body">
+          <ul>
+            <li><span class="icon">&#x1F4C4;</span> Generic document for all users</li>
+            <li><span class="icon">&#x1F50D;</span> Buried in legalese — average 4,000+ words</li>
+            <li><span class="icon">&#x26A0;</span> No link to YOUR specific data</li>
+            <li><span class="icon">&#x1F6AB;</span> Not machine-readable</li>
+            <li><span class="icon">&#x23F3;</span> Changes silently, no versioning</li>
+            <li><span class="icon">&#x2753;</span> Vague on rights exercise</li>
+          </ul>
+          <div class="policy-blur">
+            We may collect, use, and share your personal information as described in this privacy policy. We collect information you provide directly, information collected automatically, and information from third parties. We use your information for providing and improving our services, for research and analytics, for marketing and advertising, for legal compliance, and for other purposes described in this policy. We may share your information with service providers, business partners, law enforcement, and other third parties as described herein. Your continued use of our services constitutes acceptance of these terms...
+          </div>
+        </div>
+      </div>
+      <div class="comparison-card comparison-good">
+        <div class="comparison-header">&#x2705;  ISO 27560 Privacy Receipt</div>
+        <div class="comparison-body">
+          <ul>
+            <li><span class="icon">&#x1F464;</span> Personal to YOU — tied to your PII principal ID</li>
+            <li><span class="icon">&#x1F3AF;</span> Specific: one receipt per purpose + lawful basis</li>
+            <li><span class="icon">&#x1F4CA;</span> Structured fields with standardized DPV values</li>
+            <li><span class="icon">&#x1F916;</span> Machine-readable — enables automated compliance</li>
+            <li><span class="icon">&#x1F4C5;</span> Versioned with event timeline (given → renewed → withdrawn)</li>
+            <li><span class="icon">&#x1F4AA;</span> Direct links to withdraw consent, exercise rights, file complaints</li>
+          </ul>
+          <div style="margin-top:16px; padding:16px; background:#fff; border-radius:8px; border:1px solid #c6f6d5;">
+            <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--success);font-weight:600;">
+              <span>receipt_id: 7a2f...</span><span>schema: v2.0</span>
+            </div>
+            <div style="margin-top:8px;font-size:0.8rem;">
+              <strong>Purpose:</strong> Newsletter — Personalised Recommendations<br>
+              <strong>Lawful Basis:</strong> <code style="background:#c6f6d5;padding:2px 6px;border-radius:4px;font-size:0.75rem;">dpv:Consent</code><br>
+              <strong>Data:</strong> Email, Browsing Preferences<br>
+              <strong>Retention:</strong> P2Y (2 years)<br>
+              <strong>Withdraw:</strong> <a href="#" style="color:var(--success);">preferences.example.com/consent</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════════════════ INTERACTIVE RECEIPT ════════════════════ -->
+<section id="interactive">
+  <div class="container">
+    <h2>Interactive Privacy Receipt Explorer</h2>
+    <p class="subtitle" style="margin-bottom:24px">
+      Select a EUDI Wallet scenario, then switch lawful bases to see how the receipt adapts.
+      Hover over any field label for its ISO 27560 definition and DPV mapping.
+    </p>
+
+    <!-- Scenario selector -->
+    <div class="scenario-cards" id="scenarioCards">
+      <div class="scenario-card active" data-scenario="identity" onclick="selectScenario('identity')">
+        <div class="sc-icon"><svg><use href="#icon-sc-identity"/></svg></div>
+        <div class="sc-label">Identity (PID)</div>
+        <div class="sc-sub">Person Identification Data</div>
+      </div>
+      <div class="scenario-card" data-scenario="health" onclick="selectScenario('health')">
+        <div class="sc-icon"><svg><use href="#icon-sc-health"/></svg></div>
+        <div class="sc-label">Health (EAA)</div>
+        <div class="sc-sub">Medical records</div>
+      </div>
+      <div class="scenario-card" data-scenario="education" onclick="selectScenario('education')">
+        <div class="sc-icon"><svg><use href="#icon-sc-education"/></svg></div>
+        <div class="sc-label">Education (EAA)</div>
+        <div class="sc-sub">Diplomas &amp; credentials</div>
+      </div>
+      <div class="scenario-card" data-scenario="payment" onclick="selectScenario('payment')">
+        <div class="sc-icon"><svg><use href="#icon-sc-payment"/></svg></div>
+        <div class="sc-label">Payment</div>
+        <div class="sc-sub">Financial transactions</div>
+      </div>
+    </div>
+
+    <!-- Lawful basis tabs -->
+    <div style="margin-bottom:8px;font-size:0.8rem;font-weight:600;color:var(--text-light);">LAWFUL BASIS:</div>
+    <div class="tab-group" id="lawfulBasisTabs">
+      <button class="tab-btn active" data-basis="consent" onclick="selectBasis('consent')">Consent</button>
+      <button class="tab-btn" data-basis="contract" onclick="selectBasis('contract')">Contract</button>
+      <button class="tab-btn" data-basis="legitimate" onclick="selectBasis('legitimate')">Legitimate Interest</button>
+      <button class="tab-btn" data-basis="legal" onclick="selectBasis('legal')">Legal Obligation</button>
+      <button class="tab-btn" data-basis="public" onclick="selectBasis('public')">Public Interest</button>
+      <button class="tab-btn" data-basis="vital" onclick="selectBasis('vital')">Vital Interest</button>
+    </div>
+
+    <div class="receipt-wrapper">
+      <!-- LEFT: The Receipt -->
+      <div>
+        <div class="receipt-card fade-in" id="receiptCard">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- RIGHT: Data Icons + Events -->
+      <div>
+        <h3>Data Categories</h3>
+        <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:4px;">
+          Apple-style privacy labels — designed for mobile wallet screens
+        </p>
+        <div class="privacy-icons-grid" id="dataIcons">
+          <!-- Populated by JS -->
+        </div>
+
+        <h3 style="margin-top:32px;">Event Timeline</h3>
+        <div class="timeline" id="eventTimeline">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ FURTHER READING ════════════════════ -->
+<section class="go-deeper">
+  <div class="container" style="text-align:center;">
+    <h2>Go Deeper</h2>
+    <p class="subtitle" style="margin:0 auto 32px;">
+      Explore the developer reference, related standards, and Linaltec tools.
+    </p>
+    <div class="info-cards" style="grid-template-columns: repeat(3, 1fr);">
+      <a href="#" class="info-card">
+        <div class="info-card-icon"><svg><use href="#icon-code"/></svg></div>
+        <h3>Developer Reference</h3>
+        <p>ISO 27560 &#x2194; DPV field mapping, JSON-LD examples, namespace prefixes, and implementation guidance.</p>
+        <span class="badge badge-blue" style="margin-top:12px;">Coming Soon</span>
+      </a>
+      <a href="#" class="info-card">
+        <div class="info-card-icon"><svg><use href="#icon-chat"/></svg></div>
+        <h3>Safe AI Chat</h3>
+        <p>Privacy-preserving AI chat built differently. Ask questions about ISO 27001 policies and ISMS compliance.</p>
+        <span class="badge badge-blue" style="margin-top:12px;">Coming Soon</span>
+      </a>
+      <a href="#" class="info-card">
+        <div class="info-card-icon"><svg><use href="#icon-book"/></svg></div>
+        <h3>Knowledge Q&amp;A</h3>
+        <p>Query ISO 27001 controls, ISMS policies, and compliance requirements interactively.</p>
+        <span class="badge badge-blue" style="margin-top:12px;">Coming Soon</span>
+      </a>
+    </div>
+    <div style="margin-top:32px;">
+      <p style="font-size:0.85rem; color:var(--text-light);">
+        <strong>Standards &amp; Specifications:</strong>&ensp;
+        <a href="https://w3c.github.io/dpv/2.3/dpv/" target="_blank" style="color:var(--primary-light);">W3C DPV 2.3</a> &ensp;&#x2022;&ensp;
+        <a href="https://w3id.org/dpv/primer" target="_blank" style="color:var(--primary-light);">DPV Primer</a> &ensp;&#x2022;&ensp;
+        <a href="https://www.iso.org/standard/80392.html" target="_blank" style="color:var(--primary-light);">ISO/IEC 27560</a> &ensp;&#x2022;&ensp;
+        <a href="https://w3c.github.io/dpv/2.3/pd/" target="_blank" style="color:var(--primary-light);">DPV Personal Data Extension</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ FOOTER ════════════════════ -->
+<footer>
+  <div class="container">
+    <p>&copy; 2026 Linaltec. This page demonstrates concepts from ISO/IEC 27560 and W3C DPV for educational purposes.</p>
+    <p style="margin-top:8px;">
+      <a href="https://linaltec.com" target="_blank">linaltec.com</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// DATA MODEL (DO NOT MODIFY)
+// ════════════════════════════════════════════════════════════════
+
+const TOOLTIPS = {
+  schema_version: {
+    title: "schema_version",
+    desc: "Unique reference for the implementation documentation describing the record structure. Each PII Controller defines their schema.",
+    dpv: "No direct DPV mapping — implementation-specific",
+    ref: "ISO 27560 §6.3.3.2"
+  },
+  record_id: {
+    title: "record_id",
+    desc: "Unique identifier (UUID-4 recommended) referencing this specific PII Processing Record. Used by all parties to identify and refer to the record.",
+    dpv: "No direct DPV mapping — use as record identifier",
+    ref: "ISO 27560 §6.3.3.3"
+  },
+  pii_principal_id: {
+    title: "pii_principal_id",
+    desc: "Identifier associating the record with a specific PII Principal. Should use pseudonyms where possible. Remains the same across record versions.",
+    dpv: "dpv:DataSubject",
+    ref: "ISO 27560 §6.3.3.4"
+  },
+  privacy_notice: {
+    title: "privacy_notice",
+    desc: "URL reference to the specific version of the PII Controller's privacy notice in effect when the record was created. Must remain valid over time.",
+    dpv: "dpv:PrivacyNotice",
+    ref: "ISO 27560 §6.3.4.2"
+  },
+  language: {
+    title: "language",
+    desc: "Language of the notice and interface used in communications with the PII Principal. Uses ISO 639-1 codes.",
+    dpv: "dpv:Language",
+    ref: "ISO 27560 §6.3.4.3"
+  },
+  purpose: {
+    title: "purpose",
+    desc: "The specific purpose for which PII is processed. Must be sufficiently detailed and unambiguous for the PII Principal to understand the intended processing.",
+    dpv: "dpv:Purpose and subclasses (dpv:ServiceProvision, dpv:IdentityVerification, etc.)",
+    ref: "ISO 27560 §6.3.4.5"
+  },
+  purpose_type: {
+    title: "purpose_type",
+    desc: "A broader category providing context to the specific purpose. E.g., if purpose is 'Sending Newsletters', the type might be 'Marketing'.",
+    dpv: "dpv:Purpose (parent class in DPV hierarchy)",
+    ref: "ISO 27560 §6.3.4.6"
+  },
+  lawful_basis: {
+    title: "lawful_basis",
+    desc: "The lawful basis justifying PII processing. Enumerated values: consent, contract_pii_principal, contract_third_party, legal_obligation, legitimate_interests, public_interest, vital_interests, legal_authority.",
+    dpv: "dpv:LegalBasis → dpv:Consent, dpv:Contract, dpv:LegitimateInterest, dpv:LegalObligation, dpv:PublicInterest, dpv:VitalInterest",
+    ref: "ISO 27560 §6.3.4.7"
+  },
+  pii_information: {
+    title: "pii_information",
+    desc: "Array of PII types being processed. Each type represents one attribute (e.g., 'Email Address', 'Date of Birth'). Actual data values are NOT included — only categories.",
+    dpv: "dpv:PersonalData → pd:Name, pd:EmailAddress, pd:DateOfBirth, pd:HealthRecord",
+    ref: "ISO 27560 §6.3.4.8"
+  },
+  storage_locations: {
+    title: "storage_locations",
+    desc: "Geo-locations where PII will be physically stored. Relevant for assessing jurisdictional obligations for data transfers.",
+    dpv: "dpv:StorageCondition, loc:EU, loc:DE",
+    ref: "ISO 27560 §6.3.4.12"
+  },
+  retention_period: {
+    title: "retention_period",
+    desc: "How long PII is retained. Can be a specific date, a duration (ISO 8601 e.g. P2Y = 2 years), or criteria-based.",
+    dpv: "dpv:StorageDuration",
+    ref: "ISO 27560 §6.3.4.13"
+  },
+  jurisdiction: {
+    title: "jurisdiction",
+    desc: "Legal jurisdictions governing PII processing. Indicates applicable laws and available rights.",
+    dpv: "dpv:Jurisdiction, legal-eu:EU-GDPR, legal-de:DE-BDSG",
+    ref: "ISO 27560 §6.3.4.17"
+  },
+  recipient_third_parties: {
+    title: "recipient_third_parties",
+    desc: "Third parties who receive the PII, including identity, geo-location of transfer, and whether it constitutes a jurisdictional change.",
+    dpv: "dpv:Recipient, dpv:ThirdParty, dpv:DataProcessor",
+    ref: "ISO 27560 §6.3.4.18"
+  },
+  privacy_rights: {
+    title: "privacy_rights",
+    desc: "Instructions or URL for how the PII Principal can exercise their privacy rights (access, erasure, portability, etc.).",
+    dpv: "dpv:Right → dpv:RightToAccess, dpv:RightToErasure, dpv:RightToDataPortability",
+    ref: "ISO 27560 §6.3.4.19"
+  },
+  withdrawal_method: {
+    title: "withdrawal_method",
+    desc: "How/where the PII Principal can withdraw consent. Conditionally required when consent is the lawful basis.",
+    dpv: "dpv:WithdrawConsent",
+    ref: "ISO 27560 §6.3.4.24"
+  },
+  contract_management: {
+    title: "contract_management",
+    desc: "Information about accessing and managing the contract: activation, conditions, expiry, and termination options. Required when contract is the lawful basis.",
+    dpv: "dpv:Contract context",
+    ref: "ISO 27560 §6.3.4.26"
+  },
+  privacy_choices: {
+    title: "privacy_choices",
+    desc: "Opt-in/opt-out choices and objections available to the PII Principal for control over their PII processing.",
+    dpv: "dpv:OptIn, dpv:OptOut",
+    ref: "ISO 27560 §6.3.4.25"
+  },
+  authority_party: {
+    title: "authority_party",
+    desc: "Supervisory authority for inquiries, complaints, and rights exercise. Required for accountability.",
+    dpv: "dpv:Authority",
+    ref: "ISO 27560 §6.3.4.23"
+  },
+  collection_method: {
+    title: "collection_method",
+    desc: "How PII is collected: directly provided, observed, inferred, derived, or obtained from third parties.",
+    dpv: "dpv:DataSource → dpv:DataSubjectDataSource, dpv:ThirdPartyDataSource",
+    ref: "ISO 27560 §6.3.4.10"
+  },
+  processing_method: {
+    title: "processing_method",
+    desc: "Operations performed on PII: collection, storage, analysis, transfer, etc. If automated decision-making or profiling is used, this must be disclosed.",
+    dpv: "dpv:Processing → dpv:Collect, dpv:Store, dpv:Use, dpv:Analyse, dpv:Transfer",
+    ref: "ISO 27560 §6.3.4.11"
+  },
+  event_time: {
+    title: "event_time",
+    desc: "ISO 8601 timestamp of the event. May differ from when the event was received by the controller.",
+    dpv: "No direct DPV mapping — temporal context",
+    ref: "ISO 27560 §6.3.7.2"
+  },
+  event_state: {
+    title: "event_state",
+    desc: "Lifecycle state of the event: requested, given, withdrawn, expired, terminated, renewed, etc. Determines suitability as lawful basis.",
+    dpv: "dpv:ConsentStatus → dpv:ConsentGiven, dpv:ConsentWithdrawn, dpv:ConsentExpired",
+    ref: "ISO 27560 §6.3.7.6"
+  },
+  event_type: {
+    title: "event_type",
+    desc: "Category of event: for consent = explicit/implicit/regular. For contract = standard_form/negotiated/employment.",
+    dpv: "dpv:ConsentType → dpv:ExplicitConsent, dpv:ImpliedConsent",
+    ref: "ISO 27560 §6.3.7.5"
+  }
+};
+
+const SCENARIOS = {
+  identity: {
+    name: "Identity Verification (PID)",
+    icon: "&#x1F194;",
+    controller: "EU Digital Identity Wallet Provider",
+    controller_url: "https://eudi-wallet.example.eu",
+    service: "EUDI Wallet — Person Identification Data",
+    purposes: {
+      consent: { purpose: "Share identity attributes for age verification at online service", dpv: "dpv:IdentityVerification", type: "Identity Management", dpvType: "dpv:IdentityManagement" },
+      contract: { purpose: "Provide digital identity credentials under eIDAS 2.0 framework", dpv: "dpv:ServiceProvision", type: "Service Provision", dpvType: "dpv:ServiceProvision" },
+      legitimate: { purpose: "Fraud prevention through identity document validation", dpv: "dpv:FraudPreventionAndDetection", type: "Security", dpvType: "dpv:EnforceSecurity" },
+      legal: { purpose: "Identity verification as required by eIDAS Regulation (EU) 2024/1183", dpv: "dpv:LegalCompliance", type: "Legal Compliance", dpvType: "dpv:LegalCompliance" },
+      public: { purpose: "Facilitate cross-border identity verification for EU citizens", dpv: "dpv:PublicBenefit", type: "Public Services", dpvType: "dpv:PublicBenefit" },
+      vital: { purpose: "Emergency identification for unconscious or incapacitated individual", dpv: "dpv:VitalInterestOfDataSubject", type: "Emergency", dpvType: "dpv:VitalInterest" },
+    },
+    dataItems: [
+      { label: "Family Name", icon: "&#x1F464;", cat: "identity", dpv: "pd:FamilyName", required: true, sensitive: false },
+      { label: "Given Name", icon: "&#x1F464;", cat: "identity", dpv: "pd:GivenName", required: true, sensitive: false },
+      { label: "Date of Birth", icon: "&#x1F4C5;", cat: "identity", dpv: "pd:DateOfBirth", required: true, sensitive: false },
+      { label: "Nationality", icon: "&#x1F30D;", cat: "identity", dpv: "pd:Nationality", required: true, sensitive: false },
+      { label: "Document Number", icon: "&#x1F4C4;", cat: "identity", dpv: "pd:OfficialID", required: true, sensitive: true },
+      { label: "Issuance Date", icon: "&#x1F4C5;", cat: "identity", dpv: "pd:Identifier", required: false, sensitive: false },
+    ],
+    thirdParties: "Relying Party (service requesting verification)",
+    retention: "P0D (zero-retention selective disclosure)",
+    jurisdiction: "EU — eIDAS 2.0, GDPR",
+    storage: "Device-only (EUDI Wallet secure element)",
+    authority: "National Supervisory Authority (per Member State)",
+  },
+  health: {
+    name: "Health Records (EAA)",
+    icon: "&#x1FA7A;",
+    controller: "European Health Data Space Provider",
+    controller_url: "https://ehds.example.eu",
+    service: "EUDI Wallet — European Health Insurance Card (EHIC)",
+    purposes: {
+      consent: { purpose: "Share health records with treating physician for consultation", dpv: "dpv:ProvideHealthCare", type: "Healthcare", dpvType: "dpv:ProvideHealthCare" },
+      contract: { purpose: "Health insurance claim processing under policy agreement", dpv: "dpv:ServiceProvision", type: "Insurance", dpvType: "dpv:ServiceProvision" },
+      legitimate: { purpose: "Epidemiological surveillance and disease pattern monitoring", dpv: "dpv:AcademicResearch", type: "Research", dpvType: "dpv:AcademicResearch" },
+      legal: { purpose: "Mandatory disease notification under EU communicable disease regulations", dpv: "dpv:LegalCompliance", type: "Legal Compliance", dpvType: "dpv:LegalCompliance" },
+      public: { purpose: "Public health emergency response and contact tracing", dpv: "dpv:PublicBenefit", type: "Public Health", dpvType: "dpv:PublicBenefit" },
+      vital: { purpose: "Emergency medical treatment — access to allergies and blood type", dpv: "dpv:VitalInterestOfDataSubject", type: "Life-threatening", dpvType: "dpv:VitalInterest" },
+    },
+    dataItems: [
+      { label: "Health Record", icon: "&#x1FA7A;", cat: "health", dpv: "pd:HealthRecord", required: true, sensitive: true },
+      { label: "Prescription", icon: "&#x1F48A;", cat: "health", dpv: "pd:Prescription", required: true, sensitive: true },
+      { label: "Blood Type", icon: "&#x1FA78;", cat: "health", dpv: "pd:BloodType", required: false, sensitive: true },
+      { label: "Allergies", icon: "&#x26A0;", cat: "health", dpv: "pd:HealthHistory", required: true, sensitive: true },
+      { label: "Insurance ID", icon: "&#x1F4C4;", cat: "identity", dpv: "pd:OfficialID", required: true, sensitive: false },
+      { label: "Treating Physician", icon: "&#x1F468;&#x200D;&#x2695;", cat: "contact", dpv: "pd:Contact", required: false, sensitive: false },
+    ],
+    thirdParties: "Healthcare provider, Insurance company, EHDS Node",
+    retention: "P10Y (medical record retention requirement)",
+    jurisdiction: "EU — GDPR, EHDS Regulation",
+    storage: "EU Member State health data infrastructure",
+    authority: "National Health Data Authority + DPA",
+  },
+  education: {
+    name: "Education Credentials (EAA)",
+    icon: "&#x1F393;",
+    controller: "European Digital Credentials for Learning",
+    controller_url: "https://edci.example.eu",
+    service: "EUDI Wallet — Europass Digital Credentials",
+    purposes: {
+      consent: { purpose: "Present diploma to prospective employer for job application", dpv: "dpv:ServiceProvision", type: "Employment", dpvType: "dpv:ServiceProvision" },
+      contract: { purpose: "Verify qualifications under employment contract terms", dpv: "dpv:ServiceProvision", type: "Contract Fulfilment", dpvType: "dpv:ServiceProvision" },
+      legitimate: { purpose: "University alumni analytics for programme improvement", dpv: "dpv:ImproveExistingProductsAndServices", type: "Service Improvement", dpvType: "dpv:ImproveExistingProductsAndServices" },
+      legal: { purpose: "Professional licensing verification required by regulated profession laws", dpv: "dpv:LegalCompliance", type: "Legal Compliance", dpvType: "dpv:LegalCompliance" },
+      public: { purpose: "National education statistics and workforce planning", dpv: "dpv:PublicBenefit", type: "Public Policy", dpvType: "dpv:PublicBenefit" },
+      vital: { purpose: "Verify medical professional qualification in emergency", dpv: "dpv:VitalInterestOfDataSubject", type: "Emergency", dpvType: "dpv:VitalInterest" },
+    },
+    dataItems: [
+      { label: "Degree Title", icon: "&#x1F393;", cat: "education", dpv: "pd:EducationQualification", required: true, sensitive: false },
+      { label: "Institution", icon: "&#x1F3EB;", cat: "education", dpv: "pd:EducationExperience", required: true, sensitive: false },
+      { label: "Grade/GPA", icon: "&#x1F4CA;", cat: "education", dpv: "pd:EducationQualification", required: false, sensitive: false },
+      { label: "Date of Award", icon: "&#x1F4C5;", cat: "identity", dpv: "pd:Identifier", required: true, sensitive: false },
+      { label: "Student ID", icon: "&#x1F194;", cat: "identity", dpv: "pd:OfficialID", required: false, sensitive: false },
+      { label: "Credential ID", icon: "&#x1F517;", cat: "identity", dpv: "pd:Identifier", required: true, sensitive: false },
+    ],
+    thirdParties: "Employer, Accreditation body, Professional register",
+    retention: "Indefinite (educational record)",
+    jurisdiction: "EU — GDPR, Bologna Process framework",
+    storage: "EU — Europass infrastructure + device",
+    authority: "National Data Protection Authority",
+  },
+  payment: {
+    name: "Payment Processing",
+    icon: "&#x1F4B3;",
+    controller: "Payment Service Provider (PSD2 Licensed)",
+    controller_url: "https://psp.example.eu",
+    service: "EUDI Wallet — Payment Initiation",
+    purposes: {
+      consent: { purpose: "Share account information with third-party financial aggregator", dpv: "dpv:ServiceProvision", type: "Account Information", dpvType: "dpv:ServiceProvision" },
+      contract: { purpose: "Process payment transaction under merchant agreement", dpv: "dpv:ServiceProvision", type: "Payment Processing", dpvType: "dpv:ServiceProvision" },
+      legitimate: { purpose: "Transaction monitoring for anti-money laundering compliance", dpv: "dpv:FraudPreventionAndDetection", type: "AML/CFT", dpvType: "dpv:FraudPreventionAndDetection" },
+      legal: { purpose: "Mandatory transaction reporting under PSD2/PSR and AML directives", dpv: "dpv:LegalCompliance", type: "Regulatory Reporting", dpvType: "dpv:LegalCompliance" },
+      public: { purpose: "Financial stability monitoring by central bank", dpv: "dpv:PublicBenefit", type: "Financial Stability", dpvType: "dpv:PublicBenefit" },
+      vital: { purpose: "Emergency fund access for stranded or endangered individual", dpv: "dpv:VitalInterestOfDataSubject", type: "Emergency Access", dpvType: "dpv:VitalInterest" },
+    },
+    dataItems: [
+      { label: "IBAN", icon: "&#x1F3E6;", cat: "payment", dpv: "pd:FinancialAccount", required: true, sensitive: true },
+      { label: "Transaction Amount", icon: "&#x1F4B6;", cat: "payment", dpv: "pd:Transactional", required: true, sensitive: false },
+      { label: "Merchant ID", icon: "&#x1F3EA;", cat: "payment", dpv: "pd:Transactional", required: true, sensitive: false },
+      { label: "Cardholder Name", icon: "&#x1F464;", cat: "identity", dpv: "pd:Name", required: true, sensitive: false },
+      { label: "Payment Token", icon: "&#x1F510;", cat: "device", dpv: "pd:DeviceBased", required: true, sensitive: true },
+      { label: "IP Address", icon: "&#x1F4F1;", cat: "device", dpv: "pd:IPAddress", required: false, sensitive: false },
+    ],
+    thirdParties: "Merchant, Card network, Acquiring bank, Central bank",
+    retention: "P5Y (PSD2 record retention requirement)",
+    jurisdiction: "EU — GDPR, PSD2/PSR, AMLD6",
+    storage: "EU — PCI DSS certified infrastructure",
+    authority: "National Financial Supervisory Authority + DPA",
+  }
+};
+
+const LAWFUL_BASIS_META = {
+  consent: { label: "Consent", dpv: "dpv:Consent", css: "lb-consent", icon: "&#x2705;" },
+  contract: { label: "Contract", dpv: "dpv:Contract", css: "lb-contract", icon: "&#x1F4DD;" },
+  legitimate: { label: "Legitimate Interest", dpv: "dpv:LegitimateInterest", css: "lb-legitimate", icon: "&#x2696;" },
+  legal: { label: "Legal Obligation", dpv: "dpv:LegalObligation", css: "lb-legal", icon: "&#x2696;" },
+  public: { label: "Public Interest", dpv: "dpv:PublicInterest", css: "lb-public", icon: "&#x1F3DB;" },
+  vital: { label: "Vital Interest", dpv: "dpv:VitalInterest", css: "lb-vital", icon: "&#x1F6D1;" }
+};
+
+const EVENT_TIMELINES = {
+  consent: [
+    { state: "requested", label: "Notice Presented", time: "2026-01-15T10:00:00Z", entity: "Controller", active: false },
+    { state: "given", label: "Consent Given", time: "2026-01-15T10:02:30Z", entity: "PII Principal", active: true },
+    { state: "reaffirmed", label: "Consent Reaffirmed", time: "2026-07-15T09:00:00Z", entity: "PII Principal", active: false },
+  ],
+  contract: [
+    { state: "offered", label: "Contract Offered", time: "2026-01-10T14:00:00Z", entity: "Controller", active: false },
+    { state: "accepted", label: "Contract Accepted", time: "2026-01-12T09:15:00Z", entity: "PII Principal", active: true },
+    { state: "activated", label: "Contract Activated", time: "2026-01-12T09:15:00Z", entity: "Controller", active: false },
+  ],
+  legitimate: [
+    { state: "initiated", label: "Processing Initiated", time: "2026-02-01T00:00:00Z", entity: "Controller", active: true },
+    { state: "lia_completed", label: "LIA Completed", time: "2026-01-20T16:00:00Z", entity: "Controller", active: false },
+    { state: "notified", label: "PII Principal Notified", time: "2026-02-01T08:00:00Z", entity: "Controller", active: false },
+  ],
+  legal: [
+    { state: "obligation_identified", label: "Legal Obligation Identified", time: "2026-01-01T00:00:00Z", entity: "Controller", active: false },
+    { state: "processing_started", label: "Processing Started", time: "2026-01-05T09:00:00Z", entity: "Controller", active: true },
+    { state: "notified", label: "PII Principal Notified", time: "2026-01-05T09:01:00Z", entity: "Controller", active: false },
+  ],
+  public: [
+    { state: "authority_mandate", label: "Public Interest Mandate", time: "2026-01-01T00:00:00Z", entity: "Authority", active: false },
+    { state: "processing_started", label: "Processing Started", time: "2026-01-10T09:00:00Z", entity: "Controller", active: true },
+  ],
+  vital: [
+    { state: "emergency_triggered", label: "Emergency Triggered", time: "2026-03-01T14:30:00Z", entity: "Emergency Services", active: true },
+    { state: "data_accessed", label: "Data Accessed", time: "2026-03-01T14:31:00Z", entity: "Controller", active: false },
+  ]
+};
+
+
+// ════════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════════
+
+let currentScenario = 'identity';
+let currentBasis = 'consent';
+
+
+// ════════════════════════════════════════════════════════════════
+// SVG ICON HELPER
+// ════════════════════════════════════════════════════════════════
+
+const CATEGORY_ICON_MAP = {
+  identity: '#icon-cat-identity',
+  health: '#icon-cat-health',
+  education: '#icon-cat-education',
+  payment: '#icon-cat-payment',
+  location: '#icon-cat-location',
+  contact: '#icon-cat-contact',
+  device: '#icon-cat-device',
+  behavior: '#icon-cat-behavior',
+};
+
+function getCategoryIcon(cat) {
+  const href = CATEGORY_ICON_MAP[cat] || '#icon-cat-identity';
+  return `<svg><use href="${href}"/></svg>`;
+}
+
+
+// ════════════════════════════════════════════════════════════════
+// RENDERING
+// ════════════════════════════════════════════════════════════════
+
+function makeTooltipHTML(key, align) {
+  const t = TOOLTIPS[key];
+  if (!t) return '';
+  const cls = align === 'right' ? 'tooltip-container tooltip-right' : 'tooltip-container';
+  return `<span class="${cls}" tabindex="0">
+    <span class="receipt-field-label">${t.title}</span>
+    <span class="tooltip">
+      <div class="tooltip-title">${t.title}</div>
+      <div>${t.desc}</div>
+      <div class="tooltip-dpv">DPV: ${t.dpv}</div>
+      <div class="tooltip-27560">${t.ref}</div>
+    </span>
+  </span>`;
+}
+
+function renderReceipt() {
+  const s = SCENARIOS[currentScenario];
+  const b = currentBasis;
+  const lb = LAWFUL_BASIS_META[b];
+  const p = s.purposes[b];
+
+  const receiptId = 'r-' + Math.random().toString(36).substr(2,8);
+  const recordId = '550e8400-e29b-41d4-a716-4466554400' + Math.floor(Math.random()*100).toString().padStart(2,'0');
+
+  // Conditional fields
+  let conditionalFields = '';
+  if (b === 'consent') {
+    conditionalFields += `
+      <div class="receipt-field">
+        ${makeTooltipHTML('withdrawal_method')}
+        <span class="receipt-field-value"><a href="#">preferences.example.eu/withdraw</a></span>
+      </div>`;
+  }
+  if (b === 'contract') {
+    conditionalFields += `
+      <div class="receipt-field">
+        ${makeTooltipHTML('contract_management')}
+        <span class="receipt-field-value"><a href="#">account.example.eu/contract</a></span>
+      </div>`;
+  }
+
+  const html = `
+    <div class="receipt-header">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3>Privacy Receipt</h3>
+        <span class="lawful-basis-badge ${lb.css}">${lb.icon} ${lb.label}</span>
+      </div>
+      <div class="receipt-id">receipt_id: ${receiptId} &nbsp;|&nbsp; schema: linaltec-eudi-v2.0</div>
+    </div>
+
+    <div class="receipt-section">
+      <div class="receipt-section-title">Record Header</div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('record_id')}
+        <span class="receipt-field-value" style="font-family:monospace;font-size:0.75rem;">${recordId}</span>
+      </div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('pii_principal_id')}
+        <span class="receipt-field-value" style="font-family:monospace;font-size:0.75rem;">did:eudi:principal:a3f8...</span>
+      </div>
+    </div>
+
+    <div class="receipt-section">
+      <div class="receipt-section-title">Processing Details</div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('purpose')}
+        <span class="receipt-field-value">${p.purpose} <span class="dpv-tag" title="${p.dpv}">${p.dpv}</span></span>
+      </div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('purpose_type')}
+        <span class="receipt-field-value">${p.type} <span class="dpv-tag" title="${p.dpvType}">${p.dpvType}</span></span>
+      </div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('lawful_basis')}
+        <span class="receipt-field-value"><span class="dpv-tag" title="${lb.dpv}">${lb.dpv}</span></span>
+      </div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('collection_method')}
+        <span class="receipt-field-value">Directly provided <span class="dpv-tag">dpv:DataSubjectDataSource</span></span>
+      </div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('processing_method')}
+        <span class="receipt-field-value">Collect, Verify, Transfer <span class="dpv-tag">dpv:Collect</span></span>
+      </div>
+    </div>
+
+    <div class="receipt-section">
+      <div class="receipt-section-title">Storage &amp; Jurisdiction</div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('storage_locations')}
+        <span class="receipt-field-value">${s.storage} <span class="dpv-tag">loc:EU</span></span>
+      </div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('retention_period')}
+        <span class="receipt-field-value">${s.retention} <span class="dpv-tag">dpv:StorageDuration</span></span>
+      </div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('jurisdiction')}
+        <span class="receipt-field-value">${s.jurisdiction} <span class="dpv-tag">legal-eu:EU-GDPR</span></span>
+      </div>
+    </div>
+
+    <div class="receipt-section">
+      <div class="receipt-section-title">Parties &amp; Sharing</div>
+      <div class="receipt-field">
+        <span class="receipt-field-label">pii_controller</span>
+        <span class="receipt-field-value">${s.controller} <span class="dpv-tag">dpv:DataController</span></span>
+      </div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('recipient_third_parties')}
+        <span class="receipt-field-value">${s.thirdParties} <span class="dpv-tag">dpv:Recipient</span></span>
+      </div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('authority_party')}
+        <span class="receipt-field-value">${s.authority}</span>
+      </div>
+    </div>
+
+    <div class="receipt-section">
+      <div class="receipt-section-title">Rights &amp; Controls</div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('privacy_rights')}
+        <span class="receipt-field-value"><a href="#">rights.example.eu/exercise</a> <span class="dpv-tag">dpv:Right</span></span>
+      </div>
+      <div class="receipt-field">
+        ${makeTooltipHTML('privacy_notice')}
+        <span class="receipt-field-value"><a href="#">notice.example.eu/v2.1</a></span>
+      </div>
+      ${conditionalFields}
+    </div>
+  `;
+
+  const card = document.getElementById('receiptCard');
+  card.innerHTML = html;
+  card.classList.remove('fade-in');
+  void card.offsetWidth;
+  card.classList.add('fade-in');
+}
+
+function renderDataIcons() {
+  const s = SCENARIOS[currentScenario];
+  const grid = document.getElementById('dataIcons');
+  grid.innerHTML = s.dataItems.map((d, i) => `
+    <div class="privacy-icon-card icon-${d.cat}" style="animation-delay:${i * 60}ms">
+      <div class="privacy-icon">${getCategoryIcon(d.cat)}</div>
+      <div class="privacy-icon-label">${d.label}</div>
+      <div class="privacy-icon-sub">${d.dpv}</div>
+      <div>
+        <span class="privacy-icon-badge ${d.required ? 'badge-required' : 'badge-optional'}">${d.required ? 'Required' : 'Optional'}</span>
+        ${d.sensitive ? '<span class="privacy-icon-badge badge-sensitive" style="margin-left:4px;">Sensitive</span>' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderTimeline() {
+  const events = EVENT_TIMELINES[currentBasis] || [];
+  const tl = document.getElementById('eventTimeline');
+  tl.innerHTML = events.map(e => `
+    <div class="timeline-item ${e.active ? 'active' : ''}">
+      <div class="timeline-event">${e.label}</div>
+      <div class="timeline-meta">${e.state} &bull; ${new Date(e.time).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})} &bull; ${e.entity}</div>
+    </div>
+  `).join('');
+}
+
+function renderAll() {
+  renderReceipt();
+  renderDataIcons();
+  renderTimeline();
+}
+
+
+// ════════════════════════════════════════════════════════════════
+// INTERACTION
+// ════════════════════════════════════════════════════════════════
+
+function selectScenario(scenario) {
+  currentScenario = scenario;
+  document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
+  document.querySelector(`[data-scenario="${scenario}"]`).classList.add('active');
+  renderAll();
+}
+
+function selectBasis(basis) {
+  currentBasis = basis;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-basis="${basis}"]`).classList.add('active');
+  renderAll();
+}
+
+// ════════════════════════════════════════════════════════════════
+// TOUCH TOOLTIP SUPPORT
+// ════════════════════════════════════════════════════════════════
+
+const overlay = document.getElementById('tooltipOverlay');
+
+function closeAllTooltips() {
+  document.querySelectorAll('.tooltip-container.tooltip-active').forEach(el => {
+    el.classList.remove('tooltip-active');
+  });
+  overlay.classList.remove('active');
+}
+
+document.addEventListener('click', function(e) {
+  const container = e.target.closest('.tooltip-container');
+  if (container) {
+    e.preventDefault();
+    e.stopPropagation();
+    const wasActive = container.classList.contains('tooltip-active');
+    closeAllTooltips();
+    if (!wasActive) {
+      container.classList.add('tooltip-active');
+      // Show overlay on mobile
+      if (window.innerWidth <= 768) {
+        overlay.classList.add('active');
+      }
+    }
+    return;
+  }
+  // Close on outside click
+  closeAllTooltips();
+});
+
+overlay.addEventListener('click', closeAllTooltips);
+
+// Initial render
+document.addEventListener('DOMContentLoaded', renderAll);
+</script>
+
+</body>
+</html>
