@@ -293,10 +293,6 @@
   .info-card h3 { color: var(--primary); }
   .info-card p { font-size: 0.9rem; color: var(--text-light); }
 
-  /* Go Deeper cards as links */
-  a.info-card {
-    text-decoration: none; color: inherit; display: block;
-  }
 
   /* ─── Event Timeline ─── */
   .timeline { position: relative; padding-left: 28px; margin-top: 12px; }
@@ -357,9 +353,6 @@
   }
   footer a { color: rgba(255,255,255,0.9); }
 
-  /* ─── Go Deeper Section ─── */
-  .go-deeper { background: #EDF2F7; }
-  .go-deeper .info-card-icon { background: #fff; }
 
   /* ─── Accessibility ─── */
   .sr-only {
@@ -447,15 +440,6 @@
   </symbol>
   <symbol id="icon-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M12 2l8 4v6c0 5.25-3.5 9.74-8 11-4.5-1.26-8-5.75-8-11V6l8-4z"/><path d="M9 12l2 2 4-4"/>
-  </symbol>
-  <symbol id="icon-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>
-  </symbol>
-  <symbol id="icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
-  </symbol>
-  <symbol id="icon-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
   </symbol>
   <!-- Scenario icons -->
   <symbol id="icon-sc-identity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -649,48 +633,15 @@
   </div>
 </section>
 
-<!-- ════════════════════ FURTHER READING ════════════════════ -->
-<section class="go-deeper">
-  <div class="container" style="text-align:center;">
-    <h2>Go Deeper</h2>
-    <p class="subtitle" style="margin:0 auto 32px;">
-      Explore the developer reference, related standards, and Linaltec tools.
-    </p>
-    <div class="info-cards" style="grid-template-columns: repeat(3, 1fr);">
-      <a href="#" class="info-card">
-        <div class="info-card-icon"><svg><use href="#icon-code"/></svg></div>
-        <h3>Developer Reference</h3>
-        <p>ISO 27560 &#x2194; DPV field mapping, JSON-LD examples, namespace prefixes, and implementation guidance.</p>
-        <span class="badge badge-blue" style="margin-top:12px;">Coming Soon</span>
-      </a>
-      <a href="#" class="info-card">
-        <div class="info-card-icon"><svg><use href="#icon-chat"/></svg></div>
-        <h3>Safe AI Chat</h3>
-        <p>Privacy-preserving AI chat built differently. Ask questions about ISO 27001 policies and ISMS compliance.</p>
-        <span class="badge badge-blue" style="margin-top:12px;">Coming Soon</span>
-      </a>
-      <a href="#" class="info-card">
-        <div class="info-card-icon"><svg><use href="#icon-book"/></svg></div>
-        <h3>Knowledge Q&amp;A</h3>
-        <p>Query ISO 27001 controls, ISMS policies, and compliance requirements interactively.</p>
-        <span class="badge badge-blue" style="margin-top:12px;">Coming Soon</span>
-      </a>
-    </div>
-    <div style="margin-top:32px;">
-      <p style="font-size:0.85rem; color:var(--text-light);">
-        <strong>Standards &amp; Specifications:</strong>&ensp;
-        <a href="https://w3c.github.io/dpv/2.3/dpv/" target="_blank" style="color:var(--primary-light);">W3C DPV 2.3</a> &ensp;&#x2022;&ensp;
-        <a href="https://w3id.org/dpv/primer" target="_blank" style="color:var(--primary-light);">DPV Primer</a> &ensp;&#x2022;&ensp;
-        <a href="https://www.iso.org/standard/80392.html" target="_blank" style="color:var(--primary-light);">ISO/IEC 27560</a> &ensp;&#x2022;&ensp;
-        <a href="https://w3c.github.io/dpv/2.3/pd/" target="_blank" style="color:var(--primary-light);">DPV Personal Data Extension</a>
-      </p>
-    </div>
-  </div>
-</section>
-
 <!-- ════════════════════ FOOTER ════════════════════ -->
 <footer>
   <div class="container">
+    <p style="margin-bottom:12px;">
+      <a href="https://w3c.github.io/dpv/2.3/dpv/" target="_blank">W3C DPV 2.3</a> &ensp;&#x2022;&ensp;
+      <a href="https://w3id.org/dpv/primer" target="_blank">DPV Primer</a> &ensp;&#x2022;&ensp;
+      <a href="https://www.iso.org/standard/80392.html" target="_blank">ISO/IEC 27560</a> &ensp;&#x2022;&ensp;
+      <a href="https://w3c.github.io/dpv/2.3/pd/" target="_blank">DPV Personal Data Extension</a>
+    </p>
     <p>&copy; 2026 Linaltec. This page demonstrates concepts from ISO/IEC 27560 and W3C DPV for educational purposes.</p>
     <p style="margin-top:8px;">
       <a href="https://linaltec.com" target="_blank">linaltec.com</a>
