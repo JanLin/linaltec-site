@@ -96,6 +96,29 @@
             {{- $menu_item_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) | absLangURL }}
             {{- $page_url:= $currentPage.Permalink | absLangURL }}
             {{- $is_search := eq (site.GetPage .KeyName).Layout `search` }}
+            {{- if .HasChildren }}
+            <li class="menu-dropdown">
+                <a href="{{ .URL | absLangURL }}" title="{{ .Title | default .Name }}">
+                    <span {{- if eq $menu_item_url $page_url }} class="active" {{- end }}>
+                        {{- .Name -}}
+                        <svg class="dropdown-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </span>
+                </a>
+                <ul class="submenu">
+                    {{- range .Children }}
+                    <li>
+                        <a href="{{ .URL | absLangURL }}" title="{{ .Title | default .Name }}">
+                            {{- .Name -}}
+                        </a>
+                    </li>
+                    {{- end }}
+                </ul>
+            </li>
+            {{- else }}
             <li>
                 <a href="{{ .URL | absLangURL }}" title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
                 {{- cond $is_search (" accesskey=/" | safeHTMLAttr) ("" | safeHTMLAttr ) }}>
@@ -115,6 +138,7 @@
                 </a>
             </li>
             {{- end }}
+            {{- end }}
         </ul>
     </nav>
 </header>
@@ -122,5 +146,14 @@
 document.getElementById('menu-toggle').addEventListener('click', function() {
     document.getElementById('menu').classList.toggle('menu-open');
     this.classList.toggle('active');
+});
+/* Mobile: toggle dropdown submenus on click */
+document.querySelectorAll('.menu-dropdown > a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+        if (window.innerWidth <= 720) {
+            e.preventDefault();
+            this.parentElement.classList.toggle('open');
+        }
+    });
 });
 </script>

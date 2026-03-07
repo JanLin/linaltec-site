@@ -178,6 +178,155 @@ h1, h2, h3, h4 {
   padding: 4px;
 }
 
+/* ─── Dropdown menu (desktop) ─── */
+#menu {
+  overflow: visible;
+}
+
+.menu-dropdown {
+  position: relative;
+}
+
+.dropdown-chevron {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 2px;
+  transition: transform 0.2s ease;
+}
+
+.menu-dropdown:hover .dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+.submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  list-style: none;
+  background: var(--theme);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 0;
+  min-width: 260px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  margin-top: 6px;
+}
+
+.menu-dropdown:hover .submenu {
+  display: block;
+}
+
+.submenu li {
+  padding: 0;
+  margin: 0;
+}
+
+.submenu li + li {
+  margin-inline-start: 0;
+}
+
+.submenu li a {
+  display: block;
+  padding: 8px 16px;
+  font-size: 14px;
+  white-space: nowrap;
+  color: var(--content);
+  transition: background 0.15s;
+}
+
+.submenu li a:hover {
+  background: var(--border);
+  color: var(--color-primary);
+}
+
+/* Tool cards on the Tools landing page */
+.tools-grid {
+  margin-top: 0.5rem;
+}
+
+.tool-card {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  background: var(--theme);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tool-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.tool-icon {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #E1F5FE;
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] .tool-icon {
+  background: rgba(0, 174, 239, 0.15);
+}
+
+.tool-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.tool-body h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+}
+
+[data-theme="dark"] .tool-body h3 {
+  color: var(--content);
+}
+
+.tool-body p {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  margin-bottom: 0.75rem;
+}
+
+.tool-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tool-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: #E1F5FE;
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] .tool-tag {
+  background: rgba(0, 174, 239, 0.15);
+  color: #7ab8d4;
+}
+
 /* Mobile responsive */
 @media (max-width: 720px) {
   .main:has(.post-entry) {
@@ -229,5 +378,43 @@ h1, h2, h3, h4 {
 
   #menu li:last-child {
     border-bottom: none;
+  }
+
+  /* Mobile dropdown: inline accordion */
+  .menu-dropdown:hover .submenu {
+    display: none;
+  }
+
+  .menu-dropdown.open .submenu {
+    display: block;
+  }
+
+  .menu-dropdown.open .dropdown-chevron {
+    transform: rotate(180deg);
+  }
+
+  .submenu {
+    position: static;
+    transform: none;
+    border: none;
+    box-shadow: none;
+    min-width: 0;
+    padding: 0;
+    margin-top: 0;
+    background: transparent;
+  }
+
+  .submenu li {
+    padding-left: 1rem;
+  }
+
+  .submenu li a {
+    padding: 6px 0;
+    font-size: 14px;
+  }
+
+  .tool-card {
+    flex-direction: column;
+    gap: 1rem;
   }
 }

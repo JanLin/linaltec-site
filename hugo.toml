@@ -47,6 +47,19 @@ paginate = 10
     weight = 30
 
   [[menu.main]]
+    identifier = "tools"
+    name = "Tools"
+    url = "/tools/"
+    weight = 35
+
+  [[menu.main]]
+    identifier = "tools-27560"
+    parent = "tools"
+    name = "ISO 27560 Receipt Explorer"
+    url = "/tools/27560-receipt-explorer/"
+    weight = 10
+
+  [[menu.main]]
     identifier = "contact"
     name = "Contact"
     url = "/contact/"
