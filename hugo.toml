@@ -38,7 +38,7 @@ paginate = 10
     identifier = "about"
     name = "About"
     url = "/about/"
-    weight = 20
+    weight = 40
 
   [[menu.main]]
     identifier = "resources"
@@ -46,11 +46,12 @@ paginate = 10
     url = "/resources/"
     weight = 30
 
+
   [[menu.main]]
     identifier = "tools"
     name = "Tools"
     url = "/tools/"
-    weight = 35
+    weight = 20
 
   [[menu.main]]
     identifier = "tools-27560"
