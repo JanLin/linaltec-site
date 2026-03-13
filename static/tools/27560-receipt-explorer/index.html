@@ -82,16 +82,6 @@
     border-radius: 8px; font-size: 0.875rem; font-weight: 500;
     backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.18);
   }
-  .home-link {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 34px; height: 34px; border-radius: 8px;
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-    transition: background 0.2s, border-color 0.2s;
-    flex-shrink: 0;
-  }
-  .home-link:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.3); }
-  .home-link svg { width: 20px; height: 20px; }
-
   /* ─── Tabs / Lawful Basis Selector ─── */
   .tab-group {
     display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px;
@@ -413,6 +403,13 @@
 </head>
 <body>
 
+<!-- ════ Site Bar ════ -->
+<div style="background:#1A1A2E;padding:10px 24px;display:flex;align-items:center;">
+  <a href="../../" style="display:inline-flex;align-items:center;text-decoration:none;">
+    <img src="../../images/logo-white.png" alt="Linaltec" style="height:28px;">
+  </a>
+</div>
+
 <!-- ════════════════ SVG SPRITE SHEET ════════════════ -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
   <!-- Category icons -->
@@ -471,24 +468,17 @@
 <!-- ════════════════════ HERO ════════════════════ -->
 <header class="hero">
   <div class="container">
-    <div class="hero-badges">
-      <a href="../../" class="home-link" title="Back to Linaltec">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-          <rect x="2" y="2" width="65" height="65" rx="3" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="6"/>
-          <rect x="33" y="22" width="58" height="58" rx="3" fill="#00AEEF"/>
-          <rect x="40" y="29" width="44" height="44" rx="2" fill="none" stroke="white" stroke-width="2" opacity="0.4"/>
-        </svg>
-      </a>
-      <span class="hero-badge">ISO/IEC 27560</span>
-      <span class="hero-badge">W3C DPV 2.3</span>
-      <span class="hero-badge">EUDI Wallet Ready</span>
-    </div>
-    <h1 style="margin-top:24px">Privacy Processing Receipts</h1>
+    <h1>Privacy Processing Receipts</h1>
     <p class="subtitle">
       Moving beyond unreadable privacy policies. ISO/IEC 27560 defines structured, machine-readable
       PII Processing Records and Privacy Receipts — giving individuals real transparency about how
       their data is processed, with values powered by the W3C Data Privacy Vocabulary.
     </p>
+    <div class="hero-badges" style="margin-top:24px">
+      <span class="hero-badge">ISO/IEC 27560</span>
+      <span class="hero-badge">W3C DPV 2.3</span>
+      <span class="hero-badge">EUDI Wallet Ready</span>
+    </div>
   </div>
 </header>
 
