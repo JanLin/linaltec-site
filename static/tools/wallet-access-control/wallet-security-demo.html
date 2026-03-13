@@ -1,0 +1,3118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EUDI Wallet — WACE Security Check Demo</title>
+<style>
+/* ── Reset & Variables ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #1A1A2E;
+  --primary-light: #00AEEF;
+  --accent: #4682B4;
+  --accent-light: #E1F5FE;
+  --success: #38a169;
+  --success-light: #c6f6d5;
+  --warning: #d69e2e;
+  --warning-light: #fefcbf;
+  --danger: #e53e3e;
+  --danger-light: #fed7d7;
+  --bg: #F5F7FA;
+  --card: #ffffff;
+  --text: #333333;
+  --text-light: #666666;
+  --border: #E2E5EA;
+  --receipt-bg: #FEFDFB;
+  --receipt-border: #E8E4DC;
+  --phone-bg: #f8f9fa;
+}
+html { font-size: 16px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── Page Layout ── */
+.page-header {
+  background: linear-gradient(135deg, var(--primary) 0%, #0D3B66 100%);
+  padding: 28px 32px 20px;
+  color: #fff;
+}
+.page-header h1 { font-size: 1.5rem; font-weight: 800; }
+.page-header p { font-size: 0.82rem; opacity: 0.75; margin-top: 4px; }
+
+.main-layout {
+  display: flex;
+  gap: 28px;
+  padding: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+/* ── Control Panel (Left) ── */
+.control-panel {
+  width: 340px;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+.panel-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-light);
+  margin-bottom: 12px;
+}
+
+.scenario-list { display: flex; flex-direction: column; gap: 8px; }
+
+.scenario-btn {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+.scenario-btn:hover { border-color: var(--primary-light); transform: translateY(-1px); }
+.scenario-btn.active { border-color: var(--primary-light); background: var(--accent-light); }
+.sb-outcome-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: -2px;
+}
+.sb-outcome-badge {
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.sb-outcome-badge.oc-granted { background: #c6f6d5; color: #276749; }
+.sb-outcome-badge.oc-advisory { background: #fefcbf; color: #975a16; }
+.sb-outcome-badge.oc-not-recommended { background: #fed7d7; color: #c53030; }
+.sb-outcome-badge.oc-denied { background: #e8e8e8; color: #666; }
+.sb-outcome-label {
+  font-size: 0.58rem;
+  color: var(--text-light);
+  flex: 1;
+}
+
+.sb-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.sb-text { flex: 1; min-width: 0; }
+.sb-label { font-size: 0.8rem; font-weight: 700; color: var(--text); }
+.sb-sub { font-size: 0.68rem; color: var(--text-light); margin-top: 2px; }
+.sb-badges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+.sb-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.sb-badge.pass { background: var(--success-light); color: var(--success); }
+.sb-badge.fail { background: var(--danger-light); color: var(--danger); }
+.sb-badge.warn { background: var(--warning-light); color: #975a16; }
+
+/* ── Scenario Explanation Banner ── */
+.scenario-explain {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 16px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary-light);
+  border-radius: 10px;
+  display: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.scenario-explain.visible { display: block; }
+.scenario-explain-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.scenario-explain-outcome {
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.scenario-explain-outcome.oc-granted { background: #c6f6d5; color: #276749; }
+.scenario-explain-outcome.oc-advisory { background: #fefcbf; color: #975a16; }
+.scenario-explain-outcome.oc-not-recommended { background: #fed7d7; color: #c53030; }
+.scenario-explain-outcome.oc-denied { background: #e8e8e8; color: #666; }
+.scenario-explain-text {
+  font-size: 0.72rem;
+  line-height: 1.55;
+  color: var(--text-light);
+}
+.scenario-explain-steps {
+  margin-top: 8px;
+  padding-left: 18px;
+  font-size: 0.68rem;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+.scenario-explain-steps li { margin-bottom: 2px; }
+.scenario-explain-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.scenario-explain-badges .sb-badge {
+  font-size: 0.65rem;
+  padding: 2px 8px;
+}
+
+/* ── Phone Frame (Center/Right) ── */
+.phone-container { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.phone-legends {
+  width: 375px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.phone-frame {
+  width: 375px;
+  min-height: 700px;
+  background: var(--phone-bg);
+  border-radius: 40px;
+  border: 8px solid #222;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15), inset 0 0 0 2px #444;
+  overflow: hidden;
+  position: relative;
+}
+.phone-notch {
+  width: 150px; height: 28px;
+  background: #222;
+  border-radius: 0 0 18px 18px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+.phone-screen {
+  padding: 8px 0 0;
+  min-height: 620px;
+  position: relative;
+  overflow-y: auto;
+  max-height: 660px;
+}
+
+/* ── Wallet Screen States ── */
+.wallet-view { display: none; }
+.wallet-view.active { display: block; }
+
+/* ── Idle State ── */
+.idle-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+  min-height: 560px;
+}
+.idle-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.4; }
+.idle-text { font-size: 0.85rem; color: var(--text-light); line-height: 1.6; }
+
+/* ── WACE Result Screen (Clean Summary) ── */
+.wace-screen { padding: 16px 14px 24px; box-sizing: border-box; overflow: hidden; }
+
+.wace-rp-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: var(--card);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+.rp-avatar {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+}
+.rp-info { flex: 1; }
+.rp-name { font-size: 0.82rem; font-weight: 700; }
+.rp-domain { font-size: 0.68rem; color: var(--text-light); }
+
+/* Severity colour bar with icon */
+.severity-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+.severity-bar:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+.severity-bar:active { transform: scale(0.98); }
+
+.severity-bar.sev-granted   { background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%); }
+.severity-bar.sev-advisory  { background: linear-gradient(135deg, #fefcbf 0%, #fbd38d 100%); }
+.severity-bar.sev-not-recommended { background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%); }
+.severity-bar.sev-denied    { background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%); }
+
+.severity-icon {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.sev-granted .severity-icon   { background: var(--success); color: #fff; }
+.sev-advisory .severity-icon  { background: var(--warning); color: #fff; }
+.sev-not-recommended .severity-icon { background: #e53e3e; color: #fff; }
+.sev-denied .severity-icon    { background: #1A1A2E; color: #e53e3e; border: 2px solid #e53e3e; }
+
+.severity-hint {
+  font-size: 0.65rem;
+  opacity: 0.7;
+  text-align: center;
+}
+.sev-denied .severity-hint { color: #fff; }
+
+/* Tap hint pulse */
+.tap-hint {
+  font-size: 0.6rem;
+  color: var(--text-light);
+  text-align: center;
+  margin-top: -8px;
+  margin-bottom: 10px;
+  animation: pulse 2s ease-in-out infinite;
+}
+.sev-denied ~ .tap-hint { color: rgba(255,255,255,0.6); }
+@keyframes pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* DPA Report icon button */
+.dpa-report-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-light);
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.dpa-report-btn:hover { border-color: var(--primary-light); color: var(--primary-light); }
+.dpa-report-btn .dpa-icon {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: #E1F5FE;
+  color: var(--primary-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+}
+
+/* Top action row (DPA + info) */
+.wace-top-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+/* 3-icon action row (Override scenarios) */
+.action-icon-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.action-icon-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 6px;
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.action-icon-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
+.action-icon-btn:active { transform: scale(0.97); }
+
+.action-icon-btn .ai-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+}
+.action-icon-btn .ai-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+
+.action-icon-btn.ai-override { border-color: #c53030; }
+.action-icon-btn.ai-override .ai-icon { background: linear-gradient(135deg, #c53030, #9b2c2c); color: #fff; }
+.action-icon-btn.ai-override .ai-label { color: #c53030; }
+
+.action-icon-btn.ai-info { border-color: var(--primary-light); }
+.action-icon-btn.ai-info .ai-icon { background: var(--accent-light); color: var(--primary-light); }
+.action-icon-btn.ai-info .ai-label { color: var(--primary-light); }
+
+.action-icon-btn.ai-dpa { border-color: #6b46c1; }
+.action-icon-btn.ai-dpa .ai-icon { background: #e9d8fd; color: #6b46c1; }
+.action-icon-btn.ai-dpa .ai-label { color: #6b46c1; }
+
+/* RP purpose text */
+.rp-purpose {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  line-height: 1.4;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 0 0 14px 14px;
+  border: 1px solid var(--border);
+  border-top: none;
+  margin-top: -14px;
+  margin-bottom: 14px;
+}
+.rp-purpose-label {
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+  margin-bottom: 2px;
+}
+
+/* escalation warning */
+.escalation-banner {
+  display: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #742a2a, #9b2c2c);
+  color: #fff;
+  margin-bottom: 14px;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+.escalation-banner strong { display: block; font-size: 0.78rem; margin-bottom: 3px; }
+.escalation-banner.visible { display: block; }
+
+/* Check summary pills (detail screen) */
+.checks-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.check-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+.check-pill.pass { border-color: var(--success); color: var(--success); }
+.check-pill.fail { border-color: var(--danger); color: var(--danger); background: #fff5f5; }
+.check-pill.warn { border-color: var(--warning); color: #975a16; background: #fffff0; }
+.check-pill .pill-icon { font-size: 0.72rem; }
+
+/* WACE detail / drill-down screen */
+.wace-detail-screen { padding: 0; }
+.wace-detail-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.wace-detail-back:hover { background: #0D3B66; }
+.wace-detail-inner { padding: 14px 16px; }
+
+/* WACE outcome banner (inside detail screen) */
+.wace-outcome {
+  padding: 14px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.wace-outcome.granted { background: var(--success-light); border: 2px solid var(--success); }
+.wace-outcome.advisory { background: #fefcbf; border: 2px solid var(--warning); }
+.wace-outcome.not-recommended { background: #fed7d7; border: 2px solid var(--danger); }
+.wace-outcome.denied { background: #1A1A2E; border: 2px solid #e53e3e; color: #fff; }
+.wace-verdict { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+.wace-summary { font-size: 0.72rem; margin-top: 5px; opacity: 0.85; line-height: 1.4; }
+
+/* DPA Report preview modal */
+.dpa-preview {
+  padding: 14px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+.dpa-preview-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dpa-preview-row {
+  display: flex;
+  gap: 8px;
+  padding: 3px 0;
+  font-size: 0.65rem;
+}
+.dpa-preview-label {
+  font-weight: 700;
+  color: var(--text);
+  min-width: 80px;
+  text-align: right;
+  font-style: italic;
+}
+.dpa-preview-value { flex: 1; color: var(--text-light); }
+.dpa-check-include {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  font-size: 0.65rem;
+  color: var(--text);
+  cursor: pointer;
+}
+.dpa-check-include input { accent-color: var(--primary-light); }
+.dpa-close-btn {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  color: var(--text-light);
+}
+.dpa-close-btn:hover { border-color: var(--primary-light); color: var(--primary-light); }
+
+/* Requested attributes */
+.verdict-section {
+  background: var(--card);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 12px;
+  margin-bottom: 16px;
+}
+.verdict-section.sev-advisory { border-color: #ecc94b; background: #fffdf5; }
+.verdict-section.sev-not-recommended { border-color: #e53e3e; background: #fff8f8; }
+.verdict-section.sev-denied { border-color: #666; background: #f7f7f7; }
+.verdict-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+.verdict-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.verdict-icon { font-size: 1.3rem; line-height: 1; }
+.verdict-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.verdict-label.sev-advisory { color: #b7791f; }
+.verdict-label.sev-not-recommended { color: #c53030; }
+.verdict-label.sev-denied { color: #555; }
+.verdict-msg {
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.verdict-toggle {
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+.attrs-section {
+  background: var(--card);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 10px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.attrs-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+.attr-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  background: #f0f4f8;
+  color: var(--text);
+  margin: 2px;
+}
+
+/* Hint separator line */
+.hint-separator {
+  position: relative;
+  border: none;
+  border-top: 3px solid var(--border);
+  margin: 18px 0 14px;
+}
+.hint-separator::after {
+  content: 'DEBUG';
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--phone-bg);
+  padding: 0 10px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: var(--text-light);
+}
+
+/* Check hint pills */
+.checks-hint-section {
+  margin: 0 0 10px;
+}
+.checks-hint-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+/* Notification hint rows */
+.notif-hint-section {
+  margin: 0 0 8px;
+}
+.notif-hint-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.notif-hint-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 0.65rem;
+  line-height: 1.4;
+  color: var(--text-light);
+  pointer-events: none;
+  user-select: none;
+}
+.notif-hint-code {
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.notif-hint-text {
+  flex: 1;
+}
+.checks-hint-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.check-hint-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  pointer-events: none;
+  user-select: none;
+}
+.check-hint-pill.hint-pass {
+  background: var(--success-light);
+  color: var(--success);
+  border: 1.5px solid var(--success);
+}
+.check-hint-pill.hint-fail {
+  background: var(--danger-light);
+  color: var(--danger);
+  border: 1.5px solid var(--danger);
+}
+.check-hint-pill.hint-warn {
+  background: var(--warning-light);
+  color: #b7791f;
+  border: 1.5px solid var(--warning);
+}
+.check-hint-pill.hint-info {
+  background: var(--accent-light);
+  color: var(--primary-light);
+  border: 1.5px solid var(--primary-light);
+}
+.check-hint-pill.hint-na {
+  background: #ececec;
+  color: #aaa;
+  border: 1.5px solid #ccc;
+  text-decoration: line-through;
+}
+
+/* ── Authentication Modal ── */
+.auth-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+.auth-modal {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 320px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.25);
+  overflow: hidden;
+  animation: slideUp 0.25s ease;
+}
+.auth-modal-header {
+  background: linear-gradient(135deg, var(--primary) 0%, #0D3B66 100%);
+  color: #fff;
+  padding: 18px 20px 14px;
+  text-align: center;
+}
+.auth-modal-header .auth-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.auth-modal-header .auth-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+.auth-steps {
+  padding: 16px 20px;
+}
+.auth-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+.auth-step.active {
+  border-color: var(--primary-light);
+  background: var(--accent-light);
+}
+.auth-step.passed {
+  border-color: var(--success);
+  background: var(--success-light);
+}
+.auth-step.failed {
+  border-color: var(--danger);
+  background: var(--danger-light);
+}
+.auth-step.waiting {
+  opacity: 0.5;
+}
+.auth-step-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+.auth-step-body {
+  flex: 1;
+}
+.auth-step-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.auth-step-desc {
+  font-size: 0.65rem;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+.auth-step-status {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.auth-sim-buttons {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 16px;
+}
+.auth-sim-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.auth-sim-btn.sim-pass {
+  background: var(--success);
+  color: #fff;
+}
+.auth-sim-btn.sim-pass:hover { background: #2f855a; }
+.auth-sim-btn.sim-fail {
+  background: var(--danger);
+  color: #fff;
+}
+.auth-sim-btn.sim-fail:hover { background: #c53030; }
+.auth-sim-label {
+  font-size: 0.65rem;
+  color: var(--text-light);
+  text-align: center;
+  padding: 0 20px 12px;
+  font-weight: 600;
+}
+.auth-result {
+  padding: 16px 20px 20px;
+  text-align: center;
+}
+.auth-result-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+.auth-result-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.auth-result-title.result-success { color: var(--success); }
+.auth-result-title.result-denied { color: var(--danger); }
+.auth-result-msg {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.auth-result-ref {
+  font-size: 0.6rem;
+  color: var(--text-light);
+  background: #f7f7f7;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-bottom: 14px;
+}
+.auth-result-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.auth-result-btn.btn-done {
+  background: var(--success);
+  color: #fff;
+}
+.auth-result-btn.btn-denied {
+  background: transparent;
+  color: var(--text-light);
+  border: 2px solid var(--border);
+}
+
+/* Auth denied screen */
+.auth-denied-banner {
+  text-align: center;
+  padding: 16px 12px;
+  background: linear-gradient(135deg, #7f1d1d, #c53030);
+  border-radius: 14px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.auth-denied-icon {
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+.auth-denied-title {
+  font-size: 1rem;
+  font-weight: 800;
+}
+.auth-denied-subtitle {
+  font-size: 0.72rem;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+.auth-denied-detail {
+  margin-bottom: 12px;
+}
+.auth-denied-section-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.auth-denied-factors {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.auth-factor-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+}
+.auth-factor-row.passed {
+  background: var(--success-light);
+  border-color: var(--success);
+}
+.auth-factor-row.failed {
+  background: var(--danger-light);
+  border-color: var(--danger);
+}
+.auth-factor-icon { font-size: 1.1rem; flex-shrink: 0; }
+.auth-factor-label {
+  flex: 1;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.auth-factor-status {
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.auth-denied-note {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  text-align: center;
+  padding: 8px 12px;
+  background: #f7f7f7;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+/* Action buttons */
+.wallet-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.btn-wallet {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-approve {
+  background: var(--success);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-approve .approve-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.btn-approve:hover { background: #2f855a; }
+.btn-approve.cautioned {
+  background: var(--warning);
+}
+.btn-approve.cautioned:hover { background: #b7791f; }
+.btn-approve.override {
+  background: var(--danger);
+}
+.btn-approve.override:hover { background: #c53030; }
+.btn-approve.denied-approve {
+  background: #7f1d1d;
+}
+.btn-approve.denied-approve:hover { background: #5f1515; }
+.btn-decline {
+  background: transparent;
+  color: var(--danger);
+  border: 2px solid var(--danger) !important;
+}
+.btn-action-details {
+  background: transparent;
+  color: var(--primary-light);
+  border: 2px solid var(--primary-light) !important;
+}
+.btn-action-details:hover { background: var(--accent-light); }
+.btn-action-dpa {
+  background: transparent;
+  color: #6b46c1;
+  border: 2px solid #6b46c1 !important;
+}
+.btn-action-dpa:hover { background: #e9d8fd; }
+.btn-row-half {
+  display: flex;
+  gap: 8px;
+}
+.btn-row-half .btn-wallet {
+  flex: 1;
+  min-width: 0;
+}
+.btn-details {
+  background: transparent;
+  color: var(--primary-light);
+  border: 2px solid var(--primary-light) !important;
+  font-size: 0.78rem;
+}
+.btn-details:hover { background: var(--accent-light); }
+.btn-override {
+  background: linear-gradient(135deg, #742a2a, #c53030);
+  color: #fff;
+  font-size: 0.78rem;
+}
+
+/* ── Override Confirmation Modal ── */
+.override-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.override-modal {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 320px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.25);
+  overflow: hidden;
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.override-modal-header {
+  padding: 20px 20px 12px;
+  text-align: center;
+}
+.override-modal-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+.override-modal-verdict {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--danger);
+  margin-bottom: 4px;
+}
+.override-modal-verdict.denied-verdict { color: #7f1d1d; }
+.override-modal-body {
+  padding: 0 20px 16px;
+}
+.override-modal-msg {
+  font-size: 0.78rem;
+  color: var(--text);
+  line-height: 1.5;
+  background: var(--danger-light);
+  border-radius: 10px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--danger);
+}
+.override-modal-msg.denied-msg {
+  background: #fde8e8;
+  border-left-color: #7f1d1d;
+}
+.override-modal-toggle {
+  padding: 12px 20px 0;
+}
+.override-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 20px 20px;
+}
+.override-modal-actions .btn-wallet {
+  font-size: 0.82rem;
+}
+.btn-confirm-override {
+  background: var(--danger) !important;
+  color: #fff;
+}
+.btn-confirm-override.denied-btn {
+  background: #7f1d1d !important;
+}
+.btn-confirm-override:hover { opacity: 0.9; }
+.btn-view-details-modal {
+  background: transparent;
+  color: var(--primary-light);
+  border: 2px solid var(--primary-light) !important;
+}
+.btn-view-details-modal:hover { background: var(--accent-light); }
+.btn-go-back {
+  background: transparent;
+  color: var(--text-light);
+  border: 2px solid var(--border) !important;
+}
+.btn-go-back:hover { background: #f0f0f0; }
+
+/* ── Privacy Receipt Detail View ── */
+.receipt-view { padding: 0; }
+
+.receipt-back-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.receipt-back-bar:hover { background: #0D3B66; }
+
+.receipt-inner { padding: 12px; }
+
+/* Receipt card (matching receipt explorer) */
+.receipt-card {
+  background: var(--receipt-bg);
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+  border: 1px solid var(--receipt-border);
+  position: relative;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.receipt-card::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0; right: 0;
+  height: 12px;
+  background:
+    linear-gradient(45deg, transparent 33.33%, var(--receipt-bg) 33.33%) 0 0 / 12px 100%,
+    linear-gradient(-45deg, transparent 33.33%, var(--receipt-bg) 33.33%) 0 0 / 12px 100%;
+  background-repeat: repeat-x;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.04));
+}
+
+.receipt-header {
+  background: linear-gradient(135deg, var(--primary) 0%, #0D3B66 100%);
+  padding: 16px;
+  color: #fff;
+}
+.receipt-title { font-size: 0.82rem; font-weight: 800; }
+.receipt-id { font-size: 0.62rem; opacity: 0.6; margin-top: 4px; font-family: monospace; }
+
+.receipt-section {
+  padding: 14px 16px;
+  border-bottom: 1px solid #EDE9E3;
+}
+.receipt-section:last-child { border-bottom: none; }
+.receipt-section-title {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+
+/* Check result rows */
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0ece6;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.check-row:last-child { border-bottom: none; }
+.check-row:hover { background: rgba(0,0,0,0.02); }
+
+.check-row.failed { background: #fff5f5; border-radius: 8px; padding: 10px 8px; margin: 0 -8px; }
+.check-row.failed:hover { background: #fed7d7; }
+
+.check-status-icon {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.check-status-icon.pass { background: var(--success-light); color: var(--success); }
+.check-status-icon.fail { background: var(--danger-light); color: var(--danger); }
+.check-status-icon.warn { background: var(--warning-light); color: #975a16; }
+.check-status-icon.info { background: var(--accent-light); color: var(--primary-light); }
+.check-status-icon.na { background: #e8e8e8; color: #aaa; }
+
+.check-row.na-row {
+  opacity: 0.5;
+  background: #f3f3f3;
+  border-radius: 8px;
+  padding: 10px 8px;
+  margin: 0 -8px;
+  pointer-events: none;
+}
+.check-row.na-row .check-label { color: #aaa; }
+.check-row.na-row .check-desc { color: #bbb; }
+.check-row.na-row .check-ref { color: #ccc; }
+
+.check-body { flex: 1; min-width: 0; }
+.check-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.check-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.badge-privacy { background: #E1F5FE; color: #00AEEF; }
+.badge-trust { background: #e9d8fd; color: #6b46c1; }
+.badge-policy { background: #fefcbf; color: #975a16; }
+.badge-auth { background: #f0f4f8; color: #4a5568; }
+
+.check-desc {
+  font-size: 0.68rem;
+  color: var(--text-light);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+.check-ref {
+  font-size: 0.6rem;
+  font-family: monospace;
+  color: var(--primary-light);
+  margin-top: 3px;
+}
+
+.check-expand { display: flex; align-items: center; padding-top: 2px; }
+.chevron {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  transition: transform 0.2s;
+}
+.check-row.expanded .chevron { transform: rotate(90deg); }
+
+/* Expandable detail */
+.check-detail {
+  display: none;
+  padding: 8px 0 4px 36px;
+  font-size: 0.66rem;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+.check-row.expanded + .check-detail { display: block; }
+
+.detail-field {
+  display: flex;
+  gap: 8px;
+  padding: 3px 0;
+}
+.detail-label {
+  font-weight: 700;
+  color: var(--text);
+  min-width: 90px;
+  flex-shrink: 0;
+  text-align: right;
+  font-style: italic;
+}
+.detail-value { flex: 1; }
+
+.dpv-tag {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.6rem;
+  font-family: 'SF Mono', monospace;
+  background: var(--accent-light);
+  color: var(--primary-light);
+}
+
+/* ── Notification History (bottom) ── */
+.notif-log {
+  padding: 12px 16px;
+}
+.notif-log-title {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+.notif-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0ece6;
+  font-size: 0.68rem;
+}
+.notif-entry:last-child { border-bottom: none; }
+.notif-code {
+  font-family: monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--primary-light);
+  min-width: 36px;
+}
+.notif-text { flex: 1; color: var(--text-light); line-height: 1.3; }
+
+/* ── Attribute Icon Cards (Apple-style privacy labels) ── */
+.attrs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.attr-card {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 6px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  position: relative;
+  transition: all 0.15s;
+  cursor: default;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.attr-card:hover { border-color: var(--primary-light); }
+.attr-card.deselected { opacity: 0.4; border-style: dashed; }
+
+.attr-icon {
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  position: relative;
+}
+/* Category colours matching receipt explorer */
+.attr-icon.cat-identity   { background: #E1F5FE; color: #00AEEF; }
+.attr-icon.cat-health     { background: #fff5f5; color: #e53e3e; }
+.attr-icon.cat-finance    { background: #fffff0; color: #d69e2e; }
+.attr-icon.cat-document   { background: #f7fafc; color: #718096; }
+.attr-icon.cat-biometric  { background: #faf5ff; color: #805ad5; }
+.attr-icon.cat-location   { background: #f0fff4; color: #38a169; }
+.attr-icon.cat-contact    { background: #e6fffa; color: #319795; }
+.attr-icon.cat-government { background: #e9d8fd; color: #6b46c1; }
+
+/* Sensitivity flame overlay on icon */
+.sens-flag {
+  position: absolute;
+  top: -4px; right: -4px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--danger);
+  color: #fff;
+  font-size: 0.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  box-shadow: 0 1px 3px rgba(229,62,62,0.4);
+  cursor: help;
+}
+
+.attr-body { flex: 1; min-width: 0; }
+.attr-name {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.attr-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+.attr-req-badge {
+  font-size: 0.52rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 1px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.03em;
+}
+.attr-req-badge.required { background: var(--danger-light); color: var(--danger); }
+.attr-req-badge.optional { background: #f0f4f8; color: var(--text-light); }
+
+/* Optional checkbox */
+.attr-checkbox {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  font-size: 0.6rem;
+  color: transparent;
+  background: var(--card);
+}
+.attr-checkbox.checked {
+  background: var(--primary-light);
+  border-color: var(--primary-light);
+  color: #fff;
+}
+.attr-checkbox.disabled {
+  background: #f0f4f8;
+  border-color: var(--border);
+  color: var(--text-light);
+  cursor: not-allowed;
+}
+
+/* Attribute hover tooltip (inside phone frame) */
+.attr-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.65rem;
+  line-height: 1.4;
+  width: 200px;
+  z-index: 50;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  pointer-events: none;
+}
+.attr-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--primary);
+}
+.attr-card:hover .attr-tooltip { display: block; }
+/* Keep tooltips within phone screen */
+.attr-card:nth-child(odd) .attr-tooltip { left: 30%; }
+.attr-card:nth-child(even) .attr-tooltip { left: 70%; }
+
+/* Sensitivity legend strip */
+.sens-legend {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  margin-top: 6px;
+  font-size: 0.6rem;
+  color: var(--text-light);
+}
+.sens-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.sens-legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.45rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+/* ── Issuer Context Toggle ── */
+.voice-toggle-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  background: var(--card);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.voice-toggle-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-light);
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+.voice-toggle-label.active { color: var(--text); font-weight: 700; }
+.voice-toggle {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.voice-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+.voice-toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 11px;
+  background: var(--border);
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.voice-toggle input:checked + .voice-toggle-track {
+  background: linear-gradient(135deg, #6b46c1, #805ad5);
+}
+.voice-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: transform 0.25s;
+  pointer-events: none;
+}
+.voice-toggle input:checked ~ .voice-toggle-thumb {
+  transform: translateX(18px);
+}
+
+/* Issuer context styling on check descriptions */
+.issuer-desc {
+  border-left: 3px solid #805ad5;
+  padding-left: 8px;
+  margin-top: 4px;
+  background: rgba(128,90,213,0.04);
+  border-radius: 0 4px 4px 0;
+}
+.issuer-tag {
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.52rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: #e9d8fd;
+  color: #6b46c1;
+  margin-bottom: 2px;
+}
+.wallet-tag {
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.52rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: #f0f4f8;
+  color: #718096;
+  margin-bottom: 2px;
+}
+.no-issuer-text {
+  font-size: 0.62rem;
+  font-style: italic;
+  color: #a0aec0;
+  border-left: 3px dashed #cbd5e0;
+  padding-left: 8px;
+  margin-top: 4px;
+}
+
+/* ── Animations ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: fadeInUp 0.3s ease-out; }
+
+/* ── Legend ── */
+.legend-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--card);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-top: 12px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.65rem;
+  color: var(--text-light);
+}
+.legend-icon {
+  width: 18px; height: 18px;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+}
+
+/* ── Responsive ── */
+/* ── Mobile Scenario Dropdown ── */
+.scenario-select-wrap { display: none; }
+.scenario-select {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.scenario-select:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(0,174,239,0.15);
+}
+
+@media (max-width: 900px) {
+  .main-layout { flex-direction: column; padding: 16px; gap: 16px; }
+  .control-panel { width: 100%; position: static; }
+  .scenario-list { display: none; }
+  .scenario-select-wrap { display: block; }
+  .phone-frame { width: 100%; max-width: 375px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>EUDI Wallet — WACE Security Check Demo</h1>
+  <p>CEN/TS 18297 Access Control Notifications &middot; Phases 0–6 &middot; Interactive Simulation</p>
+</div>
+
+<div class="main-layout">
+  <!-- ── Control Panel ── -->
+  <div class="control-panel">
+    <div class="panel-title">Scenario Selector</div>
+    <div class="scenario-select-wrap">
+      <select class="scenario-select" id="scenarioSelect" onchange="if(this.value) selectScenario(this.value)">
+        <option value="">— Select a scenario —</option>
+      </select>
+    </div>
+    <div class="scenario-list" id="scenarioList"></div>
+  </div>
+
+  <!-- ── Phone Frame ── -->
+  <div class="phone-container">
+    <div class="scenario-explain" id="scenarioExplain">
+      <div class="scenario-explain-title">
+        <span id="explainTitle"></span>
+        <span class="scenario-explain-outcome" id="explainOutcome"></span>
+      </div>
+      <div class="scenario-explain-text" id="explainText"></div>
+      <ol class="scenario-explain-steps" id="explainSteps"></ol>
+      <div class="scenario-explain-badges" id="explainBadges"></div>
+    </div>
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="phone-screen" id="phoneScreen">
+        <!-- Idle View -->
+        <div class="wallet-view active" id="viewIdle">
+          <div class="idle-screen">
+            <div class="idle-icon">🛡️</div>
+            <div class="idle-text">Select a scenario from the control panel to simulate an RP request and WACE security evaluation.</div>
+          </div>
+        </div>
+
+        <!-- WACE Summary View (clean) -->
+        <div class="wallet-view" id="viewWace">
+          <div class="wace-screen" id="waceContent"></div>
+        </div>
+
+        <!-- WACE Detail View (checks + toggle) -->
+        <div class="wallet-view" id="viewDetail">
+          <div class="wace-detail-screen">
+            <div class="wace-detail-back" onclick="showView('viewWace')">
+              <span>‹</span> Back to Request
+            </div>
+            <div class="wace-detail-inner" id="detailContent"></div>
+          </div>
+        </div>
+
+        <!-- DPA Report Preview -->
+        <div class="wallet-view" id="viewDpa">
+          <div class="wace-detail-screen">
+            <div class="wace-detail-back" onclick="showView(dpaReturnView)">
+              <span>‹</span> Back
+            </div>
+            <div class="wace-detail-inner" id="dpaContent"></div>
+          </div>
+        </div>
+
+        <!-- Receipt Detail View -->
+        <div class="wallet-view" id="viewReceipt">
+          <div class="receipt-view">
+            <div class="receipt-back-bar" onclick="showView('viewWace')">
+              <span>‹</span> Back to Wallet
+            </div>
+            <div class="receipt-inner" id="receiptContent"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-legends">
+      <div class="legend-bar">
+        <div style="font-size:0.62rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.08em;width:100%;">Check Status</div>
+        <div class="legend-item"><div class="legend-icon" style="background:var(--success-light);color:var(--success);">✓</div> Pass</div>
+        <div class="legend-item"><div class="legend-icon" style="background:var(--danger-light);color:var(--danger);">✗</div> Fail</div>
+        <div class="legend-item"><div class="legend-icon" style="background:var(--warning-light);color:#975a16;">!</div> Warning</div>
+        <div class="legend-item"><div class="legend-icon" style="background:#e8e8e8;color:#aaa;">—</div> Unavailable</div>
+        <div class="legend-item"><div class="legend-icon badge-privacy" style="font-size:0.55rem;">PN</div> Privacy Notice</div>
+        <div class="legend-item"><div class="legend-icon badge-trust" style="font-size:0.55rem;">TL</div> Trust List</div>
+        <div class="legend-item"><div class="legend-icon badge-policy" style="font-size:0.55rem;">EP</div> EDP Policy</div>
+      </div>
+      <div class="legend-bar">
+        <div style="font-size:0.62rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.08em;width:100%;">Attribute Icons</div>
+        <div class="legend-item"><div class="legend-icon" style="background:#E1F5FE;font-size:0.6rem;">👤</div> Identity</div>
+        <div class="legend-item"><div class="legend-icon" style="background:#fff5f5;font-size:0.6rem;">🩺</div> Health</div>
+        <div class="legend-item"><div class="legend-icon" style="background:#fffff0;font-size:0.6rem;">💰</div> Finance</div>
+        <div class="legend-item"><div class="legend-icon" style="background:#e9d8fd;font-size:0.6rem;">🏛️</div> Government</div>
+        <div class="legend-item"><div class="legend-icon" style="background:#f0fff4;font-size:0.6rem;">📍</div> Location</div>
+        <div class="legend-item"><div class="legend-icon" style="background:#faf5ff;font-size:0.6rem;">📷</div> Biometric</div>
+        <div class="legend-item"><div class="legend-icon" style="background:var(--danger);color:#fff;font-size:0.5rem;font-weight:800;">S</div> Sensitive (GDPR Art. 9)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Scenario Definitions ──
+const scenarios = [
+  {
+    id: 'happy',
+    icon: '🏥', iconBg: '#c6f6d5',
+    label: 'Pharmacy — Prescription Pickup',
+    sub: 'All checks pass. RP recognised and EDP compliant.',
+    rp: { name: 'CityPharm AG', domain: 'citypharm.eu', icon: '💊', iconBg: '#c6f6d5' },
+    outcome: 'granted',
+    desc: 'A trusted pharmacy with valid certificates, EU Trusted List registration, and compliant EDP. All checks pass cleanly — the baseline "everything works" flow.',
+    steps: ['Observe all green check pills in debug section', 'Tap Details to see all checks passed', 'Tap Approve — transaction completes normally'],
+    verdict: 'Access Granted',
+    summary: 'All security checks passed. The relying party is verified and compliant with all policies.',
+    escalation: null,
+    attrs: [
+      { name: 'Given Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required by RP for prescription verification. PID attribute.' },
+      { name: 'Family Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required by RP for prescription verification. PID attribute.' },
+      { name: 'Date of Birth', required: true, sensitive: false, category: 'identity', icon: '📅', tooltip: 'Required to confirm patient identity against prescription record.' },
+      { name: 'Prescription ID', required: true, sensitive: true, category: 'health', icon: '💊', tooltip: 'Sensitive: health-related credential. Required for dispensing.' }
+    ],
+    checks: [
+      { id: 'cert', status: 'pass', label: 'Certificate Validation', type: 'trust', ref: 'REQ-5.8 / N-05', desc: 'Valid NCP certificate policy identifier present.', detail: { 'Policy OID': '0.4.0.2042.1.2 (NCP)', 'Issuer': 'EU Trust Services CA', 'Status': 'Valid, not revoked' } },
+      { id: 'role', status: 'pass', label: 'RP Role Type Match', type: 'trust', ref: 'REQ-5.6 / N-04', desc: 'RP role type matches wallet-held access control metadata.', detail: { 'Role OID': '2.16.840.1.113883.2.1 (Pharmacist)', 'Matched Against': 'PID + ePrescription EDP', 'Registry': 'ETSI TS 119 612 Trusted List' } },
+      { id: 'rpid', status: 'pass', label: 'RP Identity Verified', type: 'trust', ref: 'REQ-6.2 / N-06', desc: 'RP identifier present and matches metadata restrictions.', detail: { 'RP ID': 'urn:eudi:rp:citypharm-ag:de', 'Certificate CN': 'CityPharm AG', 'Match': 'Confirmed' } },
+      { id: 'edp', status: 'pass', label: 'EDP Compliance', type: 'policy', ref: 'Gap CNTR-8-A / N-10', desc: 'Relying party complies with issuer embedded disclosure policy.', detail: { 'EDP Type': 'authorised-RPs (TS 119 472-3)', 'Entitlement': 'ePrescription dispensing', 'Result': 'RP authorised' } },
+      { id: 'pin', status: 'pass', label: 'Processing Information Notice', type: 'privacy', ref: 'REQ-7.3 / N-08', desc: 'Full ISO/IEC TS 27560 PIN received and validated.', detail: { 'Purpose': 'Prescription verification & dispensing', 'Lawful Basis': 'Legal Obligation (EU Dir. 2011/24)', 'Retention': '5 years (pharmaceutical records)', 'Jurisdiction': 'DE — Federal Data Protection Act', 'Data Controller': 'CityPharm AG, Berlin', 'Privacy Notice': 'https://citypharm.eu/privacy' } },
+      { id: 'prefs', status: 'pass', label: 'User Preference Check', type: 'privacy', ref: 'RECO-7.5 / N-09', desc: 'RP data processing parameters align with user-defined preferences.', detail: { 'Retention Match': '✓ Within user limit (5y ≤ 10y)', 'Jurisdiction Match': '✓ EU member state', 'Purpose Match': '✓ Healthcare (permitted category)' } }
+    ],
+    notifications: [
+      { code: 'N-07', text: 'WACE decision: all access control checks passed.' },
+      { code: 'N-08', text: 'Processing Information Notice displayed (ISO 27560 Table 7).' },
+      { code: 'N-11', text: 'Approval screen presented — grant or decline.' }
+    ]
+  },
+  {
+    id: 'role-mismatch',
+    icon: '🏪', iconBg: '#fed7d7',
+    label: 'Unknown Retailer — PID Request',
+    sub: 'RP role not recognised for PID attestation.',
+    rp: { name: 'QuickMart Ltd', domain: 'quickmart.shop', icon: '🛒', iconBg: '#fed7d7' },
+    outcome: 'not-recommended',
+    desc: 'A retailer requesting PID data but whose role type is not recognised for identity attestations. Demonstrates the override confirmation flow.',
+    steps: ['Note the red warning box with override message', 'Tap Approve — override confirmation popup appears', 'Toggle Wallet/Issuer text in the popup', 'Use Confirm Override or View Details'],
+    verdict: 'Granting Not Recommended',
+    summary: 'The requesting party\'s role type is not recognised for this credential. Sharing personal identity data is not recommended.',
+    issuerSummary: 'Your national identity authority restricts PID disclosure to government, healthcare, financial, and transport roles. Retail businesses should use the age-over-18 attestation instead of requesting full PID attributes. This RP is also absent from the EU Trusted List.',
+    escalation: null,
+    attrs: [
+      { name: 'Given Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required by RP. PID core attribute.' },
+      { name: 'Family Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required by RP. PID core attribute.' },
+      { name: 'Date of Birth', required: true, sensitive: false, category: 'identity', icon: '📅', tooltip: 'Required for age verification claim.' },
+      { name: 'Nationality', required: false, sensitive: false, category: 'identity', icon: '🌍', tooltip: 'Optional — not needed for age verification. You may deselect.' }
+    ],
+    checks: [
+      { id: 'cert', status: 'pass', label: 'Certificate Validation', type: 'trust', ref: 'REQ-5.8 / N-05', desc: 'Valid certificate policy present.', detail: { 'Policy OID': '0.4.0.2042.1.2 (NCP)', 'Status': 'Valid' } },
+      { id: 'role', status: 'fail', label: 'RP Role Type Match', type: 'trust', ref: 'REQ-5.6 / N-04', desc: 'No role type in WRPRC matches wallet-held access control metadata for PID.', issuerDesc: 'Your national identity credential (PID) is restricted to government services, healthcare providers, financial institutions, and regulated transport operators. Retail businesses are not authorised to receive PID attributes — for age verification, consider using the age-over-18 attestation instead.', detail: { 'RP Role OID': '1.3.6.1.4.1.99999.1 (Retail)', 'Expected': 'Government, Healthcare, Finance, or Transport', 'Result': 'No match — retail not authorised for PID' } },
+      { id: 'rpid', status: 'warn', label: 'RP Identity Check', type: 'trust', ref: 'REQ-6.2 / N-06', desc: 'RP identifier present but not in any recognised trust list.', issuerDesc: 'This relying party is not registered in the EU Trusted List maintained under Regulation (EU) 2024/1183. PID attributes should only be shared with parties whose identity can be independently verified through the trust framework.', detail: { 'RP ID': 'urn:eudi:rp:quickmart:uk', 'Trust List': 'Not found in EU Trusted List or national lists', 'Status': 'Unrecognised — proceed with caution' } },
+      { id: 'edp', status: 'fail', label: 'EDP Compliance', type: 'policy', ref: 'Gap CNTR-8-A / N-10', desc: 'RP not included in issuer embedded disclosure policy for PID.', issuerDesc: 'The PID issuer (your Member State identity authority) restricts PID disclosure to a defined set of authorised relying parties. QuickMart Ltd is not on this list. This policy exists because PID contains foundational identity data that, if disclosed to unverified parties, creates risk of identity fraud and social engineering.', detail: { 'EDP Type': 'authorised-RPs (TS 119 472-3)', 'RP Entitlement': 'None', 'Result': 'RP not authorised by issuer' } },
+      { id: 'pin', status: 'pass', label: 'Processing Information Notice', type: 'privacy', ref: 'REQ-7.3 / N-08', desc: 'PIN received — purpose: age verification for alcohol sales.', detail: { 'Purpose': 'Age verification', 'Lawful Basis': 'Legitimate Interest', 'Retention': '24 hours', 'Jurisdiction': 'UK', 'Privacy Notice': 'https://quickmart.shop/privacy' } },
+      { id: 'prefs', status: 'pass', label: 'User Preference Check', type: 'privacy', ref: 'RECO-7.5 / N-09', desc: 'Processing parameters within user preferences.', detail: { 'Retention Match': '✓ 24h within limit', 'Purpose Match': '✓ Age verification permitted' } }
+    ],
+    notifications: [
+      { code: 'N-04', text: 'RP role not recognised for PID — recommendation to deny.' },
+      { code: 'N-06', text: 'RP not found in trusted list — caution advised.' },
+      { code: 'N-07', text: 'WACE decision: granting not recommended.' },
+      { code: 'N-10', text: 'EDP check failed — RP not authorised by PID issuer.' },
+      { code: 'N-12', text: 'Override option available (RECO-8.3).' }
+    ]
+  },
+  {
+    id: 'cert-fail',
+    icon: '🔐', iconBg: '#fefcbf',
+    label: 'Bank — Certificate Policy Missing',
+    sub: 'WRPRC lacks valid certificate policy identifier.',
+    rp: { name: 'FastLoan GmbH', domain: 'fastloan.de', icon: '🏦', iconBg: '#fefcbf' },
+    outcome: 'not-recommended',
+    desc: 'A bank whose WRPRC lacks a valid certificate policy identifier (NCP/NCP+/QCP-w). Also flags a retention preference conflict (10y vs user 5y limit).',
+    steps: ['Note cert failure and retention warning in debug pills', 'Tap Details and expand Certificate Policy check', 'Toggle to Issuer Context for AML regulation explanation'],
+    verdict: 'Granting Not Recommended',
+    summary: 'The relying party\'s certificate does not contain a valid certificate policy identifier. Transaction security cannot be assured.',
+    escalation: null,
+    attrs: [
+      { name: 'Given Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required for loan application identity check.' },
+      { name: 'Family Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required for loan application identity check.' },
+      { name: 'Date of Birth', required: true, sensitive: false, category: 'identity', icon: '📅', tooltip: 'Required for AML age verification.' },
+      { name: 'Address', required: false, sensitive: false, category: 'location', icon: '📍', tooltip: 'Optional — for correspondence. You may deselect.' }
+    ],
+    checks: [
+      { id: 'cert', status: 'fail', label: 'Certificate Policy Validation', type: 'trust', ref: 'REQ-5.8 / N-05', desc: 'WRPRC does not contain a valid certificate policy identifier (NCP per ETSI EN 319 411-1).', detail: { 'Expected': 'NCP, NCP+, QCP-w (ETSI EN 319 411-1)', 'Found': 'None / unrecognised OID', 'Impact': 'Certificate trust level cannot be verified' } },
+      { id: 'role', status: 'pass', label: 'RP Role Type Match', type: 'trust', ref: 'REQ-5.6 / N-04', desc: 'Role type matches financial services.', detail: { 'Role OID': '2.16.840.1.113883.2.8 (Financial)', 'Match': 'Confirmed' } },
+      { id: 'rpid', status: 'pass', label: 'RP Identity Verified', type: 'trust', ref: 'REQ-6.2 / N-06', desc: 'RP identifier matches metadata.', detail: { 'RP ID': 'urn:eudi:rp:fastloan:de', 'Match': 'Confirmed' } },
+      { id: 'edp', status: 'pass', label: 'EDP Compliance', type: 'policy', ref: 'Gap CNTR-8-A / N-10', desc: 'EDP evaluation passed.', detail: { 'EDP Type': 'authorised-RPs', 'Result': 'Authorised' } },
+      { id: 'pin', status: 'pass', label: 'Processing Information Notice', type: 'privacy', ref: 'REQ-7.3 / N-08', desc: 'Full PIN received.', detail: { 'Purpose': 'Identity verification for loan application', 'Lawful Basis': 'Contract', 'Retention': '10 years (AML regulations)', 'Jurisdiction': 'DE' } },
+      { id: 'prefs', status: 'warn', label: 'User Preference Check', type: 'privacy', ref: 'RECO-7.5 / N-09', desc: 'Retention period exceeds user preference (10y vs 5y limit).', detail: { 'RP Retention': '10 years', 'User Limit': '5 years', 'Reason': 'AML legal obligation overrides user preference', 'Advisory': 'Retention mandated by law — cannot be reduced' } }
+    ],
+    notifications: [
+      { code: 'N-05', text: 'Certificate policy verification failed — no valid NCP.' },
+      { code: 'N-07', text: 'WACE decision: granting not recommended.' },
+      { code: 'N-09', text: 'Advisory: retention period exceeds your preference (legal obligation).' },
+      { code: 'N-12', text: 'Override option available.' }
+    ]
+  },
+  {
+    id: 'edp-block',
+    icon: '🏛️', iconBg: '#e9d8fd',
+    label: 'Government — EDP Blocks Disclosure',
+    sub: 'Issuer EDP restricts this RP. Trust & policy failure.',
+    rp: { name: 'TaxAssist App', domain: 'taxassist.io', icon: '📋', iconBg: '#e9d8fd' },
+    outcome: 'not-recommended',
+    desc: 'The issuer\'s Embedded Disclosure Policy blocks this RP. Demonstrates how credential issuers can restrict which relying parties may receive their attestations.',
+    steps: ['Note EDP Compliance check failure in debug pills', 'Tap Details and expand EDP check row', 'Toggle Issuer Context for tax authority explanation'],
+    verdict: 'Granting Not Recommended',
+    summary: 'The issuer\'s embedded disclosure policy does not authorise this relying party. The RP is not in the permitted trust root.',
+    issuerSummary: 'Your tax credential may only be shared with services certified under the National Tax Authority PKI. TaxAssist uses a commercial CA which does not meet the required infrastructure security level. Contact tax.gov/wallet-support if you believe this service should be authorised.',
+    escalation: null,
+    attrs: [
+      { name: 'Tax ID Number', required: true, sensitive: true, category: 'government', icon: '🏛️', tooltip: 'Sensitive: government fiscal identifier. Required by RP for filing.' },
+      { name: 'Given Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required for tax filing identity match.' },
+      { name: 'Family Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required for tax filing identity match.' }
+    ],
+    checks: [
+      { id: 'cert', status: 'pass', label: 'Certificate Validation', type: 'trust', ref: 'REQ-5.8 / N-05', desc: 'Valid certificate.', detail: { 'Policy OID': 'QCP-w', 'Status': 'Valid' } },
+      { id: 'role', status: 'pass', label: 'RP Role Type Match', type: 'trust', ref: 'REQ-5.6 / N-04', desc: 'Financial services role accepted.', detail: { 'Role': 'Tax preparation service', 'Match': 'Confirmed' } },
+      { id: 'rpid', status: 'pass', label: 'RP Identity Verified', type: 'trust', ref: 'REQ-6.2 / N-06', desc: 'RP identified.', detail: { 'RP ID': 'urn:eudi:rp:taxassist:eu' } },
+      { id: 'edp', status: 'fail', label: 'EDP Compliance', type: 'policy', ref: 'Gap CNTR-8-A / N-10', desc: 'EDP type: specific-root-of-trust. RP certificate not issued under the required trust root specified by the tax authority issuer.', issuerDesc: 'Your tax credential may only be shared with services certified under the National Tax Authority PKI infrastructure. TaxAssist uses a commercial certificate authority (DigiCert), which does not meet our security requirements for fiscal data. Only accredited tax software connected to the national tax administration gateway is permitted to receive your Tax Identification Number. If you believe TaxAssist should be authorised, contact the tax authority helpdesk at tax.gov/wallet-support.', detail: { 'EDP Type': 'specific-root-of-trust (TS 119 472-3)', 'Required Root': 'National Tax Authority PKI', 'RP Root': 'Commercial CA (DigiCert)', 'Result': 'Trust root mismatch — RP not authorised', 'Issuer Rationale': 'Tax credentials may only be disclosed to RPs certified by the national tax authority infrastructure.' } },
+      { id: 'pin', status: 'pass', label: 'Processing Information Notice', type: 'privacy', ref: 'REQ-7.3 / N-08', desc: 'PIN received.', detail: { 'Purpose': 'Automated tax filing assistance', 'Lawful Basis': 'Contract', 'Retention': '7 years', 'Jurisdiction': 'EU' } },
+      { id: 'prefs', status: 'pass', label: 'User Preference Check', type: 'privacy', ref: 'RECO-7.5 / N-09', desc: 'Preferences satisfied.', detail: { 'All checks': '✓ Within limits' } }
+    ],
+    notifications: [
+      { code: 'N-10', text: 'EDP evaluation: RP not under required trust root.' },
+      { code: 'N-07', text: 'WACE decision: granting not recommended.' },
+      { code: 'N-12', text: 'Override option available.' }
+    ]
+  },
+  {
+    id: 'expired',
+    icon: '⏰', iconBg: '#fed7d7',
+    label: 'Expired Health Certificate',
+    sub: 'WHA expired + EDP non-compliant. Multiple failures.',
+    rp: { name: 'MediCheck Clinic', domain: 'medicheck.health', icon: '🩺', iconBg: '#fff5f5' },
+    outcome: 'not-recommended',
+    desc: 'The health credential has expired and the RP also fails EDP compliance. Demonstrates dual-failure scenarios with attestation validity and policy checks.',
+    steps: ['Note attestation validity and EDP failures', 'Toggle Issuer Context for EHIC renewal instructions', 'Tap Details to see both failed checks expanded'],
+    verdict: 'Granting Not Recommended',
+    summary: 'Your health credential has expired. Additionally, the relying party does not comply with the issuer disclosure policy.',
+    issuerSummary: 'Your European Health Insurance Card expired on 30 Nov 2025. Renew at gesundheit.gv.at/ehic-renewal or visit your local health insurance office. Additionally, MediCheck Clinic is not registered as an authorised EHIC data recipient — only hospitals and registered GPs qualify under EU Dir. 2011/24.',
+    escalation: null,
+    attrs: [
+      { name: 'Health Insurance ID', required: true, sensitive: true, category: 'health', icon: '🩺', tooltip: 'Sensitive: health credential identifier. GDPR Art. 9 special category.' },
+      { name: 'Given Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required for patient identity verification.' },
+      { name: 'Blood Type', required: false, sensitive: true, category: 'health', icon: '🩸', tooltip: 'Sensitive: health data. Optional — deselect if not needed for this visit.' },
+      { name: 'Allergies', required: false, sensitive: true, category: 'health', icon: '⚕️', tooltip: 'Sensitive: health data. Optional — deselect if not needed.' }
+    ],
+    checks: [
+      { id: 'wha', status: 'fail', label: 'WHA Validity', type: 'policy', ref: 'REQ-0.3 / N-01', desc: 'The Wallet Held Asset has expired. You may still choose to share despite expiry.', issuerDesc: 'Your European Health Insurance Card (EHIC) expired on 30 November 2025. To renew, log into your national health portal at gesundheit.gv.at/ehic-renewal or visit your local health insurance office with a valid ID. Processing takes 5–10 business days. Sharing an expired EHIC may result in the healthcare provider being unable to process cross-border reimbursement claims.', detail: { 'WHA Type': 'European Health Insurance Card (EHIC)', 'Expiry Date': '2025-11-30', 'Status': 'Expired', 'Renewal': 'Contact your national health authority' } },
+      { id: 'cert', status: 'pass', label: 'Certificate Validation', type: 'trust', ref: 'REQ-5.8 / N-05', desc: 'Valid certificate.', detail: { 'Status': 'Valid' } },
+      { id: 'role', status: 'pass', label: 'RP Role Type Match', type: 'trust', ref: 'REQ-5.6 / N-04', desc: 'Healthcare role verified.', detail: { 'Role': 'Healthcare provider', 'Match': 'Confirmed' } },
+      { id: 'rpid', status: 'pass', label: 'RP Identity Verified', type: 'trust', ref: 'REQ-6.2 / N-06', desc: 'RP identified.', detail: {} },
+      { id: 'edp', status: 'fail', label: 'EDP Compliance', type: 'policy', ref: 'Gap CNTR-8-A / N-10', desc: 'RP not in issuer authorised-RP list for health credentials.', issuerDesc: 'MediCheck Clinic is not registered as an authorised EHIC data recipient with the national health insurance authority. EHIC data may only be disclosed to hospitals, registered general practitioners, and pharmacies operating under the cross-border healthcare directive (EU Dir. 2011/24). Walk-in clinics must first register with the national health authority to be added to the authorised RP list.', detail: { 'EDP Type': 'authorised-RPs', 'Result': 'Not authorised', 'Issuer Note': 'Only hospitals and registered GPs may access EHIC data.' } },
+      { id: 'pin', status: 'pass', label: 'Processing Information Notice', type: 'privacy', ref: 'REQ-7.3 / N-08', desc: 'PIN received.', detail: { 'Purpose': 'Patient registration', 'Lawful Basis': 'Contract', 'Retention': '3 years' } },
+      { id: 'prefs', status: 'pass', label: 'User Preference Check', type: 'privacy', ref: 'RECO-7.5 / N-09', desc: 'Within preferences.', detail: {} }
+    ],
+    notifications: [
+      { code: 'N-01', text: 'Your health credential (EHIC) has expired.' },
+      { code: 'N-10', text: 'EDP: RP not in issuer authorised list.' },
+      { code: 'N-07', text: 'WACE decision: granting not recommended.' }
+    ]
+  },
+  {
+    id: 'cascade',
+    icon: '🚨', iconBg: '#fed7d7',
+    label: 'Cascade — Multiple Failures',
+    sub: 'Role + Cert + EDP + RP ID all fail. Escalation challenge.',
+    rp: { name: 'DataHarvest Inc', domain: 'dataharvest.xyz', icon: '🕸️', iconBg: '#fed7d7' },
+    outcome: 'denied',
+    desc: 'An unverifiable entity failing every trust check — simulates a data harvesting attack pattern. Demonstrates cascading failures and denied access.',
+    steps: ['All check pills are red — every check fails', 'Toggle Issuer Context for attack pattern warning', 'Note the denied status and override confirmation'],
+    verdict: 'Access Denied',
+    summary: 'Multiple critical security checks failed. This request shows characteristics of an unverified or potentially malicious relying party.',
+    issuerSummary: 'Your national identity authority has flagged this request as highly suspicious. DataHarvest Inc has no verifiable identity, no authorised role, no certificate policy, and no EDP-evaluable metadata. This pattern — requesting extensive PID attributes without verifiable credentials — is consistent with data harvesting attacks reported across EU member states since Q3 2025. Do not disclose any identity data.',
+    escalation: {
+      title: 'Escalation Challenge',
+      text: 'Current CEN/TS 18297 treats each check independently. With 4 simultaneous failures, the combined risk far exceeds any single failure. However, the standard provides no mechanism for escalated warnings proportional to cumulative risk. RECO-8.3 still offers override — should it?'
+    },
+    attrs: [
+      { name: 'Given Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required by RP. PID core attribute.' },
+      { name: 'Family Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required by RP. PID core attribute.' },
+      { name: 'Date of Birth', required: true, sensitive: false, category: 'identity', icon: '📅', tooltip: 'Required by RP.' },
+      { name: 'Address', required: true, sensitive: false, category: 'location', icon: '📍', tooltip: 'Required by RP for profiling — note: this is unusual for a data analytics request.' },
+      { name: 'Nationality', required: false, sensitive: false, category: 'identity', icon: '🌍', tooltip: 'Optional — not justified by stated purpose. You may deselect.' },
+      { name: 'Photo', required: false, sensitive: true, category: 'biometric', icon: '📷', tooltip: 'Sensitive: biometric data (GDPR Art. 9). Optional — deselect recommended for this RP.' }
+    ],
+    checks: [
+      { id: 'cert', status: 'fail', label: 'Certificate Policy Validation', type: 'trust', ref: 'REQ-5.8 / N-05', desc: 'No recognised certificate policy identifier.', detail: { 'Expected': 'NCP, NCP+, QCP-w', 'Found': 'Self-signed / unknown OID', 'Impact': 'Cannot establish trust chain' } },
+      { id: 'role', status: 'fail', label: 'RP Role Type Match', type: 'trust', ref: 'REQ-5.6 / N-04', desc: 'Role type "data analytics" not authorised for PID.', issuerDesc: 'Your PID issuer (national identity authority) does not authorise "data analytics" as a valid role for receiving identity credentials. PID disclosure is restricted to roles with a demonstrable legal basis for identity verification. Data analytics and profiling do not constitute a lawful purpose for PID access under eIDAS 2.0.', detail: { 'RP Role': 'Data Analytics (unknown OID)', 'Expected': 'Any PID-authorised role', 'Result': 'No match' } },
+      { id: 'rpid', status: 'fail', label: 'RP Identity Check', type: 'trust', ref: 'REQ-6.2 / N-06', desc: 'RP identifier absent from request.', issuerDesc: 'This relying party did not provide an identifier in its request. Under the PID issuer\'s disclosure policy, any entity requesting identity attributes must be identifiable. An absent RP identifier is a strong indicator of a malicious or misconfigured request — legitimate services always identify themselves. Do not disclose identity data to unidentifiable parties.', detail: { 'RP ID': 'Missing', 'Impact': 'Identity cannot be verified at all' } },
+      { id: 'edp', status: 'fail', label: 'EDP Compliance', type: 'policy', ref: 'Gap CNTR-8-A / N-10', desc: 'No EDP evaluation possible — RP lacks required metadata.', issuerDesc: 'The PID issuer requires all relying parties to be evaluable against the Embedded Disclosure Policy. DataHarvest Inc provided no metadata for EDP evaluation, which means the issuer cannot verify whether this entity meets any of the conditions for PID access. This pattern — requesting extensive identity data without providing verifiable credentials — is consistent with data harvesting attacks reported across EU member states since Q3 2025.', detail: { 'EDP Type': 'Cannot evaluate', 'Result': 'Blocked', 'Issuer Policy': 'PID requires authorised-RPs EDP' } },
+      { id: 'pin', status: 'warn', label: 'Processing Information Notice', type: 'privacy', ref: 'REQ-7.3 / N-08', desc: 'PIN partially received — missing retention and jurisdiction fields.', detail: { 'Purpose': '"Data enrichment and profiling"', 'Lawful Basis': 'Legitimate Interest (claimed)', 'Retention': 'Not specified', 'Jurisdiction': 'Not specified', 'Missing Fields': 'retention, jurisdiction, dpv:hasStorageCondition' } },
+      { id: 'prefs', status: 'fail', label: 'User Preference Check', type: 'privacy', ref: 'RECO-7.5 / N-09', desc: 'Multiple preference conflicts: purpose, jurisdiction, retention all unknown or blocked.', detail: { 'Purpose': '✗ "Data profiling" blocked by user', 'Jurisdiction': '✗ Unknown — user requires EU', 'Retention': '✗ Unspecified — user requires disclosure' } }
+    ],
+    notifications: [
+      { code: 'N-04', text: 'RP role type not recognised for PID.' },
+      { code: 'N-05', text: 'Certificate policy verification failed.' },
+      { code: 'N-06', text: 'RP identity cannot be verified — identifier absent.' },
+      { code: 'N-09', text: 'Multiple user preference conflicts detected.' },
+      { code: 'N-10', text: 'EDP evaluation failed — insufficient metadata.' },
+      { code: 'N-07', text: 'WACE decision: access denied (multiple critical failures).' }
+    ]
+  },
+  {
+    id: 'sensitive',
+    icon: '⚠️', iconBg: '#fefcbf',
+    label: 'Sensitive Override — Health Data',
+    sub: 'User overrides WACE recommendation on sensitive WHA.',
+    rp: { name: 'WellnessTrack App', domain: 'wellnesstrack.app', icon: '💚', iconBg: '#c6f6d5' },
+    outcome: 'not-recommended',
+    desc: 'A wellness app requesting sensitive GDPR Art. 9 health data (blood type, allergies). The RP is not in the authorised list — demonstrates elevated warnings for sensitive credentials.',
+    steps: ['Note sensitivity flags (S) on health attributes', 'Toggle Issuer Context for health data risk explanation', 'Tap Approve to see override confirmation popup'],
+    verdict: 'Granting Not Recommended',
+    summary: 'The relying party is not fully compliant. This credential contains sensitive health data — elevated warning applies if you override.',
+    issuerSummary: 'WellnessTrack is not in your health insurer\'s authorised RP list. Wellness apps are not subject to EU Health Data Space regulations and may share clinical data with insurance or advertising partners. Disclosing blood type, allergies, and medications to unregulated platforms could affect your insurability and enable targeted phishing.',
+    escalation: {
+      title: 'Override Escalation — Sensitive Data',
+      text: 'REQ-10.2 mandates a risk warning on override. REQ-10.3 adds an elevated warning for sensitive WHAs. But the standard does not define what "elevated" means concretely — wallet providers must interpret this independently. Should CEN/TS 18297 define severity tiers?'
+    },
+    attrs: [
+      { name: 'Blood Type', required: true, sensitive: true, category: 'health', icon: '🩸', tooltip: 'Sensitive: health data (GDPR Art. 9). Required by RP.' },
+      { name: 'Allergies', required: true, sensitive: true, category: 'health', icon: '⚕️', tooltip: 'Sensitive: health data. Required by RP for sync.' },
+      { name: 'Medications', required: false, sensitive: true, category: 'health', icon: '💊', tooltip: 'Sensitive: health data. Optional — may reveal treatment history.' },
+      { name: 'Given Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required for account matching.' }
+    ],
+    checks: [
+      { id: 'cert', status: 'pass', label: 'Certificate Validation', type: 'trust', ref: 'REQ-5.8 / N-05', desc: 'Valid certificate.', detail: { 'Status': 'Valid' } },
+      { id: 'role', status: 'warn', label: 'RP Role Type Match', type: 'trust', ref: 'REQ-5.6 / N-04', desc: 'Role type "wellness app" is a marginal match — not a registered healthcare provider.', issuerDesc: 'Your health credential issuer classifies wellness and fitness applications separately from regulated healthcare providers. Wellness apps are not subject to the same data handling obligations as hospitals and GPs under the EU Health Data Space regulation. Sharing clinical health data (blood type, allergies, medications) with unregulated wellness apps may expose sensitive information without the protections guaranteed by the healthcare regulatory framework.', detail: { 'RP Role': 'Wellness/Fitness (marginal)', 'Expected': 'Healthcare provider preferred', 'Status': 'Weak match — advisory' } },
+      { id: 'rpid', status: 'pass', label: 'RP Identity Verified', type: 'trust', ref: 'REQ-6.2 / N-06', desc: 'RP identified.', detail: {} },
+      { id: 'edp', status: 'fail', label: 'EDP Compliance', type: 'policy', ref: 'Gap CNTR-8-A / N-10', desc: 'RP not authorised by health credential issuer EDP.', issuerDesc: 'WellnessTrack App is not in the authorised relying party list maintained by your health insurance provider. Only healthcare institutions registered under the national eHealth infrastructure may receive clinical health data. Recent incidents have shown that wellness apps may share aggregated health data with insurance and advertising partners — your health authority recommends against disclosing clinical attributes to unregulated platforms.', detail: { 'EDP Type': 'authorised-RPs', 'Result': 'Not authorised', 'Issuer Note': 'Wellness apps not in authorised RP list. Only healthcare institutions permitted.' } },
+      { id: 'sensitive', status: 'warn', label: 'Sensitive Data Flag', type: 'policy', ref: 'REQ-10.3 / N-15', desc: 'This WHA is flagged as sensitive in wallet-held metadata. Elevated warning applies on override.', issuerDesc: 'This credential contains GDPR Article 9 special category data (health). Your health insurance provider has flagged blood type, allergy, and medication records as high-sensitivity because disclosure to non-healthcare entities could affect your insurability, employment prospects, or enable targeted phishing using your medical profile. If you override, these protections no longer apply.', detail: { 'Sensitivity Level': 'High (health data)', 'Flag Source': 'Issuer wallet-held metadata', 'Override Impact': 'REQ-10.2 + REQ-10.3 elevated warning triggered', 'Missing': 'No sensitivityRationale text from issuer (see Q-3)' } },
+      { id: 'pin', status: 'pass', label: 'Processing Information Notice', type: 'privacy', ref: 'REQ-7.3 / N-08', desc: 'PIN received.', detail: { 'Purpose': 'Health data synchronisation', 'Lawful Basis': 'Consent', 'Retention': '1 year' } },
+      { id: 'prefs', status: 'pass', label: 'User Preference Check', type: 'privacy', ref: 'RECO-7.5 / N-09', desc: 'Within preferences.', detail: {} }
+    ],
+    notifications: [
+      { code: 'N-04', text: 'RP role is a marginal match — wellness app, not healthcare.' },
+      { code: 'N-10', text: 'EDP: RP not authorised by health credential issuer.' },
+      { code: 'N-07', text: 'WACE decision: granting not recommended.' },
+      { code: 'N-12', text: 'Override option available.' },
+      { code: 'N-14', text: 'Override warning: reduced security assurances.' },
+      { code: 'N-15', text: 'ELEVATED: Sensitive health data — higher impact risk.' }
+    ]
+  },
+  {
+    id: 'auth-loa-high',
+    icon: '🇪🇺', iconBg: '#E1F5FE',
+    label: 'eGov — LoA High Authentication',
+    sub: 'All checks pass. LoA High requires multi-factor auth after Approve.',
+    rp: { name: 'eGov Portal', domain: 'egov.europa.eu', icon: '🇪🇺', iconBg: '#E1F5FE' },
+    outcome: 'granted',
+    desc: 'A legitimate government portal where all checks pass, but LoA High requires multi-factor authentication (PIN + biometric/NFC) after approval. Simulate success or failure paths.',
+    steps: ['All checks are green — tap Approve', 'MFA popup appears — simulate PIN success or failure', 'Then simulate Biometric/NFC success or failure', 'On failure: see denied screen with Retry option'],
+    verdict: 'Granted — LoA High Required',
+    summary: 'All security and privacy checks passed. This request requires Level of Assurance High — you will need to complete multi-factor authentication (PIN + biometric or NFC) after approving.',
+    escalation: null,
+    loaRequired: 'high',
+    attrs: [
+      { name: 'PID Full Dataset', required: true, sensitive: true, category: 'government', icon: '🇪🇺', tooltip: 'Sensitive: full PID includes all identity attributes. Required by eGov at LoA High.' },
+      { name: 'Address', required: true, sensitive: false, category: 'identity', icon: '🏠', tooltip: 'Required for cross-border service delivery.' },
+      { name: 'Nationality', required: true, sensitive: false, category: 'identity', icon: '🌍', tooltip: 'Required for eligibility verification.' }
+    ],
+    checks: [
+      { id: 'cert', status: 'pass', label: 'Certificate Validation', type: 'trust', ref: 'REQ-5.8 / N-05', desc: 'Valid QCP-w certificate — qualified level.', detail: { 'Status': 'Valid', 'Policy': 'QCP-w (Qualified)', 'Issuer': 'EU Member State CA' } },
+      { id: 'role', status: 'pass', label: 'RP Role Type Match', type: 'trust', ref: 'REQ-5.6 / N-04', desc: 'Government portal role verified.', detail: { 'Role': 'eGovernment Service', 'Match': 'Confirmed', 'Registry': 'EU Trusted List' } },
+      { id: 'rpid', status: 'pass', label: 'RP Identity Verified', type: 'trust', ref: 'REQ-6.2 / N-06', desc: 'RP in EU Trusted List.', detail: { 'RP ID': 'urn:eudi:rp:egov:eu', 'Trust List': 'EU Trusted List (ETSI TS 119 612)', 'Status': 'Active' } },
+      { id: 'edp', status: 'pass', label: 'EDP Compliance', type: 'policy', ref: 'Gap CNTR-8-A / N-10', desc: 'EDP evaluation passed — RP authorised.', detail: { 'EDP Type': 'authorised-RPs (TS 119 472-3)', 'Result': 'Authorised' } },
+      { id: 'loa', status: 'info', label: 'LoA High Required', type: 'auth', ref: 'REQ-9.4 / N-13', desc: 'This transaction requires Level of Assurance High. Multi-factor authentication will be triggered after approval.', detail: { 'Required LoA': 'High (eIDAS Art. 8)', 'Factors needed': 'Two of: knowledge (PIN), inherence (biometric), possession (NFC eID card)', 'Triggered': 'After user approval (Phase 4)' } },
+      { id: 'pin', status: 'pass', label: 'Processing Information Notice', type: 'privacy', ref: 'REQ-7.3 / N-08', desc: 'Full PIN received and validated.', detail: { 'Purpose': 'Cross-border identity verification & eGov service access', 'Lawful Basis': 'Legal Obligation (eIDAS 2.0)', 'Retention': '30 days', 'Jurisdiction': 'EU', 'Data Controller': 'European Commission DG DIGIT' } },
+      { id: 'prefs', status: 'pass', label: 'User Preference Check', type: 'privacy', ref: 'RECO-7.5 / N-09', desc: 'Within user preferences.', detail: { 'Retention Match': '✓ 30d ≤ 90d limit', 'Jurisdiction': '✓ EU', 'Purpose': '✓ Government (permitted)' } }
+    ],
+    notifications: [
+      { code: 'N-07', text: 'WACE decision: all access control checks passed.' },
+      { code: 'N-08', text: 'Processing Information Notice displayed (ISO 27560).' },
+      { code: 'N-11', text: 'Approval screen presented — LoA High authentication required after approval.' }
+    ]
+  },
+  {
+    id: 'retention',
+    icon: '🕐', iconBg: '#fefcbf',
+    label: 'Preference Conflict — Retention',
+    sub: 'RP retention exceeds user preference. Advisory issued.',
+    rp: { name: 'InsurePlus SE', domain: 'insureplus.eu', icon: '🛡️', iconBg: '#fefcbf' },
+    outcome: 'advisory',
+    desc: 'A legitimate insurer whose 15-year retention period exceeds the user\'s 5-year preference due to Solvency II regulations. All security checks pass but an advisory is raised.',
+    steps: ['Note the yellow advisory status and warning icon', 'Tap Details and expand User Preference Check', 'Toggle to Issuer Context for regulatory explanation'],
+    verdict: 'Granted With Advisory',
+    summary: 'All security checks passed, but the relying party\'s data retention period exceeds your stated preference. Review details before approving.',
+    escalation: null,
+    attrs: [
+      { name: 'Given Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required for insurance policy application.' },
+      { name: 'Family Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required for insurance policy application.' },
+      { name: 'Date of Birth', required: true, sensitive: false, category: 'identity', icon: '📅', tooltip: 'Required for actuarial assessment.' },
+      { name: 'Address', required: false, sensitive: false, category: 'location', icon: '📍', tooltip: 'Optional — for policy correspondence. You may deselect.' }
+    ],
+    checks: [
+      { id: 'cert', status: 'pass', label: 'Certificate Validation', type: 'trust', ref: 'REQ-5.8 / N-05', desc: 'Valid NCP+ certificate.', detail: { 'Policy': 'NCP+', 'Status': 'Valid' } },
+      { id: 'role', status: 'pass', label: 'RP Role Type Match', type: 'trust', ref: 'REQ-5.6 / N-04', desc: 'Insurance role verified.', detail: { 'Role': 'Insurance provider', 'Match': 'Confirmed' } },
+      { id: 'rpid', status: 'pass', label: 'RP Identity Verified', type: 'trust', ref: 'REQ-6.2 / N-06', desc: 'RP identified and in trust list.', detail: { 'RP ID': 'urn:eudi:rp:insureplus:eu', 'Trust List': 'National Trusted List (DE)' } },
+      { id: 'edp', status: 'pass', label: 'EDP Compliance', type: 'policy', ref: 'Gap CNTR-8-A / N-10', desc: 'EDP passed.', detail: { 'Result': 'Authorised' } },
+      { id: 'pin', status: 'pass', label: 'Processing Information Notice', type: 'privacy', ref: 'REQ-7.3 / N-08', desc: 'Full PIN received.', detail: { 'Purpose': 'Insurance policy application', 'Lawful Basis': 'Contract', 'Retention': '15 years (insurance regulation)', 'Jurisdiction': 'DE', 'Privacy Notice': 'https://insureplus.eu/privacy' } },
+      { id: 'prefs', status: 'warn', label: 'User Preference Check', type: 'privacy', ref: 'RECO-7.5 / N-09', desc: 'Retention conflict: RP retains data 15 years, your preference is max 5 years. This is due to insurance regulatory requirements.', detail: { 'RP Retention': '15 years', 'User Preference': '5 years maximum', 'Reason': 'Solvency II regulation mandates 15y for policy records', 'Advisory': 'Legal obligation — RP cannot reduce retention period' } }
+    ],
+    notifications: [
+      { code: 'N-07', text: 'WACE decision: access granted with advisory.' },
+      { code: 'N-08', text: 'Processing Information Notice displayed.' },
+      { code: 'N-09', text: 'Advisory: RP retention (15y) exceeds your preference (5y).' },
+      { code: 'N-11', text: 'Approval screen presented.' }
+    ]
+  },
+  {
+    id: 'log-delete',
+    icon: '📜', iconBg: '#E1F5FE',
+    label: 'Log Deletion Restricted',
+    sub: 'User tries to delete log — retention period active.',
+    rp: { name: 'Transaction Log', domain: 'wallet.local', icon: '📁', iconBg: '#E1F5FE' },
+    outcome: 'denied',
+    desc: 'User attempts to delete a transaction log entry, but a legal retention period is active. Demonstrates the N-16 notification and denied access to log deletion.',
+    steps: ['Note the denied status — action is blocked', 'Tap Details to see retention policy details', 'Note the standards gap escalation banner'],
+    verdict: 'Action Restricted',
+    summary: 'The transaction log entry cannot be deleted. An active retention period or dispute resolution window applies.',
+    escalation: {
+      title: 'Post-Transaction User Rights',
+      text: 'REQ-USER-4.3 prevents deletion during retention. But the standard doesn\'t specify how the wallet should explain the retention reason — is it legal obligation, dispute window, or issuer policy? The user needs to understand why, but the information source varies.'
+    },
+    attrs: [],
+    checks: [
+      { id: 'logretain', status: 'fail', label: 'Log Retention Policy', type: 'policy', ref: 'REQ-USER-4.3 / N-16', desc: 'Deletion restricted: active retention period applies. The transaction log must be preserved for the legal minimum period.', detail: { 'Transaction': 'PID disclosure to CityPharm AG', 'Date': '2026-02-15 14:32 UTC', 'Retention Until': '2031-02-15 (5 years — pharmaceutical regulation)', 'Restriction': 'Legal obligation — cannot be overridden', 'Dispute Window': 'Open until 2026-05-15' } }
+    ],
+    notifications: [
+      { code: 'N-16', text: 'Log deletion restricted: retention period active until 2031-02-15.' }
+    ]
+  },
+  {
+    id: 'cross-border',
+    icon: '🌍', iconBg: '#fefcbf',
+    label: 'Cross-Border — Non-EU Service',
+    sub: 'RP in non-EU country. Trust infrastructure checks unavailable.',
+    rp: { name: 'MedRecords Global', domain: 'medrecords.us', icon: '🇺🇸', iconBg: '#fefcbf' },
+    outcome: 'not-recommended',
+    desc: 'A US-based health records service. No EU trust infrastructure — role, identity, and EDP checks are greyed out as unavailable. Demonstrates cross-border trust gaps.',
+    steps: ['Note greyed-out (strikethrough) check pills', 'Tap Details to see unavailable checks explained', 'Toggle to Issuer Context for HIPAA/GDPR comparison'],
+    verdict: 'Granting Not Recommended',
+    summary: 'This relying party is based in a non-EU jurisdiction (United States) that has not implemented the EU Digital Identity trust framework. Several critical security checks cannot be performed. Sharing personal data is not recommended.',
+    issuerSummary: 'MedRecords Global operates under US HIPAA rules, not EU eIDAS / GDPR. Your health credential issuer cannot verify this RP because the US has no Access Certificate infrastructure, no EU Trusted List registration, and no Embedded Disclosure Policy support. US data protection laws do not provide equivalent safeguards to GDPR — once shared, your health data may be subject to US subpoena, insurance disclosure, or commercial re-use without your consent.',
+    escalation: {
+      title: 'Cross-Border Trust Gap — ',
+      text: 'Non-EU countries that have not implemented IA 2024/2982 lack the WRPRC infrastructure needed for EDP evaluation, Trust List verification, and RP role validation. The wallet can only perform basic certificate checks. This is a known gap in the current eIDAS 2.0 framework for international interoperability.'
+    },
+    attrs: [
+      { name: 'Given Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required by RP. PID core attribute.' },
+      { name: 'Family Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required by RP. PID core attribute.' },
+      { name: 'Date of Birth', required: true, sensitive: false, category: 'identity', icon: '📅', tooltip: 'Required for patient identity matching.' },
+      { name: 'Blood Type', required: true, sensitive: true, category: 'health', icon: '🩸', tooltip: 'Sensitive: GDPR Art. 9 health data. Required by RP for medical records.' },
+      { name: 'Allergies', required: true, sensitive: true, category: 'health', icon: '⚕️', tooltip: 'Sensitive: GDPR Art. 9 health data. Required by RP for patient safety.' },
+      { name: 'Insurance ID', required: false, sensitive: false, category: 'finance', icon: '🛡️', tooltip: 'Optional — used for billing. You may deselect.' }
+    ],
+    checks: [
+      { id: 'cert', status: 'warn', label: 'Certificate Validation', type: 'trust', ref: 'REQ-5.8 / N-05', desc: 'RP presents a valid TLS certificate from a commercial CA (DigiCert). However, no EU-qualified certificate policy (NCP/NCP+/QCP-w) is present. Cannot assess trust level under eIDAS.', detail: { 'Certificate': 'Valid TLS (DigiCert Global G2)', 'Policy OID': 'None (commercial CA)', 'EU Qualified': '✗ Not applicable', 'Note': 'Non-EU CA — outside ETSI EN 319 411-1 scope' } },
+      { id: 'role', status: 'na', label: 'RP Role Type Match', type: 'trust', ref: 'REQ-5.6 / N-04', desc: 'Cannot verify — RP has no EU Access Certificate with role type OIDs. Non-EU jurisdiction does not participate in the EUDI trust framework.', detail: { 'Status': 'Check unavailable', 'Reason': 'No WRPRC (Wallet Relying Party Registration Certificate)', 'Jurisdiction': 'US — not in EU trust framework' } },
+      { id: 'rpid', status: 'na', label: 'RP Identity Verified', type: 'trust', ref: 'REQ-6.2 / N-06', desc: 'Cannot verify — RP not registered in any EU Trusted List. Non-EU entities have no registration pathway under current ETSI TS 119 612.', detail: { 'Status': 'Check unavailable', 'Reason': 'Not in EU Trusted List (ETSI TS 119 612)', 'Domain': 'medrecords.us (US-registered entity)' } },
+      { id: 'edp', status: 'na', label: 'EDP Compliance', type: 'policy', ref: 'Gap CNTR-8-A / N-10', desc: 'Cannot evaluate — no Embedded Disclosure Policy exists for non-EU RPs. Without an Access/Registration Certificate, the issuer\'s EDP cannot be enforced.', detail: { 'Status': 'Check unavailable', 'Reason': 'No Access Certificate → no EDP evaluation possible', 'Impact': 'Issuer disclosure restrictions cannot be enforced' } },
+      { id: 'pin', status: 'warn', label: 'Processing Information Notice', type: 'privacy', ref: 'REQ-7.3 / N-08', desc: 'RP provides a privacy notice but it references US HIPAA, not GDPR. The lawful basis, retention terms, and data subject rights may not meet EU requirements.', detail: { 'Purpose': 'Medical records management', 'Lawful Basis': 'HIPAA Authorization (not GDPR basis)', 'Retention': 'Indefinite (per US state law)', 'Jurisdiction': 'US — California, HIPAA/CCPA', 'GDPR Compliance': '✗ Not claimed', 'Note': 'No EU DPO or representative designated' } },
+      { id: 'prefs', status: 'fail', label: 'User Preference Check', type: 'privacy', ref: 'RECO-7.5 / N-09', desc: 'RP data processing parameters conflict with your preferences: retention is indefinite (exceeds your 10-year limit), jurisdiction is non-EU (outside your permitted regions).', detail: { 'Retention Match': '✗ Indefinite exceeds 10y preference', 'Jurisdiction Match': '✗ US — not in EU permitted list', 'Purpose Match': '✓ Healthcare (permitted category)' } }
+    ],
+    notifications: [
+      { code: 'N-04', text: 'RP role type check unavailable — no EU Access Certificate.' },
+      { code: 'N-06', text: 'RP identity check unavailable — not in EU Trusted List.' },
+      { code: 'N-10', text: 'EDP evaluation unavailable — no Access/Registration Certificate infrastructure.' },
+      { code: 'N-09', text: 'Preference conflict: retention (indefinite) and jurisdiction (US) outside user limits.' },
+      { code: 'N-12', text: 'WACE recommendation: granting not recommended (non-EU, multiple checks unavailable).' }
+    ]
+  },
+  {
+    id: 'cross-border-car',
+    icon: '🚗', iconBg: '#fefcbf',
+    label: 'Cross-Border — Car Rental (Non-EU)',
+    sub: 'Non-EU car rental requests driving licence. Trust checks unavailable.',
+    rp: { name: 'DriveAway Rentals', domain: 'driveaway.us', icon: '🇺🇸', iconBg: '#fefcbf' },
+    outcome: 'not-recommended',
+    desc: 'A US car rental requesting driving licence data including biometric photo. Same cross-border trust gap pattern with jurisdiction and data-sharing conflicts.',
+    steps: ['Note sensitive biometric (photo) attribute flag', 'Observe greyed-out EU trust checks', 'Toggle Issuer Context for US data law specifics'],
+    verdict: 'Granting Not Recommended',
+    summary: 'This relying party is based in a non-EU jurisdiction (United States) that has not implemented the EU Digital Identity trust framework. Several critical security checks cannot be performed. Sharing your driving licence data is not recommended.',
+    issuerSummary: 'Your national driving licence authority cannot verify DriveAway Rentals because the US has no EU Access Certificate infrastructure, no Trusted List registration, and no Embedded Disclosure Policy support. US data protection law is fragmented across state-level statutes (e.g. CCPA/CPRA in California) and does not provide GDPR-equivalent safeguards — your licence data, including photo and personal details, may be shared with third-party insurers, reported to the DMV, or disclosed under US subpoena without your consent. Consider using an International Driving Permit instead of sharing your EUDI Wallet credentials.',
+    escalation: {
+      title: 'Cross-Border Trust Gap — ',
+      text: 'Non-EU countries that have not implemented IA 2024/2982 lack the WRPRC infrastructure needed for EDP evaluation, Trust List verification, and RP role validation. The wallet can only perform basic certificate checks. For car rentals, consider whether physical document presentation is a safer alternative.'
+    },
+    attrs: [
+      { name: 'Given Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required by RP for rental agreement.' },
+      { name: 'Family Name', required: true, sensitive: false, category: 'identity', icon: '👤', tooltip: 'Required by RP for rental agreement.' },
+      { name: 'Date of Birth', required: true, sensitive: false, category: 'identity', icon: '📅', tooltip: 'Required for minimum age verification (21+).' },
+      { name: 'Licence Number', required: true, sensitive: false, category: 'government', icon: '🪪', tooltip: 'Required for rental contract and insurance purposes.' },
+      { name: 'Licence Categories', required: true, sensitive: false, category: 'government', icon: '🚗', tooltip: 'Required to verify vehicle class entitlement (e.g. B, B1).' },
+      { name: 'Licence Expiry', required: true, sensitive: false, category: 'government', icon: '📆', tooltip: 'Required — licence must be valid for rental period.' },
+      { name: 'Photo', required: true, sensitive: true, category: 'biometric', icon: '📷', tooltip: 'Sensitive: biometric data (GDPR Art. 9). Required by RP for identity matching.' },
+      { name: 'Address', required: false, sensitive: false, category: 'identity', icon: '🏠', tooltip: 'Optional — used for billing. You may deselect.' },
+      { name: 'Nationality', required: false, sensitive: false, category: 'identity', icon: '🌍', tooltip: 'Optional — not required for rental. You may deselect.' }
+    ],
+    checks: [
+      { id: 'cert', status: 'warn', label: 'Certificate Validation', type: 'trust', ref: 'REQ-5.8 / N-05', desc: 'RP presents a valid TLS certificate from a commercial CA (GeoTrust). No EU-qualified certificate policy (NCP/NCP+/QCP-w) is present. Cannot assess trust level under eIDAS.', detail: { 'Certificate': 'Valid TLS (GeoTrust RSA CA 2018)', 'Policy OID': 'None (commercial CA)', 'EU Qualified': '✗ Not applicable', 'Note': 'Non-EU CA — outside ETSI EN 319 411-1 scope' } },
+      { id: 'role', status: 'na', label: 'RP Role Type Match', type: 'trust', ref: 'REQ-5.6 / N-04', desc: 'Cannot verify — RP has no EU Access Certificate with role type OIDs. US does not participate in the EUDI trust framework.', detail: { 'Status': 'Check unavailable', 'Reason': 'No WRPRC (Wallet Relying Party Registration Certificate)', 'Jurisdiction': 'US — not in EU trust framework' } },
+      { id: 'rpid', status: 'na', label: 'RP Identity Verified', type: 'trust', ref: 'REQ-6.2 / N-06', desc: 'Cannot verify — RP not registered in any EU Trusted List. Non-EU entities have no registration pathway under current ETSI TS 119 612.', detail: { 'Status': 'Check unavailable', 'Reason': 'Not in EU Trusted List (ETSI TS 119 612)', 'Domain': 'driveaway.us (US-registered entity)' } },
+      { id: 'edp', status: 'na', label: 'EDP Compliance', type: 'policy', ref: 'Gap CNTR-8-A / N-10', desc: 'Cannot evaluate — no Embedded Disclosure Policy exists for non-EU RPs. Without an Access/Registration Certificate, the issuer\'s EDP cannot be enforced.', detail: { 'Status': 'Check unavailable', 'Reason': 'No Access Certificate → no EDP evaluation possible', 'Impact': 'Issuer disclosure restrictions for driving licence cannot be enforced' } },
+      { id: 'pin', status: 'warn', label: 'Processing Information Notice', type: 'privacy', ref: 'REQ-7.3 / N-08', desc: 'RP provides a privacy notice referencing US state-level privacy laws (CCPA/CPRA). The lawful basis, retention terms, and data subject rights differ substantially from GDPR.', detail: { 'Purpose': 'Vehicle rental agreement & insurance', 'Lawful Basis': 'Contractual (US state law)', 'Retention': '7 years (US commercial records)', 'Jurisdiction': 'US — California', 'GDPR Compliance': '✗ Not claimed', 'Third-Party Sharing': 'Insurers, DMV, traffic authorities (disclosed)', 'Note': 'No EU DPO or representative designated' } },
+      { id: 'prefs', status: 'fail', label: 'User Preference Check', type: 'privacy', ref: 'RECO-7.5 / N-09', desc: 'RP data processing parameters conflict with your preferences: jurisdiction is non-EU (outside your permitted regions), third-party sharing with insurers is not in your allowed categories.', detail: { 'Retention Match': '✓ 7y ≤ 10y preference', 'Jurisdiction Match': '✗ US — not in EU permitted list', 'Purpose Match': '✓ Transport/rental (permitted)', 'Third-Party Sharing': '✗ Insurers, DMV & traffic authorities — not in allowed sharing categories' } }
+    ],
+    notifications: [
+      { code: 'N-04', text: 'RP role type check unavailable — no EU Access Certificate.' },
+      { code: 'N-06', text: 'RP identity check unavailable — not in EU Trusted List.' },
+      { code: 'N-10', text: 'EDP evaluation unavailable — no Access/Registration Certificate infrastructure.' },
+      { code: 'N-09', text: 'Preference conflict: jurisdiction (US) outside user limits; third-party sharing not permitted.' },
+      { code: 'N-12', text: 'WACE recommendation: granting not recommended (non-EU, multiple checks unavailable).' }
+    ]
+  }
+];
+
+let currentScenario = null;
+let issuerVoice = false; // false = wallet provider text, true = issuer context
+
+// ── Render Control Panel ──
+function renderScenarios() {
+  const list = document.getElementById('scenarioList');
+  const outcomeLabels = {
+    'granted': 'Granted',
+    'advisory': 'Advisory',
+    'not-recommended': 'Not Recommended',
+    'denied': 'Denied'
+  };
+  const scenarioReasons = {
+    'happy': 'All checks pass',
+    'role-mismatch': 'RP role not recognised',
+    'financial': 'Certificate policy missing',
+    'edp-block': 'EDP blocks disclosure',
+    'expired': 'Expired attestation + EDP fail',
+    'cascade': 'Multiple trust failures',
+    'sensitive': 'Sensitive health data risk',
+    'auth-loa-high': 'LoA High — MFA required',
+    'retention': 'Retention exceeds preference',
+    'log-delete': 'Retention period active',
+    'cross-border': 'Non-EU trust gaps',
+    'cross-border-car': 'Non-EU trust gaps'
+  };
+  list.innerHTML = scenarios.map(s => {
+    const fails = s.checks.filter(c => c.status === 'fail').length;
+    const warns = s.checks.filter(c => c.status === 'warn').length;
+    const passes = s.checks.filter(c => c.status === 'pass').length;
+    const ocClass = s.outcome.replace(' ', '-');
+    const reason = scenarioReasons[s.id] || '';
+    return `
+      <div class="scenario-btn ${currentScenario === s.id ? 'active' : ''}" onclick="selectScenario('${s.id}')">
+        <div class="sb-outcome-row">
+          <span class="sb-outcome-badge oc-${ocClass}">${outcomeLabels[s.outcome] || s.outcome}</span>
+          <span class="sb-outcome-label">${reason}</span>
+        </div>
+        <div class="sb-icon" style="background:${s.iconBg}">${s.icon}</div>
+        <div class="sb-text">
+          <div class="sb-label">${s.label}</div>
+          <div class="sb-sub">${s.sub}</div>
+          <div class="sb-badges">
+            ${passes ? `<span class="sb-badge pass">${passes} pass</span>` : ''}
+            ${fails ? `<span class="sb-badge fail">${fails} fail</span>` : ''}
+            ${warns ? `<span class="sb-badge warn">${warns} warn</span>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Populate mobile dropdown
+  const sel = document.getElementById('scenarioSelect');
+  const opts = sel.querySelectorAll('option:not(:first-child)');
+  if (opts.length === 0) {
+    scenarios.forEach(s => {
+      const ocLabel = outcomeLabels[s.outcome] || s.outcome;
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.icon + ' ' + s.label + ' — ' + ocLabel;
+      sel.appendChild(opt);
+    });
+  }
+  sel.value = currentScenario || '';
+}
+
+// ── View Management ──
+function showView(viewId) {
+  document.querySelectorAll('.wallet-view').forEach(v => v.classList.remove('active'));
+  document.getElementById(viewId).classList.add('active');
+}
+
+// ── Override Confirmation Modal ──
+function showOverrideModal() {
+  const s = scenarios.find(x => x.id === currentScenario);
+  if (!s) return;
+  const sev = getSeverity(s);
+  const isDenied = s.outcome === 'denied';
+  const hasIssuerText = s.issuerSummary || s.checks.some(c => c.issuerDesc);
+
+  const summary = issuerVoice && s.issuerSummary ? s.issuerSummary : s.summary;
+
+  let html = `
+    <div class="override-modal-overlay" onclick="if(event.target===this)dismissOverrideModal()">
+      <div class="override-modal">
+        <div class="override-modal-header">
+          <div class="override-modal-icon">${sev.symbol}</div>
+          <div class="override-modal-verdict ${isDenied ? 'denied-verdict' : ''}">${s.verdict}</div>
+        </div>
+        <div class="override-modal-body">
+          <div class="override-modal-msg ${isDenied ? 'denied-msg' : ''}">
+            <span class="modal-wallet-text" style="${issuerVoice && s.issuerSummary ? 'display:none' : ''}">${s.summary}</span>
+            ${s.issuerSummary ? '<span class="modal-issuer-text" style="' + (!issuerVoice ? 'display:none' : '') + '">' + s.issuerSummary + '</span>' : ''}
+          </div>
+        </div>
+        ${hasIssuerText ? `
+        <div class="override-modal-toggle">
+          <div class="voice-toggle-bar" style="margin-bottom:0;">
+            <span class="voice-toggle-label ${!issuerVoice ? 'active' : ''}">Wallet</span>
+            <label class="voice-toggle">
+              <input type="checkbox" ${issuerVoice ? 'checked' : ''} onchange="toggleModalVoice(this.checked)">
+              <span class="voice-toggle-track"></span>
+              <span class="voice-toggle-thumb"></span>
+            </label>
+            <span class="voice-toggle-label ${issuerVoice ? 'active' : ''}">Issuer</span>
+          </div>
+        </div>
+        ` : ''}
+        <div class="override-modal-actions">
+          <button class="btn-wallet btn-confirm-override ${isDenied ? 'denied-btn' : ''}" onclick="dismissOverrideModal()">
+            ${sev.symbol} Confirm Override
+          </button>
+          <button class="btn-wallet btn-view-details-modal" onclick="dismissOverrideModal(); showView('viewDetail');">
+            ℹ️ View Details
+          </button>
+          <button class="btn-wallet btn-go-back" onclick="dismissOverrideModal()">
+            ← Go Back
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'overrideModalContainer';
+  overlay.innerHTML = html;
+  document.getElementById('phoneScreen').appendChild(overlay);
+}
+
+function dismissOverrideModal() {
+  const el = document.getElementById('overrideModalContainer');
+  if (el) el.remove();
+}
+
+function toggleModalVoice(isIssuer) {
+  issuerVoice = isIssuer;
+  // Update modal text visibility
+  const container = document.getElementById('overrideModalContainer');
+  if (container) {
+    container.querySelectorAll('.modal-wallet-text').forEach(el => el.style.display = isIssuer ? 'none' : '');
+    container.querySelectorAll('.modal-issuer-text').forEach(el => el.style.display = isIssuer ? '' : 'none');
+    container.querySelectorAll('.voice-toggle-label').forEach((el, i) => {
+      el.classList.toggle('active', i === 0 ? !isIssuer : isIssuer);
+    });
+  }
+  // Also re-render underlying views to stay in sync
+  const s = scenarios.find(x => x.id === currentScenario);
+  if (s) {
+    renderWaceScreen(s);
+    renderDetailView(s);
+    renderReceiptView(s);
+  }
+}
+
+// ── Authentication Modal (LoA High multi-factor flow) ──
+let authStep = 0; // 0 = step1 (PIN), 1 = step2 (biometric/NFC), 2 = done
+let authResults = [null, null]; // null = pending, true = pass, false = fail
+
+function showAuthModal() {
+  authStep = 0;
+  authResults = [null, null];
+  renderAuthModal();
+}
+
+function renderAuthModal() {
+  const steps = [
+    { icon: '🔢', label: 'PIN Entry', desc: 'What you know', factor: 'Knowledge factor' },
+    { icon: '🔬', label: 'Biometric / NFC', desc: 'What you are · What you have', factor: 'Inherence or possession factor' }
+  ];
+
+  const anyFailed = authResults.includes(false);
+  const allPassed = authResults[0] === true && authResults[1] === true;
+  const allDone = allPassed || anyFailed;
+
+  let stepsHtml = steps.map((st, i) => {
+    let cls = 'waiting';
+    let statusIcon = '⏳';
+    if (authResults[i] === true) { cls = 'passed'; statusIcon = '✅'; }
+    else if (authResults[i] === false) { cls = 'failed'; statusIcon = '❌'; }
+    else if (i === authStep) { cls = 'active'; statusIcon = '👉'; }
+    return `
+      <div class="auth-step ${cls}">
+        <div class="auth-step-icon">${st.icon}</div>
+        <div class="auth-step-body">
+          <div class="auth-step-label">Step ${i+1}: ${st.label}</div>
+          <div class="auth-step-desc">${st.desc}</div>
+        </div>
+        <div class="auth-step-status">${statusIcon}</div>
+      </div>
+    `;
+  }).join('');
+
+  let actionHtml = '';
+  if (!allDone) {
+    const currentStep = steps[authStep];
+    actionHtml = `
+      <div class="auth-sim-label">Simulate ${currentStep.label}:</div>
+      <div class="auth-sim-buttons">
+        <button class="auth-sim-btn sim-pass" onclick="authSimulate(true)">✓ Success</button>
+        <button class="auth-sim-btn sim-fail" onclick="authSimulate(false)">✗ Failure</button>
+      </div>
+    `;
+  } else if (allPassed) {
+    actionHtml = `
+      <div class="auth-result">
+        <div class="auth-result-icon">✅</div>
+        <div class="auth-result-title result-success">Authentication Successful</div>
+        <div class="auth-result-msg">LoA High achieved. Your identity data has been securely shared with eGov Portal.</div>
+        <div class="auth-result-ref">N-07 · WACE decision: transaction completed at LoA High.</div>
+        <button class="auth-result-btn btn-done" onclick="dismissAuthModal()">Done</button>
+      </div>
+    `;
+  } else {
+    const failedStep = authResults[0] === false ? 'Step 1 (PIN)' : 'Step 2 (Biometric/NFC)';
+    actionHtml = `
+      <div class="auth-result">
+        <div class="auth-result-icon">🚫</div>
+        <div class="auth-result-title result-denied">Approve Denied</div>
+        <div class="auth-result-msg">${failedStep} failed. Authentication did not meet the required Level of Assurance High. No data has been shared.</div>
+        <div class="auth-result-ref">N-13 · REQ-9.4 · Authentication failed: LoA High required, multi-factor not completed.</div>
+        <button class="auth-result-btn btn-denied" onclick="showAuthDeniedScreen()">Close</button>
+      </div>
+    `;
+  }
+
+  const html = `
+    <div class="auth-modal-overlay" onclick="if(event.target===this)dismissAuthModal()">
+      <div class="auth-modal">
+        <div class="auth-modal-header">
+          <div class="auth-title">🔐 Multi-Factor Authentication</div>
+          <div class="auth-subtitle">LoA High requires two authentication factors</div>
+        </div>
+        <div class="auth-steps">
+          ${stepsHtml}
+        </div>
+        ${actionHtml}
+      </div>
+    </div>
+  `;
+
+  let container = document.getElementById('authModalContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'authModalContainer';
+    document.getElementById('phoneScreen').appendChild(container);
+  }
+  container.innerHTML = html;
+}
+
+function authSimulate(success) {
+  authResults[authStep] = success;
+  if (!success) {
+    // Failed — go straight to result
+    authStep = 2;
+  } else if (authStep === 0) {
+    // Step 1 passed — move to step 2
+    authStep = 1;
+  } else {
+    // Step 2 passed — done
+    authStep = 2;
+  }
+  renderAuthModal();
+}
+
+function dismissAuthModal() {
+  const el = document.getElementById('authModalContainer');
+  if (el) el.remove();
+}
+
+function showAuthDeniedScreen() {
+  dismissAuthModal();
+  const s = scenarios.find(x => x.id === currentScenario);
+  if (!s) return;
+
+  const failedStepLabel = authResults[0] === false ? 'PIN Entry (Knowledge factor)' : 'Biometric / NFC (Inherence or possession factor)';
+  const failedStepIcon = authResults[0] === false ? '🔢' : '🔬';
+  const passedSteps = [];
+  const failedSteps = [];
+  if (authResults[0] === true) passedSteps.push({ icon: '🔢', label: 'PIN Entry' });
+  if (authResults[0] === false) failedSteps.push({ icon: '🔢', label: 'PIN Entry' });
+  if (authResults[1] === true) passedSteps.push({ icon: '🔬', label: 'Biometric / NFC' });
+  if (authResults[1] === false) failedSteps.push({ icon: '🔬', label: 'Biometric / NFC' });
+
+  const logEntries = [
+    { icon: '🛡️', code: 'N-07', text: 'WACE: all pre-approval access control checks passed.' },
+    { icon: 'ℹ️', code: 'N-11', text: 'User tapped Approve — LoA High authentication initiated.' },
+    ...passedSteps.map(ps => ({ icon: '✅', code: 'N-13', text: ps.label + ' — authentication factor passed.' })),
+    ...failedSteps.map(fs => ({ icon: '❌', code: 'N-13', text: fs.label + ' — authentication factor FAILED.' })),
+    { icon: '🚫', code: 'N-07', text: 'WACE decision: approve denied (LoA High not achieved).' }
+  ];
+
+  const html = `
+    <div class="animate-in">
+      <div class="wace-rp-bar">
+        <div class="rp-avatar" style="background:${s.rp.iconBg}">${s.rp.icon}</div>
+        <div class="rp-info">
+          <div class="rp-name">${s.rp.name}</div>
+          <div class="rp-domain">${s.rp.domain}</div>
+        </div>
+      </div>
+
+      <div class="auth-denied-banner">
+        <div class="auth-denied-icon">🚫</div>
+        <div class="auth-denied-title">Approve Denied</div>
+        <div class="auth-denied-subtitle">Authentication did not meet LoA High</div>
+      </div>
+
+      <div class="auth-denied-detail">
+        <div class="auth-denied-section-label">Authentication Result</div>
+        <div class="auth-denied-factors">
+          ${passedSteps.map(ps => '<div class="auth-factor-row passed"><span class="auth-factor-icon">' + ps.icon + '</span><span class="auth-factor-label">' + ps.label + '</span><span class="auth-factor-status">✅ Passed</span></div>').join('')}
+          ${failedSteps.map(fs => '<div class="auth-factor-row failed"><span class="auth-factor-icon">' + fs.icon + '</span><span class="auth-factor-label">' + fs.label + '</span><span class="auth-factor-status">❌ Failed</span></div>').join('')}
+        </div>
+      </div>
+
+      <div class="auth-denied-detail">
+        <div class="auth-denied-section-label">Transaction Log</div>
+        <div class="notif-hint-list">
+          ${logEntries.map(e => '<div class="notif-hint-row"><span class="notif-hint-code">' + e.icon + ' ' + e.code + '</span><span class="notif-hint-text">' + e.text + '</span></div>').join('')}
+        </div>
+      </div>
+
+      <div class="auth-denied-note">
+        No data has been shared. This attempt has been logged in your wallet transaction history.
+      </div>
+
+      <div class="wallet-actions">
+        <button class="btn-wallet btn-approve" onclick="showAuthModal()">
+          <span class="approve-icon">🔄</span> Retry Authentication
+        </button>
+        <button class="btn-wallet btn-decline" onclick="selectScenario(currentScenario)">Back to Start</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('waceContent').innerHTML = html;
+  showView('viewWace');
+}
+
+// ── Select Scenario ──
+function selectScenario(id) {
+  currentScenario = id;
+  renderScenarios();
+  const s = scenarios.find(x => x.id === id);
+  renderScenarioExplain(s);
+  renderWaceScreen(s);
+  renderDetailView(s);
+  renderReceiptView(s);
+  showView('viewWace');
+}
+
+function renderScenarioExplain(s) {
+  const el = document.getElementById('scenarioExplain');
+  const outcomeLabels = { 'granted': 'Granted', 'advisory': 'Advisory', 'not-recommended': 'Not Recommended', 'denied': 'Denied' };
+  const ocClass = s.outcome.replace(' ', '-');
+  document.getElementById('explainTitle').textContent = s.label;
+  const badge = document.getElementById('explainOutcome');
+  badge.textContent = outcomeLabels[s.outcome] || s.outcome;
+  badge.className = 'scenario-explain-outcome oc-' + ocClass;
+  document.getElementById('explainText').textContent = s.desc || '';
+  const stepsEl = document.getElementById('explainSteps');
+  if (s.steps && s.steps.length) {
+    stepsEl.innerHTML = s.steps.map(st => '<li>' + st + '</li>').join('');
+    stepsEl.style.display = '';
+  } else {
+    stepsEl.innerHTML = '';
+    stepsEl.style.display = 'none';
+  }
+  // Check status badges
+  const passes = s.checks.filter(c => c.status === 'pass').length;
+  const fails = s.checks.filter(c => c.status === 'fail').length;
+  const warns = s.checks.filter(c => c.status === 'warn').length;
+  const infos = s.checks.filter(c => c.status === 'info').length;
+  const nas = s.checks.filter(c => c.status === 'na').length;
+  const badgesEl = document.getElementById('explainBadges');
+  badgesEl.innerHTML =
+    (passes ? '<span class="sb-badge pass">✓ ' + passes + ' pass</span>' : '') +
+    (fails ? '<span class="sb-badge fail">✗ ' + fails + ' fail</span>' : '') +
+    (warns ? '<span class="sb-badge warn">! ' + warns + ' warn</span>' : '') +
+    (infos ? '<span class="sb-badge" style="background:#ebf8ff;color:#2b6cb0;">ℹ ' + infos + ' info</span>' : '') +
+    (nas ? '<span class="sb-badge" style="background:#eee;color:#888;">— ' + nas + ' n/a</span>' : '');
+
+  el.classList.add('visible');
+}
+
+// ── Render WACE Result Screen ──
+// ── Severity mapping ──
+function getSeverity(s) {
+  const fails = s.checks.filter(c => c.status === 'fail').length;
+  const warns = s.checks.filter(c => c.status === 'warn').length;
+  if (s.outcome === 'granted' && warns === 0) return { cls: 'sev-granted', icon: '✓', symbol: '🛡️' };
+  if (s.outcome === 'advisory' || (s.outcome === 'granted' && warns > 0)) return { cls: 'sev-advisory', icon: '⚠', symbol: '⚠️' };
+  if (s.outcome === 'not-recommended') return { cls: 'sev-not-recommended', icon: '✗', symbol: '⛔' };
+  return { cls: 'sev-denied', icon: '⊘', symbol: '🚫' };
+}
+
+let dpaReturnView = 'viewWace';
+
+// ── Render WACE Summary Screen (Clean) ──
+function renderWaceScreen(s) {
+  const sev = getSeverity(s);
+  const approveClass = s.outcome === 'not-recommended' ? 'cautioned override' :
+                       s.outcome === 'denied' ? 'cautioned denied-approve' :
+                       s.outcome === 'advisory' ? 'cautioned' : '';
+  const approveIcon = s.outcome === 'not-recommended' ? '⛔' :
+                      s.outcome === 'denied' ? '🚫' :
+                      s.outcome === 'advisory' ? '⚠️' : '🛡️';
+  const approveText = s.outcome === 'not-recommended' ? 'Approve (override)' :
+                      s.outcome === 'denied' ? 'Approve (denied)' :
+                      s.outcome === 'advisory' ? 'Approve (with advisory)' : 'Approve';
+
+  // Extract purpose from PIN check detail
+  const pinCheck = s.checks.find(c => c.id === 'pin');
+  const purpose = pinCheck && pinCheck.detail && pinCheck.detail['Purpose'] ? pinCheck.detail['Purpose'] : null;
+
+  let html = `
+    <div class="animate-in">
+      <div class="wace-rp-bar">
+        <div class="rp-avatar" style="background:${s.rp.iconBg}">${s.rp.icon}</div>
+        <div class="rp-info">
+          <div class="rp-name">${s.rp.name}</div>
+          <div class="rp-domain">${s.rp.domain}</div>
+        </div>
+      </div>
+      ${purpose ? `
+        <div class="rp-purpose">
+          <div class="rp-purpose-label">Purpose</div>
+          ${purpose}
+        </div>
+      ` : ''}
+
+      ${s.attrs.length ? `
+        <div class="attrs-section">
+          <div class="attrs-title">Requested Attributes</div>
+          <div class="sens-legend">
+            <span class="sens-legend-item"><span class="sens-legend-dot" style="background:var(--danger);">S</span> Sensitive</span>
+            <span class="sens-legend-item"><span class="sens-legend-dot" style="background:var(--primary-light);">✓</span> Opt-in</span>
+            <span class="sens-legend-item"><span class="attr-req-badge required" style="font-size:0.5rem;">REQ</span> Required</span>
+          </div>
+          <div class="attrs-grid">
+            ${s.attrs.map((a, idx) => {
+              const cardId = 'attr-' + s.id + '-' + idx;
+              return '<div class="attr-card' + (a.required ? '' : ' deselected') + '" id="' + cardId + '">' +
+                '<div class="attr-icon cat-' + a.category + '">' + a.icon +
+                  (a.sensitive ? '<span class="sens-flag" title="Sensitive — GDPR Art. 9 special category">S</span>' : '') +
+                '</div>' +
+                '<div class="attr-body">' +
+                  '<div class="attr-name">' + a.name + '</div>' +
+                  '<div class="attr-meta">' +
+                    '<span class="attr-req-badge ' + (a.required ? 'required' : 'optional') + '">' + (a.required ? 'Required' : 'Optional') + '</span>' +
+                  '</div>' +
+                '</div>' +
+                (a.required
+                  ? '<div class="attr-checkbox checked disabled" title="Required — cannot deselect">✓</div>'
+                  : '<div class="attr-checkbox" onclick="toggleAttr(this, event)" title="Optional — click to opt in"></div>') +
+                '<div class="attr-tooltip">' + a.tooltip + '</div>' +
+              '</div>';
+            }).join('')}
+          </div>
+        </div>
+      ` : ''}
+
+      ${s.outcome !== 'granted' ? (() => {
+        const hasIssuerText = s.issuerSummary || s.checks.some(c => c.issuerDesc);
+        const walletMsg = s.summary;
+        const issuerMsg = s.issuerSummary || '';
+        return '<div class="verdict-section ' + sev.cls + '">' +
+          '<div class="verdict-title">Request Verified</div>' +
+          '<div class="verdict-row">' +
+            '<span class="verdict-icon">' + sev.symbol + '</span>' +
+            '<span class="verdict-label ' + sev.cls + '">' + s.verdict + '</span>' +
+          '</div>' +
+          '<div class="verdict-msg">' +
+            '<span class="modal-wallet-text" style="' + (issuerVoice && issuerMsg ? 'display:none' : '') + '">' + walletMsg + '</span>' +
+            (issuerMsg ? '<span class="modal-issuer-text" style="' + (!issuerVoice ? 'display:none' : '') + '">' + issuerMsg + '</span>' : '') +
+          '</div>' +
+          (hasIssuerText ? '<div class="verdict-toggle">' +
+            '<div class="voice-toggle-bar" style="margin-bottom:0;">' +
+              '<span class="voice-toggle-label ' + (!issuerVoice ? 'active' : '') + '">Wallet</span>' +
+              '<label class="voice-toggle">' +
+                '<input type="checkbox" ' + (issuerVoice ? 'checked' : '') + ' onchange="toggleVoice(this.checked)">' +
+                '<span class="voice-toggle-track"></span>' +
+                '<span class="voice-toggle-thumb"></span>' +
+              '</label>' +
+              '<span class="voice-toggle-label ' + (issuerVoice ? 'active' : '') + '">Issuer</span>' +
+            '</div>' +
+          '</div>' : '') +
+        '</div>';
+      })() : ''}
+
+      <div class="wallet-actions">
+        <button class="btn-wallet btn-approve ${approveClass}"${
+          s.loaRequired ? ' onclick="showAuthModal()"' :
+          s.outcome === 'not-recommended' || s.outcome === 'denied' ? ' onclick="showOverrideModal()"' : ''
+        }>
+          <span class="approve-icon">${approveIcon}</span> ${approveText}
+        </button>
+        <button class="btn-wallet btn-decline">Decline</button>
+        <div class="btn-row-half">
+          <button class="btn-wallet btn-action-details" onclick="showView('viewDetail')">
+            ℹ️ Details
+          </button>
+          <button class="btn-wallet btn-action-dpa" onclick="dpaReturnView='viewWace'; renderDpaView(); showView('viewDpa');">
+            ⚖️ Report DPA
+          </button>
+        </div>
+      </div>
+
+      <div class="hint-separator"></div>
+
+      <div class="checks-hint-section">
+        <div class="checks-hint-label">Security Checks</div>
+        <div class="checks-hint-grid">
+          ${s.checks.map(c => {
+            const icon = c.status === 'pass' ? '✓' : c.status === 'fail' ? '✗' : c.status === 'info' ? 'ℹ' : c.status === 'na' ? '—' : '!';
+            const cls = c.status === 'pass' ? 'hint-pass' : c.status === 'fail' ? 'hint-fail' : c.status === 'info' ? 'hint-info' : c.status === 'na' ? 'hint-na' : 'hint-warn';
+            return '<span class="check-hint-pill ' + cls + '">' + icon + ' ' + c.label + '</span>';
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="notif-hint-section">
+        <div class="checks-hint-label">Notification Log</div>
+        <div class="notif-hint-list">
+          ${s.notifications.map(n => {
+            const nIcon = n.code.match(/N-0[7]/) ? '✅' :
+                          n.code.match(/N-(11|08|09)/) ? 'ℹ️' :
+                          n.code.match(/N-(12|13|14)/) ? '⚠️' :
+                          n.code.match(/N-(15|16)/) ? '🚫' : '📋';
+            return '<div class="notif-hint-row"><span class="notif-hint-code">' + nIcon + ' ' + n.code + '</span><span class="notif-hint-text">' + n.text + '</span></div>';
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('waceContent').innerHTML = html;
+}
+
+// ── Render Detail Drill-Down View ──
+function renderDetailView(s) {
+  const outcomeClass = s.outcome === 'advisory' ? 'advisory' : s.outcome;
+  const hasIssuerText = s.checks.some(c => c.issuerDesc);
+  const sev = getSeverity(s);
+
+  let html = `
+    <div class="animate-in">
+      <div class="wace-outcome ${outcomeClass}">
+        <div class="wace-verdict">${s.verdict}</div>
+        ${s.issuerSummary ? `
+          <div class="wace-summary wallet-text" style="${issuerVoice ? 'display:none' : ''}"><span class="wallet-tag" style="margin-bottom:3px;">Wallet Provider</span><br>${s.summary}</div>
+          <div class="wace-summary issuer-text issuer-desc" style="${!issuerVoice ? 'display:none' : ''}; border-left-color:rgba(255,255,255,0.5);"><span class="issuer-tag">Issuer Context</span><br>${s.issuerSummary}</div>
+        ` : `
+          <div class="wace-summary">${s.summary}</div>
+        `}
+      </div>
+
+      <div class="escalation-banner ${s.escalation ? 'visible' : ''}" id="escalationBanner">
+        ${s.escalation ? '<strong>' + s.escalation.title + '</strong>' + s.escalation.text : ''}
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        ${hasIssuerText ? `
+        <div class="voice-toggle-bar" style="flex:1;margin-bottom:0;">
+          <span class="voice-toggle-label ${!issuerVoice ? 'active' : ''}">Wallet</span>
+          <label class="voice-toggle">
+            <input type="checkbox" ${issuerVoice ? 'checked' : ''} onchange="toggleVoice(this.checked)">
+            <span class="voice-toggle-track"></span>
+            <span class="voice-toggle-thumb"></span>
+          </label>
+          <span class="voice-toggle-label ${issuerVoice ? 'active' : ''}">Issuer</span>
+        </div>
+        ` : '<div></div>'}
+        <div class="dpa-report-btn" style="margin-left:8px;" onclick="dpaReturnView='viewDetail'; renderDpaView(); showView('viewDpa');">
+          <span class="dpa-icon">⚖</span> DPA
+        </div>
+      </div>
+
+      <div class="checks-summary">
+        ${s.checks.map(c => `
+          <span class="check-pill ${c.status}">
+            <span class="pill-icon">${c.status === 'pass' ? '✓' : c.status === 'fail' ? '✗' : '!'}</span>
+            ${c.label.split(' ').slice(0, 2).join(' ')}
+          </span>
+        `).join('')}
+      </div>
+
+      ${buildCheckRows(s)}
+
+      <div style="margin-top:14px;">
+        <button class="btn-wallet btn-details" onclick="showView('viewReceipt')">
+          View Privacy Receipt
+        </button>
+      </div>
+
+      <div class="notif-log" style="margin-top:14px">
+        <div class="notif-log-title">Notification Log</div>
+        ${s.notifications.map(n => `
+          <div class="notif-entry">
+            <span class="notif-code">${n.code}</span>
+            <span class="notif-text">${n.text}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  document.getElementById('detailContent').innerHTML = html;
+}
+
+// ── Build Check Rows (shared between detail and receipt) ──
+function buildCheckRows(s) {
+  const typeLabels = { trust: ['TL', 'Trust List', 'badge-trust'], policy: ['EP', 'EDP / Policy', 'badge-policy'], privacy: ['PN', 'Privacy Notice', 'badge-privacy'], auth: ['AU', 'Authentication', 'badge-auth'] };
+
+  return s.checks.map((c, i) => {
+    const [abbr, typeName, badgeClass] = typeLabels[c.type] || ['??', c.type, ''];
+    const detailRows = c.detail ? Object.entries(c.detail).map(([k, v]) => `
+      <div class="detail-field">
+        <span class="detail-label">${k}</span>
+        <span class="detail-value">${v}</span>
+      </div>
+    `).join('') : '';
+
+    const walletDescHtml = '<div class="check-desc wallet-text" style="' + (issuerVoice ? 'display:none' : '') + '"><span class="wallet-tag">Wallet Provider</span><br>' + c.desc + '</div>';
+    let issuerDescHtml = '';
+    if (c.issuerDesc) {
+      issuerDescHtml = '<div class="check-desc issuer-text issuer-desc" style="' + (!issuerVoice ? 'display:none' : '') + '"><span class="issuer-tag">Issuer Context</span><br>' + c.issuerDesc + '</div>';
+    } else if (c.status !== 'pass') {
+      issuerDescHtml = '<div class="check-desc issuer-text no-issuer-text" style="' + (!issuerVoice ? 'display:none' : '') + '">No issuer rationale available — wallet provider generic text used.</div>';
+    } else {
+      issuerDescHtml = '<div class="check-desc issuer-text" style="' + (!issuerVoice ? 'display:none' : '') + '">' + c.desc + '</div>';
+    }
+
+    return `
+      <div class="check-row ${c.status === 'fail' ? 'failed' : c.status === 'na' ? 'na-row' : ''}" ${c.status !== 'na' ? 'onclick="toggleCheckDetail(this)"' : ''} id="check-${i}">
+        <div class="check-status-icon ${c.status}">
+          ${c.status === 'pass' ? '✓' : c.status === 'fail' ? '✗' : c.status === 'info' ? 'ℹ' : c.status === 'na' ? '—' : '!'}
+        </div>
+        <div class="check-body">
+          <div class="check-label">
+            ${c.label}
+            <span class="check-type-badge ${badgeClass}">${abbr} ${typeName}</span>
+          </div>
+          ${walletDescHtml}
+          ${issuerDescHtml}
+          <div class="check-ref">${c.ref}</div>
+        </div>
+        <div class="check-expand"><span class="chevron">›</span></div>
+      </div>
+      <div class="check-detail">${detailRows}</div>
+    `;
+  }).join('');
+}
+
+// ── Render DPA Report Preview ──
+function renderDpaView() {
+  const s = scenarios.find(x => x.id === currentScenario);
+  if (!s) return;
+
+  const failedChecks = s.checks.filter(c => c.status === 'fail' || c.status === 'warn');
+  const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+  let html = `
+    <div class="animate-in">
+      <div class="dpa-preview">
+        <div class="dpa-preview-title">
+          <span style="font-size:1rem;">⚖️</span> DPA Report Preview
+        </div>
+        <div style="font-size:0.62rem;color:var(--text-light);margin-bottom:10px;line-height:1.4;">
+          The following information would be included in a report to your Data Protection Authority. This is a preview — no data is transmitted.
+        </div>
+
+        <div style="border-top:1px solid var(--border);padding-top:8px;">
+          <div class="dpa-preview-row">
+            <span class="dpa-preview-label">Timestamp</span>
+            <span class="dpa-preview-value">${now} UTC</span>
+          </div>
+          <div class="dpa-preview-row">
+            <span class="dpa-preview-label">RP Name</span>
+            <span class="dpa-preview-value">${s.rp.name}</span>
+          </div>
+          <div class="dpa-preview-row">
+            <span class="dpa-preview-label">RP Domain</span>
+            <span class="dpa-preview-value">${s.rp.domain}</span>
+          </div>
+          <div class="dpa-preview-row">
+            <span class="dpa-preview-label">WACE Verdict</span>
+            <span class="dpa-preview-value" style="font-weight:700;">${s.verdict}</span>
+          </div>
+          <div class="dpa-preview-row">
+            <span class="dpa-preview-label">Attributes</span>
+            <span class="dpa-preview-value">${s.attrs.map(a => a.name).join(', ') || 'N/A'}</span>
+          </div>
+        </div>
+
+        ${failedChecks.length ? `
+          <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px;">
+            <div style="font-size:0.65rem;font-weight:700;color:var(--text);margin-bottom:6px;">Failed / Warned Security Checks</div>
+            ${failedChecks.map((c, i) => `
+              <label class="dpa-check-include">
+                <input type="checkbox" checked onchange="toggleDpaCheck(this, ${i})">
+                <span>
+                  <strong>${c.status === 'fail' ? '✗' : '⚠'} ${c.label}</strong>
+                  <span style="color:var(--text-light);"> — ${c.ref}</span>
+                </span>
+              </label>
+              <div class="dpa-check-detail" id="dpa-detail-${i}" style="padding:4px 0 8px 26px;font-size:0.6rem;color:var(--text-light);line-height:1.4;">
+                ${issuerVoice && c.issuerDesc ? c.issuerDesc : c.desc}
+              </div>
+            `).join('')}
+          </div>
+        ` : `
+          <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px;font-size:0.65rem;color:var(--success);">
+            ✓ All security checks passed — no failures to report.
+          </div>
+        `}
+
+        <button class="dpa-close-btn" style="background:var(--primary);color:#fff;border-color:var(--primary);">
+          Submit Report to DPA (Demo)
+        </button>
+        <button class="dpa-close-btn" onclick="showView(dpaReturnView);">
+          Cancel
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('dpaContent').innerHTML = html;
+}
+
+function toggleDpaCheck(cb, idx) {
+  const detail = document.getElementById('dpa-detail-' + idx);
+  if (detail) detail.style.display = cb.checked ? '' : 'none';
+}
+
+// ── Render Receipt View ──
+function renderReceiptView(s) {
+  const receiptId = 'RCPT-' + Date.now().toString(36).toUpperCase() + '-' + s.id.toUpperCase();
+  const hasIssuerText = s.checks.some(c => c.issuerDesc);
+  const checksHtml = buildCheckRows(s);
+
+  // Find the PIN check for privacy notice fields
+  const pinCheck = s.checks.find(c => c.id === 'pin');
+  let privacyFieldsHtml = '';
+  if (pinCheck && pinCheck.detail) {
+    privacyFieldsHtml = `
+      <div class="receipt-section">
+        <div class="receipt-section-title">Processing Information Notice (ISO 27560)</div>
+        ${Object.entries(pinCheck.detail).map(([k, v]) => `
+          <div class="detail-field" style="padding:4px 0;">
+            <span class="detail-label" style="min-width:100px;">${k}</span>
+            <span class="detail-value">${k === 'Privacy Notice' ? `<a href="${v}" style="color:var(--primary-light);font-size:0.68rem;word-break:break-all;">${v}</a>` : v}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  const failCount = s.checks.filter(c => c.status === 'fail').length;
+  const warnCount = s.checks.filter(c => c.status === 'warn').length;
+  const passCount = s.checks.filter(c => c.status === 'pass').length;
+
+  let html = `
+    <div class="receipt-inner animate-in">
+      <div class="receipt-card">
+        <div class="receipt-header">
+          <div class="receipt-title">WACE Security & Privacy Receipt</div>
+          <div class="receipt-id">${receiptId}</div>
+          <div style="display:flex;gap:6px;margin-top:8px;">
+            <span class="sb-badge pass" style="font-size:0.6rem;">${passCount} Passed</span>
+            ${failCount ? `<span class="sb-badge fail" style="font-size:0.6rem;">${failCount} Failed</span>` : ''}
+            ${warnCount ? `<span class="sb-badge warn" style="font-size:0.6rem;">${warnCount} Warning</span>` : ''}
+          </div>
+        </div>
+
+        <div class="receipt-section">
+          <div class="receipt-section-title">Relying Party</div>
+          <div class="detail-field">
+            <span class="detail-label">Name</span>
+            <span class="detail-value">${s.rp.name}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Domain</span>
+            <span class="detail-value">${s.rp.domain}</span>
+          </div>
+        </div>
+
+        ${s.attrs.length ? `
+        <div class="receipt-section">
+          <div class="receipt-section-title">Disclosed Attributes</div>
+          <div class="attrs-grid">
+            ${s.attrs.map(a => `
+              <div class="attr-card" style="padding:6px 8px;">
+                <div class="attr-icon cat-${a.category}" style="width:24px;height:24px;border-radius:6px;font-size:0.65rem;">
+                  ${a.icon}
+                  ${a.sensitive ? '<span class="sens-flag" style="width:11px;height:11px;font-size:0.42rem;top:-3px;right:-3px;">S</span>' : ''}
+                </div>
+                <div class="attr-body">
+                  <div class="attr-name" style="font-size:0.65rem;">${a.name}</div>
+                  <div class="attr-meta">
+                    <span class="attr-req-badge ${a.required ? 'required' : 'optional'}" style="font-size:0.48rem;">${a.required ? 'Req' : 'Opt'}</span>
+                    ${a.sensitive ? '<span class="attr-req-badge" style="font-size:0.48rem;background:#fed7d7;color:#c53030;">Sensitive</span>' : ''}
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        ` : ''}
+
+        <div class="receipt-section">
+          <div class="receipt-section-title">Security Check Results</div>
+          ${hasIssuerText ? `
+          <div class="voice-toggle-bar" style="margin-bottom:10px;">
+            <span class="voice-toggle-label ${!issuerVoice ? 'active' : ''}">Wallet</span>
+            <label class="voice-toggle">
+              <input type="checkbox" ${issuerVoice ? 'checked' : ''} onchange="toggleVoice(this.checked)">
+              <span class="voice-toggle-track"></span>
+              <span class="voice-toggle-thumb"></span>
+            </label>
+            <span class="voice-toggle-label ${issuerVoice ? 'active' : ''}">Issuer</span>
+          </div>
+          ` : ''}
+          ${checksHtml}
+        </div>
+
+        ${privacyFieldsHtml}
+
+        <div class="receipt-section">
+          <div class="receipt-section-title">WACE Outcome</div>
+          <div class="detail-field">
+            <span class="detail-label">Verdict</span>
+            <span class="detail-value" style="font-weight:700;">${s.verdict}</span>
+          </div>
+          ${s.issuerSummary ? `
+            <div class="detail-field wallet-text" style="${issuerVoice ? 'display:none' : ''}">
+              <span class="detail-label">Summary</span>
+              <span class="detail-value"><span class="wallet-tag">Wallet Provider</span><br>${s.summary}</span>
+            </div>
+            <div class="detail-field issuer-text" style="${!issuerVoice ? 'display:none' : ''}">
+              <span class="detail-label">Summary</span>
+              <span class="detail-value issuer-desc"><span class="issuer-tag">Issuer Context</span><br>${s.issuerSummary}</span>
+            </div>
+          ` : `
+            <div class="detail-field">
+              <span class="detail-label">Summary</span>
+              <span class="detail-value">${s.summary}</span>
+            </div>
+          `}
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('receiptContent').innerHTML = html;
+}
+
+function toggleVoice(isIssuer) {
+  issuerVoice = isIssuer;
+  // Re-render all views so all text reflects the new voice setting
+  const s = scenarios.find(x => x.id === currentScenario);
+  if (s) {
+    const activeView = document.querySelector('.wallet-view.active');
+    const activeId = activeView ? activeView.id : 'viewDetail';
+    renderWaceScreen(s);
+    renderDetailView(s);
+    renderReceiptView(s);
+    showView(activeId);
+  }
+}
+
+function toggleCheckDetail(el) {
+  el.classList.toggle('expanded');
+}
+
+function toggleAttr(el, evt) {
+  evt.stopPropagation();
+  const card = el.closest('.attr-card');
+  const isChecked = el.classList.contains('checked');
+  if (isChecked) {
+    el.classList.remove('checked');
+    el.innerHTML = '';
+    card.classList.add('deselected');
+  } else {
+    el.classList.add('checked');
+    el.innerHTML = '✓';
+    card.classList.remove('deselected');
+  }
+}
+
+// ── Init ──
+renderScenarios();
+
+// ── Report height to parent iframe wrapper ──
+(function() {
+  function reportHeight() {
+    if (window.parent !== window) {
+      var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+      window.parent.postMessage({ type: 'demoHeight', height: h }, '*');
+    }
+  }
+  // Report on load and after interactions
+  reportHeight();
+  setTimeout(reportHeight, 300);
+  setTimeout(reportHeight, 1000);
+  new ResizeObserver(reportHeight).observe(document.body);
+})();
+</script>
+</body>
+</html>

@@ -61,6 +61,13 @@ paginate = 10
     weight = 10
 
   [[menu.main]]
+    identifier = "tools-wallet-access-control"
+    parent = "tools"
+    name = "Wallet Access Control Demo"
+    url = "/tools/wallet-access-control/"
+    weight = 20
+
+  [[menu.main]]
     identifier = "contact"
     name = "Contact"
     url = "/contact/"
