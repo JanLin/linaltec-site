@@ -202,7 +202,7 @@ h1, h2, h3, h4 {
   display: none;
   position: absolute;
   top: 100%;
-  right: 0;
+  left: 0;
   list-style: none;
   background: var(--theme);
   border: 1px solid var(--border);
@@ -211,19 +211,28 @@ h1, h2, h3, h4 {
   min-width: 260px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   z-index: 100;
-  margin-top: 6px;
+}
+
+/* Invisible bridge so mouse can travel from trigger to submenu */
+.submenu::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
 }
 
 .menu-dropdown:hover .submenu {
   display: block;
 }
 
-.submenu li {
+#menu .submenu li {
   padding: 0;
   margin: 0;
 }
 
-.submenu li + li {
+#menu .submenu li + li {
   margin-inline-start: 0;
 }
 
