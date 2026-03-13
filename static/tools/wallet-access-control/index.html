@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EUDI Wallet Access Control — Interactive Security Demo</title>
+<style>
+/* ── Reset & Variables ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #1A1A2E;
+  --primary-light: #00AEEF;
+  --accent: #4682B4;
+  --accent-light: #E1F5FE;
+  --success: #38a169;
+  --warning: #d69e2e;
+  --danger: #e53e3e;
+  --bg: #F5F7FA;
+  --card: #ffffff;
+  --text: #333333;
+  --text-light: #666666;
+  --border: #E2E5EA;
+}
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* ── Hero ── */
+.hero {
+  background: linear-gradient(135deg, var(--primary) 0%, #0D3B66 60%, #1a5276 100%);
+  color: #fff;
+  padding: 60px 32px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(0,174,239,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+.hero-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.hero h1 {
+  font-size: 2.4rem;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.hero .subtitle {
+  font-size: 1.05rem;
+  opacity: 0.85;
+  max-width: 720px;
+  line-height: 1.6;
+}
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.hero-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.9);
+}
+.home-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 8px;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+  transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+.home-link:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.3); }
+.home-link svg { width: 20px; height: 20px; }
+
+/* ── Container ── */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Sections ── */
+.section {
+  padding: 32px 0;
+}
+.section + .section {
+  border-top: 1px solid var(--border);
+}
+.section h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 16px;
+}
+.section h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.section p {
+  max-width: 720px;
+  margin-bottom: 14px;
+  color: var(--text);
+}
+.section p.note {
+  font-size: 0.88rem;
+  color: var(--text-light);
+  font-style: italic;
+  background: #f8f9fa;
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary-light);
+  border-radius: 0 8px 8px 0;
+  max-width: 720px;
+}
+
+/* ── Demo Embed ── */
+.demo-section {
+  padding: 32px 0;
+  background: #eef1f5;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.demo-frame-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.demo-frame-wrapper iframe {
+  width: 100%;
+  height: 1100px;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  background: #fff;
+  overflow: hidden;
+}
+
+/* ── Testing Guide ── */
+.test-scenarios {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+.test-card {
+  background: var(--card);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 20px;
+  transition: box-shadow 0.2s;
+}
+.test-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+.test-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.test-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.test-card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+.test-card-outcome {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+  margin-top: 2px;
+}
+.outcome-granted { background: #c6f6d5; color: #276749; }
+.outcome-advisory { background: #fefcbf; color: #975a16; }
+.outcome-not-recommended { background: #fed7d7; color: #c53030; }
+.outcome-denied { background: #e8e8e8; color: #666; }
+
+/* ── Outcome Legend ── */
+.outcome-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 12px;
+}
+.outcome-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.outcome-legend-desc {
+  font-size: 0.78rem;
+  color: var(--text-light);
+}
+
+.test-card p {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.test-steps {
+  font-size: 0.75rem;
+  color: var(--text);
+  padding-left: 16px;
+}
+.test-steps li {
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+/* ── Highlight Scenarios (for blog) ── */
+.highlight-scenarios {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+.highlight-card {
+  background: var(--card);
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  padding: 24px 20px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.highlight-card:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+.highlight-card .hl-icon {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+.highlight-card .hl-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+.highlight-card .hl-desc {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+/* ── Flow Diagram ── */
+.diagram-section {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+}
+.diagram-container {
+  max-width: 700px;
+  margin: 24px auto 0;
+  background: var(--card);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  padding: 32px 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  overflow-x: auto;
+}
+.flow-diagram {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: block;
+}
+/* SVG diagram styling */
+.flow-diagram .lane {
+  rx: 12;
+  ry: 12;
+}
+.flow-diagram text {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ── Footer ── */
+.footer {
+  background: var(--primary);
+  color: rgba(255,255,255,0.7);
+  padding: 32px;
+  text-align: center;
+  font-size: 0.78rem;
+}
+.footer a {
+  color: var(--primary-light);
+  text-decoration: none;
+}
+.footer a:hover { text-decoration: underline; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .hero { padding: 40px 20px 32px; }
+  .hero h1 { font-size: 1.75rem; }
+  .section { padding: 32px 0; }
+  .test-scenarios { grid-template-columns: 1fr; }
+  .highlight-scenarios { grid-template-columns: 1fr; }
+  .demo-frame-wrapper iframe { height: 1600px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════ Hero ════ -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>EUDI Wallet Access Control<br>Security Check Demo</h1>
+    <p class="subtitle">
+      An interactive demonstration of how the Wallet Access Control Engine (WACE) evaluates
+      security checks and informs users about risks before sharing personal data — based on
+      CEN/TS 18297 and the eIDAS 2.0 regulatory framework.
+    </p>
+    <div class="hero-badges">
+      <a href="../../" class="home-link" title="Back to Linaltec">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+          <rect x="2" y="2" width="65" height="65" rx="3" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="6"/>
+          <rect x="33" y="22" width="58" height="58" rx="3" fill="#00AEEF"/>
+          <rect x="40" y="29" width="44" height="44" rx="2" fill="none" stroke="white" stroke-width="2" opacity="0.4"/>
+        </svg>
+      </a>
+      <span class="hero-badge">CEN/TS 18297</span>
+      <span class="hero-badge">eIDAS 2.0</span>
+      <span class="hero-badge">IA 2024/2982</span>
+      <span class="hero-badge">ETSI TS 119 472-3</span>
+      <span class="hero-badge">ISO/IEC TS 27560</span>
+      <span class="hero-badge">GDPR Art. 9</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════ Purpose ════ -->
+<div class="container">
+  <div class="section">
+    <h2>Purpose of This Demo</h2>
+    <p>
+      The EU Digital Identity Wallet places the citizen at the centre of every data-sharing transaction.
+      But the citizen is also the weakest link in the security chain — they must make informed decisions
+      about sharing sensitive personal data with relying parties, often under time pressure and without
+      technical expertise.
+    </p>
+    <p>
+      CEN/TS 18297 defines the <strong>Wallet Access Control Engine (WACE)</strong> — a set of security
+      controls that evaluate every relying party request before the user sees it. The WACE checks
+      certificates, role types, trust list registrations, embedded disclosure policies, processing
+      information notices, and user preferences. Based on these checks, it produces a recommendation:
+      grant, advise caution, recommend against sharing, or deny outright.
+    </p>
+    <p>
+      This demo illustrates how those security checks work and how the wallet user could be informed
+      of the results. It covers the full notification inventory (N-01 through N-16) across all
+      lifecycle phases defined in the CEN/TC 224 WG20 working document on wallet user notifications.
+    </p>
+    <p class="note">
+      This demo is not intended to dictate how the user experience should look. It does not prescribe
+      a specific UX design or visual style. Its sole purpose is to demonstrate the security checks
+      performed by the WACE, the warnings and notifications generated, and how different severity
+      levels could be communicated to help users make informed decisions. Wallet implementers are
+      free to design their own user interfaces while ensuring the underlying security checks and
+      notifications defined in the standard are properly conveyed.
+    </p>
+
+    <h3>What the Demo Covers</h3>
+    <p>
+      The interactive demo below simulates a wallet phone screen with a control panel for selecting
+      different scenarios. Each scenario triggers a different combination of WACE security checks and
+      produces a specific outcome. The demo covers: certificate validation against ETSI EN 319 411-1
+      policies, relying party role type matching via access control metadata, RP identity verification
+      against EU Trusted Lists (ETSI TS 119 612), embedded disclosure policy evaluation per
+      TS 119 472-3, ISO/IEC TS 27560 processing information notice validation, user preference
+      conflict detection, Level of Assurance authentication requirements including multi-factor
+      authentication simulation, user override with informed consent per REQ-10.2 and REQ-10.3,
+      cross-border trust gaps for non-EU jurisdictions, and transaction log retention policies.
+    </p>
+    <p>
+      The demo also illustrates the <strong>issuer governance problem</strong>: wallet providers lack
+      domain expertise to craft meaningful warning messages. A toggle between "Wallet Provider" and
+      "Issuer Context" text demonstrates how issuer-authored notifications can significantly improve
+      user understanding of risks.
+    </p>
+  </div>
+
+  <!-- ════ How to Test ════ -->
+  <div class="section">
+    <h2>How to Test the Scenarios</h2>
+    <p>
+      Select a scenario from the control panel in the demo below. The phone screen will display the
+      WACE assessment. Each scenario shows a description and testing steps when selected. Use the
+      <strong>Details</strong> button to drill into checks, and toggle between Wallet Provider and
+      Issuer Context text to see the governance difference.
+    </p>
+
+    <h3>Key Scenarios to Try</h3>
+    <p>
+      These four scenarios cover the main paths a wallet user will encounter: a clean pass,
+      override warnings at different severity levels, a multi-factor authentication flow,
+      and a hard denial.
+    </p>
+    <div class="highlight-scenarios">
+      <div class="highlight-card">
+        <div class="hl-icon">💊</div>
+        <div class="hl-title">1. Clean Pass</div>
+        <div class="hl-desc">
+          Pharmacy ePrescription — all WACE checks pass, user approves, transaction completes.
+          Shows the baseline "everything works" flow.
+        </div>
+      </div>
+      <div class="highlight-card">
+        <div class="hl-icon">🏪</div>
+        <div class="hl-title">2. Override Warning</div>
+        <div class="hl-desc">
+          Scenarios where the WACE recommends caution. <span class="test-card-outcome outcome-not-recommended" style="font-size:0.62rem;">Not Recommended</span> triggers an override confirmation popup (e.g. Unknown Retailer, Cross-Border).
+          <span class="test-card-outcome outcome-advisory" style="font-size:0.62rem;">Advisory</span> allows approval with a warning (e.g. Insurance Retention Conflict).
+        </div>
+      </div>
+      <div class="highlight-card">
+        <div class="hl-icon">🇪🇺</div>
+        <div class="hl-title">3. LoA High &amp; MFA</div>
+        <div class="hl-desc">
+          eGov Portal — all checks pass but LoA High triggers multi-factor authentication.
+          Simulate PIN + biometric success/failure paths.
+        </div>
+      </div>
+      <div class="highlight-card">
+        <div class="hl-icon">🚨</div>
+        <div class="hl-title">4. Denied</div>
+        <div class="hl-desc">
+          Cascade Denial — an unverifiable entity failing every trust check. Also: Log Deletion
+          Restricted where a legal retention period blocks the action.
+        </div>
+      </div>
+    </div>
+
+    <h3>Outcome Levels</h3>
+    <div class="outcome-legend">
+      <div class="outcome-legend-item">
+        <span class="test-card-outcome outcome-granted">🛡️ Granted</span>
+        <span class="outcome-legend-desc">All checks pass — safe to approve</span>
+      </div>
+      <div class="outcome-legend-item">
+        <span class="test-card-outcome outcome-advisory">⚠️ Advisory</span>
+        <span class="outcome-legend-desc">Minor conflicts — approval with warning</span>
+      </div>
+      <div class="outcome-legend-item">
+        <span class="test-card-outcome outcome-not-recommended">⛔ Not Recommended</span>
+        <span class="outcome-legend-desc">Trust or policy failures — override required</span>
+      </div>
+      <div class="outcome-legend-item">
+        <span class="test-card-outcome outcome-denied">🚫 Denied</span>
+        <span class="outcome-legend-desc">Multiple critical failures — access blocked</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ Demo Embed ════ -->
+<div class="demo-section">
+  <div class="demo-frame-wrapper">
+    <h2 style="max-width:960px;margin:0 auto 20px;padding:0 24px;font-size:1.6rem;font-weight:800;color:var(--primary);">Interactive Demo</h2>
+    <iframe id="demoIframe" src="wallet-security-demo.html" title="EUDI Wallet WACE Security Check Demo" loading="lazy" scrolling="no"></iframe>
+  </div>
+</div>
+
+<!-- ════ Flow Diagram ════ -->
+<div class="container">
+  <div class="diagram-section">
+    <h2>Access Control Flow — CEN/TS 18297 Clause 6.2.2</h2>
+    <p>
+      The diagram below illustrates the three-step access control flow for relying party operations
+      over Wallet Held Attestations: wallet unit processing (automated security checks), wallet user
+      decision (human approval with override option), and wallet response (final decision returned to
+      the relying party with transaction logging).
+    </p>
+    <div class="diagram-container">
+      <svg class="flow-diagram" viewBox="0 0 620 1380" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" fill="#666">
+            <path d="M 0 0 L 10 5 L 0 10 z"/>
+          </marker>
+          <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" fill="#c62828">
+            <path d="M 0 0 L 10 5 L 0 10 z"/>
+          </marker>
+          <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" fill="#2e7d32">
+            <path d="M 0 0 L 10 5 L 0 10 z"/>
+          </marker>
+          <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.08"/>
+          </filter>
+        </defs>
+
+        <!-- Title -->
+        <text x="310" y="28" text-anchor="middle" font-size="14" font-weight="800" fill="#1A1A2E">Figure 5 — Access Control Flow for RP Operations over WHAs</text>
+        <text x="310" y="46" text-anchor="middle" font-size="10" fill="#666">CEN/TS 18297 — Clause 6.2.2</text>
+
+        <!-- Start -->
+        <ellipse cx="280" cy="80" rx="80" ry="26" fill="#e6e6e6" stroke="#999" stroke-width="1.5"/>
+        <text x="280" y="77" text-anchor="middle" font-size="11" font-weight="600">RP Request Received</text>
+        <text x="280" y="91" text-anchor="middle" font-size="9" fill="#666" font-style="italic">(see 5.3)</text>
+
+        <!-- Lane 1: Wallet Unit Processing -->
+        <rect x="30" y="120" width="440" height="380" rx="12" ry="12" fill="#dae8fc" fill-opacity="0.25" stroke="#6c8ebf" stroke-width="1.5" stroke-dasharray="8 6"/>
+        <text x="45" y="140" font-size="11" font-weight="700" fill="#1a3d6e">Step 1 — Wallet Unit Processing (6.2.2.3)</text>
+
+        <!-- Arrow: Start → 1a -->
+        <line x1="280" y1="106" x2="280" y2="158" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Step 1a -->
+        <rect x="175" y="160" width="210" height="48" rx="10" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="280" y="181" text-anchor="middle" font-size="10.5" font-weight="700">1a) RP Authentication Check</text>
+        <text x="280" y="198" text-anchor="middle" font-size="8" fill="#336699">[Ctrl-5, Ctrl-6]</text>
+
+        <!-- Arrow 1a → 1b -->
+        <line x1="280" y1="208" x2="280" y2="226" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Step 1b -->
+        <rect x="175" y="228" width="210" height="48" rx="10" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="280" y="249" text-anchor="middle" font-size="10.5" font-weight="700">1b) RP Authorization Check</text>
+        <text x="280" y="266" text-anchor="middle" font-size="8" fill="#336699">[Ctrl-2, Ctrl-5, Ctrl-6]</text>
+
+        <!-- Arrow 1b → 1c -->
+        <line x1="280" y1="276" x2="280" y2="294" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Step 1c -->
+        <rect x="175" y="296" width="210" height="48" rx="10" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="280" y="317" text-anchor="middle" font-size="10.5" font-weight="700">1c) WHA Validity Check</text>
+        <text x="280" y="334" text-anchor="middle" font-size="8" fill="#336699">[Ctrl-0]</text>
+
+        <!-- Arrow 1c → 1d -->
+        <line x1="280" y1="344" x2="280" y2="362" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Step 1d -->
+        <rect x="175" y="364" width="210" height="48" rx="10" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="280" y="385" text-anchor="middle" font-size="10.5" font-weight="700">1d) Policy Evaluation</text>
+        <text x="280" y="402" text-anchor="middle" font-size="8" fill="#336699">[Ctrl-1, Ctrl-4, Ctrl-13, Ctrl-14]</text>
+
+        <!-- Arrow 1d → Decision 1 -->
+        <line x1="280" y1="412" x2="280" y2="435" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Decision 1: WACE Output -->
+        <polygon points="280,437 360,480 280,523 200,480" fill="#fff2cc" stroke="#d6b656" stroke-width="1.5"/>
+        <text x="280" y="476" text-anchor="middle" font-size="10.5" font-weight="700">WACE Output</text>
+        <text x="280" y="492" text-anchor="middle" font-size="8" fill="#666">(6.2.2.3.5)</text>
+
+        <!-- Decision labels -->
+        <text x="215" y="540" text-anchor="end" font-size="7.5" font-weight="700" fill="#2e7d32">access_granted_</text>
+        <text x="215" y="550" text-anchor="end" font-size="7.5" font-weight="700" fill="#2e7d32">recommended</text>
+        <text x="345" y="540" text-anchor="start" font-size="7.5" font-weight="700" fill="#e65100">access_not_granted_</text>
+        <text x="345" y="550" text-anchor="start" font-size="7.5" font-weight="700" fill="#e65100">recommended</text>
+
+        <!-- Arrow Decision 1 → Step 2a (granted/not-granted-recommended) -->
+        <line x1="280" y1="523" x2="280" y2="574" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+        <!-- Denied path: Decision 1 → Step 3a (bypass Step 2) -->
+        <polyline points="360,480 490,480 490,1020" fill="none" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)"/>
+        <text x="498" y="478" font-size="8" font-weight="700" fill="#c62828">access_denied</text>
+        <text x="498" y="490" font-size="7.5" fill="#c62828">(bypass Step 2)</text>
+
+        <!-- Lane 2: Wallet User Decision -->
+        <rect x="30" y="560" width="440" height="348" rx="12" ry="12" fill="#d5e8d4" fill-opacity="0.25" stroke="#82b366" stroke-width="1.5" stroke-dasharray="8 6"/>
+        <text x="45" y="580" font-size="11" font-weight="700" fill="#2e5a1e">Step 2 — Wallet User Decision (6.2.2.4)</text>
+
+        <!-- Step 2a -->
+        <rect x="175" y="596" width="210" height="48" rx="10" fill="#d5e8d4" stroke="#82b366" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="280" y="617" text-anchor="middle" font-size="10.5" font-weight="700">2a) WACE Decision Presentation</text>
+        <text x="280" y="634" text-anchor="middle" font-size="8" fill="#336699">[Ctrl-7]</text>
+
+        <!-- Arrow 2a → 2b -->
+        <line x1="280" y1="644" x2="280" y2="660" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Step 2b -->
+        <rect x="175" y="662" width="210" height="48" rx="10" fill="#d5e8d4" stroke="#82b366" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="280" y="683" text-anchor="middle" font-size="10.5" font-weight="700">2b) User Override Option</text>
+        <text x="280" y="700" text-anchor="middle" font-size="8" fill="#336699">[Ctrl-10]</text>
+
+        <!-- Arrow 2b → 2c -->
+        <line x1="280" y1="710" x2="280" y2="726" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Step 2c -->
+        <rect x="175" y="728" width="210" height="48" rx="10" fill="#d5e8d4" stroke="#82b366" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="280" y="749" text-anchor="middle" font-size="10.5" font-weight="700">2c) User Approval &amp; WHA Selection</text>
+        <text x="280" y="766" text-anchor="middle" font-size="8" fill="#336699">[Ctrl-8]</text>
+
+        <!-- Arrow 2c → 2d -->
+        <line x1="280" y1="776" x2="280" y2="792" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Step 2d -->
+        <rect x="175" y="794" width="210" height="48" rx="10" fill="#d5e8d4" stroke="#82b366" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="280" y="815" text-anchor="middle" font-size="10.5" font-weight="700">2d) User Authentication</text>
+        <text x="280" y="832" text-anchor="middle" font-size="8" fill="#336699">[Ctrl-3, Ctrl-9]</text>
+
+        <!-- Arrow 2d → Decision 2 -->
+        <line x1="280" y1="842" x2="280" y2="862" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Decision 2: User Decision Output -->
+        <polygon points="280,864 355,904 280,944 205,904" fill="#fff2cc" stroke="#d6b656" stroke-width="1.5"/>
+        <text x="280" y="898" text-anchor="middle" font-size="10" font-weight="700">User Decision</text>
+        <text x="280" y="912" text-anchor="middle" font-size="10" font-weight="700">Output</text>
+        <text x="280" y="926" text-anchor="middle" font-size="8" fill="#666">(6.2.2.4.4)</text>
+
+        <!-- Decision 2 labels -->
+        <text x="210" y="962" text-anchor="end" font-size="7.5" font-weight="700" fill="#2e7d32">access_granted</text>
+        <text x="350" y="962" text-anchor="start" font-size="7.5" font-weight="700" fill="#c62828">access_not_granted</text>
+
+        <!-- Arrow Decision 2 → Step 3a -->
+        <line x1="280" y1="944" x2="280" y2="990" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Lane 3: Wallet Response -->
+        <rect x="30" y="976" width="440" height="228" rx="12" ry="12" fill="#f8cecc" fill-opacity="0.25" stroke="#b85450" stroke-width="1.5" stroke-dasharray="8 6"/>
+        <text x="45" y="996" font-size="11" font-weight="700" fill="#6e2520">Step 3 — Wallet Response (6.2.2.5)</text>
+
+        <!-- Denied path endpoint connects here -->
+        <line x1="490" y1="1020" x2="388" y2="1020" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)"/>
+
+        <!-- Step 3a -->
+        <rect x="175" y="1010" width="210" height="48" rx="10" fill="#f8cecc" stroke="#b85450" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="280" y="1031" text-anchor="middle" font-size="10.5" font-weight="700">3a) Return Final Decision to RP</text>
+        <text x="280" y="1048" text-anchor="middle" font-size="8" fill="#336699">[Ctrl-11]</text>
+
+        <!-- Arrow 3a → 3b -->
+        <line x1="280" y1="1058" x2="280" y2="1078" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Step 3b -->
+        <rect x="175" y="1080" width="210" height="48" rx="10" fill="#f8cecc" stroke="#b85450" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="280" y="1101" text-anchor="middle" font-size="10.5" font-weight="700">3b) Transaction Log Management</text>
+        <text x="280" y="1118" text-anchor="middle" font-size="8" fill="#336699">[Ctrl-12]</text>
+
+        <!-- Arrow 3b → End -->
+        <line x1="280" y1="1128" x2="280" y2="1154" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- End -->
+        <ellipse cx="280" cy="1178" rx="80" ry="26" fill="#e6e6e6" stroke="#999" stroke-width="1.5"/>
+        <text x="280" y="1175" text-anchor="middle" font-size="11" font-weight="600">Response</text>
+        <text x="280" y="1189" text-anchor="middle" font-size="11" font-weight="600">Returned to RP</text>
+
+        <!-- Metadata Box -->
+        <rect x="440" y="160" width="155" height="140" rx="4" fill="#e1d5e7" stroke="#9673a6" stroke-width="1.2" filter="url(#shadow)"/>
+        <path d="M580,160 L565,175 L580,175 Z" fill="#e1d5e7" stroke="#9673a6" stroke-width="1"/>
+        <text x="450" y="180" font-size="9.5" font-weight="700" fill="#1A1A2E">Wallet Held Access</text>
+        <text x="450" y="194" font-size="9.5" font-weight="700" fill="#1A1A2E">Control Metadata (5.2.2)</text>
+        <line x1="448" y1="202" x2="588" y2="202" stroke="#9673a6" stroke-width="0.8"/>
+        <text x="450" y="218" font-size="8.5" fill="#444">Policies</text>
+        <text x="450" y="232" font-size="8.5" fill="#444">Instructions</text>
+        <text x="450" y="246" font-size="8.5" fill="#444">RP Registration Certs</text>
+        <text x="450" y="260" font-size="8.5" fill="#444">Pricing Policies</text>
+        <text x="450" y="280" font-size="8" fill="#666" font-style="italic">Consumed by 1a–1d</text>
+        <!-- Dashed line from metadata to step 1a -->
+        <line x1="440" y1="200" x2="388" y2="184" stroke="#9673a6" stroke-width="1" stroke-dasharray="5 3"/>
+
+        <!-- RP Request Box -->
+        <rect x="440" y="340" width="155" height="120" rx="4" fill="#e1d5e7" stroke="#9673a6" stroke-width="1.2" filter="url(#shadow)"/>
+        <path d="M580,340 L565,355 L580,355 Z" fill="#e1d5e7" stroke="#9673a6" stroke-width="1"/>
+        <text x="450" y="360" font-size="9.5" font-weight="700" fill="#1A1A2E">Relying Party</text>
+        <text x="450" y="374" font-size="9.5" font-weight="700" fill="#1A1A2E">Request (5.3)</text>
+        <line x1="448" y1="382" x2="588" y2="382" stroke="#9673a6" stroke-width="0.8"/>
+        <text x="450" y="398" font-size="8.5" fill="#444">Operation type</text>
+        <text x="450" y="412" font-size="8.5" fill="#444">WHA list</text>
+        <text x="450" y="426" font-size="8.5" fill="#444">RP attestation/cert</text>
+        <text x="450" y="440" font-size="8.5" fill="#444">Processing Info Notice</text>
+        <!-- Dashed line from RP request to step 1d -->
+        <line x1="440" y1="400" x2="388" y2="388" stroke="#9673a6" stroke-width="1" stroke-dasharray="5 3"/>
+
+        <!-- Legend -->
+        <rect x="30" y="1230" width="570" height="140" rx="10" fill="#f5f5f5" stroke="#ccc" stroke-width="1" stroke-dasharray="5 3"/>
+        <text x="45" y="1252" font-size="11" font-weight="700" fill="#333">Legend</text>
+
+        <rect x="50" y="1265" width="16" height="12" rx="3" fill="#dae8fc" stroke="#6c8ebf"/>
+        <text x="74" y="1276" font-size="9" fill="#444">Step 1: Wallet Unit Processing</text>
+
+        <rect x="50" y="1285" width="16" height="12" rx="3" fill="#d5e8d4" stroke="#82b366"/>
+        <text x="74" y="1296" font-size="9" fill="#444">Step 2: Wallet User Decision</text>
+
+        <rect x="50" y="1305" width="16" height="12" rx="3" fill="#f8cecc" stroke="#b85450"/>
+        <text x="74" y="1316" font-size="9" fill="#444">Step 3: Wallet Response</text>
+
+        <polygon points="310,1271 320,1265 330,1271 320,1277" fill="#fff2cc" stroke="#d6b656"/>
+        <text x="340" y="1276" font-size="9" fill="#444">Decision point</text>
+
+        <line x1="305" y1="1296" x2="335" y2="1296" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)"/>
+        <text x="340" y="1300" font-size="9" fill="#444">access_denied (bypasses Step 2)</text>
+
+        <rect x="307" y="1311" width="14" height="12" rx="2" fill="#e1d5e7" stroke="#9673a6"/>
+        <text x="340" y="1322" font-size="9" fill="#444">Data input (metadata / RP request)</text>
+
+        <text x="50" y="1356" font-size="8" fill="#999">Ctrl-N references correspond to CEN/TS 18297 control identifiers (Table 1, Clause 5.2.1)</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ════ Footer ════ -->
+<div class="footer">
+  <p>
+    EUDI Wallet Access Control Demo &mdash;
+    Based on CEN/TS 18297, eIDAS 2.0, IA 2024/2982 &mdash;
+    <a href="https://linaltec.com">Linaltec</a>
+  </p>
+  <p style="margin-top:8px;font-size:0.7rem;opacity:0.6;">
+    This demo is for educational and demonstration purposes only. It does not prescribe a specific wallet UX design.
+  </p>
+</div>
+
+<script>
+(function() {
+  var iframe = document.getElementById('demoIframe');
+  // Listen for height reports from the demo page via postMessage
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'demoHeight' && e.data.height) {
+      iframe.style.height = e.data.height + 'px';
+    }
+  });
+  // Fallback: try direct DOM access (same-origin only)
+  function resizeIframe() {
+    try {
+      var body = iframe.contentDocument.body;
+      var html = iframe.contentDocument.documentElement;
+      var h = Math.max(body.scrollHeight, body.offsetHeight, html.scrollHeight, html.offsetHeight);
+      if (h > 200) iframe.style.height = h + 'px';
+    } catch(e) {}
+  }
+  iframe.addEventListener('load', function() {
+    resizeIframe();
+    setTimeout(resizeIframe, 500);
+    setTimeout(resizeIframe, 1500);
+    try {
+      var ro = new ResizeObserver(function() { resizeIframe(); });
+      ro.observe(iframe.contentDocument.body);
+    } catch(e) {}
+  });
+  window.addEventListener('resize', resizeIframe);
+})();
+</script>
+</body>
+</html>
