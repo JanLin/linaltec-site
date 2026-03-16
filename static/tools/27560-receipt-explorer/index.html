@@ -160,15 +160,15 @@
   /* ─── Tooltip ─── */
   .tooltip-container { position: relative; display: inline-block; }
   .tooltip {
-    display: none; position: absolute; bottom: calc(100% + 8px); left: 50%;
-    transform: translateX(-50%); background: var(--tooltip-bg); color: #fff;
+    display: none; position: absolute; bottom: calc(100% + 8px); left: 0;
+    background: var(--tooltip-bg); color: #fff;
     padding: 14px 18px; border-radius: 10px; font-size: 0.8rem; line-height: 1.5;
-    width: 320px; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    width: 320px; max-width: calc(100vw - 32px); z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.25);
     pointer-events: none;
   }
   .tooltip::after {
-    content: ''; position: absolute; top: 100%; left: 50%;
-    transform: translateX(-50%); border: 6px solid transparent;
+    content: ''; position: absolute; top: 100%; left: 24px;
+    border: 6px solid transparent;
     border-top-color: var(--tooltip-bg);
   }
   .tooltip-container:hover .tooltip { display: block; pointer-events: auto; }
