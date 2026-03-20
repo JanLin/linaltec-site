@@ -30,7 +30,7 @@ Think about how a modern car communicates with its driver. At the surface level,
 
 But the information is layered. When that amber warning appears, you can check the dashboard display for a plain-language explanation. If you want more, the mechanic can plug in an OBD reader and see the exact fault codes, sensor readings, and diagnostic history.
 
-This is exactly the model CEN/TS 18297 follows for wallet notifications. The citizen sees a clear recommendation: **Granted**, **Advisory**, **Not Recommended**, or **Denied**. That's the dashboard light. If they want to understand why, they tap Details and see which checks passed or failed — the plain-language display. And for each check, they can expand into the technical detail: the certificate policy OID, the trust list registration status, the specific retention period conflict. That's the OBD reader.
+This is exactly the model CEN/TS 18297 follows for wallet notifications. The citizen sees a clear recommendation: **Granted**, **Advisory**, **Not Recommended**, or **Denied**. That's the dashboard light. If they want to understand why, they tap Details and see which checks passed or failed — the plain-language display. And for each check, they can expand into the technical detail: the certificate policy OID, the trust list registration status, the specific retention period conflict. That's the OBD reader. You can explore all four outcomes in the [interactive Wallet Access Control demo](https://linaltec.com/tools/wallet-access-control/).
 
 ## Structured inputs vs privacy policies
 
