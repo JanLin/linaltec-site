@@ -1,13 +1,13 @@
 ---
 title: "Where the EUDI Wallet Certification Scheme Stops Short — and Three Changes We Asked For"
 date: 2026-05-07
-description: "ENISA's draft candidate EUDI Wallet certification scheme is mature in structure but leaves the wallet-held decision layer distributed across multiple sections rather than named and sequenced as one evaluable surface. Three focused additions — reference CEN/TS 18297, add a WACE clause, and add CTRL-CNDXS — consolidate that layer without rewriting the scheme."
+description: "ENISA's draft EUDI Wallet certification scheme leaves the decision layer distributed across sections. Three focused additions consolidate it."
 tags: ["EUDI Wallet", "eIDAS 2.0", "ENISA", "CEN Standards", "Cybersecurity Certification", "Access Control"]
 author: "Jan Lindquist"
 summary: "ENISA's draft EUDI Wallet certification scheme handles the provider layer cleanly, but the wallet-held decision layer — where eIDAS 2.0 Article 5a user rights actually operate — sits distributed across sections of the Security Requirements rather than named and sequenced as one evaluable surface. This post explains how the scheme already touches the decision layer in pieces, shows the layered architecture, and sets out the three focused asks we submitted before the 30 April 2026 deadline — additions that consolidate the layer without expanding the scheme's scope."
 cover:
-  image: "images/cover-eudiw-decision-layer.svg"
-  alt: "Stacked transparent glass layers, representing the four-layer assurance stack of the EUDI wallet"
+  image: "images/cover-eudiw-decision-layer.png"
+  alt: "EUDI Wallet Certification Scheme cover — four-layer assurance stack with the Decision Layer highlighted as a proposed reference"
   relative: false
 ---
 
