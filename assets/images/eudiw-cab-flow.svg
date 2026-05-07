@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" width="900" height="500" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#2E5E8C"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="450" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="#1F4E79">Wallet Access Control Flow — CAB Evaluation View</text>
+  <text x="450" y="40" text-anchor="middle" font-size="11" fill="#595959">Mapping of CEN/TS 18297 §6.2.2.6 steps onto ENISA Scheme §X.2 evaluation activities</text>
+
+  <!-- Three lane headers -->
+  <g>
+    <rect x="20"  y="60" width="280" height="30" fill="#1F4E79" rx="4"/>
+    <rect x="310" y="60" width="280" height="30" fill="#2E5E8C" rx="4"/>
+    <rect x="600" y="60" width="280" height="30" fill="#3A6E9D" rx="4"/>
+    <text x="160" y="80" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">1. Wallet Unit Processing</text>
+    <text x="450" y="80" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">2. Wallet User Decision</text>
+    <text x="740" y="80" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">3. Wallet Response</text>
+  </g>
+
+  <!-- Lane backgrounds -->
+  <rect x="20"  y="90" width="280" height="330" fill="#F5F8FB" stroke="#D9E1EA" stroke-width="1" rx="4"/>
+  <rect x="310" y="90" width="280" height="330" fill="#F0F5FB" stroke="#D9E1EA" stroke-width="1" rx="4"/>
+  <rect x="600" y="90" width="280" height="330" fill="#ECF2FA" stroke="#D9E1EA" stroke-width="1" rx="4"/>
+
+  <!-- ========== LANE 1 — Wallet Unit Processing ========== -->
+  <!-- Step 1a -->
+  <g>
+    <rect x="35"  y="105" width="250" height="68" fill="#FFFFFF" stroke="#8FB8DD" stroke-width="1" rx="4"/>
+    <rect x="35"  y="105" width="5"   height="68" fill="#2E7D32" rx="2"/>
+    <text x="48" y="122" font-size="11" font-weight="700" fill="#1F4E79">1a  RP Authentication Check</text>
+    <text x="48" y="138" font-size="10" fill="#1A1A1A">CTRL-RPATT · CTRL-RPID</text>
+    <text x="48" y="156" font-size="9" fill="#2E7D32" font-weight="600">Conformance testing</text>
+    <text x="48" y="168" font-size="9" fill="#595959" font-style="italic">RP access certificate, LoTE</text>
+  </g>
+  <!-- Step 1b -->
+  <g>
+    <rect x="35"  y="183" width="250" height="68" fill="#FFFFFF" stroke="#8FB8DD" stroke-width="1" rx="4"/>
+    <rect x="35"  y="183" width="5"   height="68" fill="#2E7D32" rx="2"/>
+    <text x="48" y="200" font-size="11" font-weight="700" fill="#1F4E79">1b  RP Authorization Check</text>
+    <text x="48" y="216" font-size="10" fill="#1A1A1A">CTRL-RPCHK · RPATT · RPID</text>
+    <text x="48" y="234" font-size="9" fill="#2E7D32" font-weight="600">Conformance + Inspection</text>
+    <text x="48" y="246" font-size="9" fill="#595959" font-style="italic">Wallet-held metadata</text>
+  </g>
+  <!-- Step 1c -->
+  <g>
+    <rect x="35"  y="261" width="250" height="68" fill="#FFFFFF" stroke="#8FB8DD" stroke-width="1" rx="4"/>
+    <rect x="35"  y="261" width="5"   height="68" fill="#2E7D32" rx="2"/>
+    <text x="48" y="278" font-size="11" font-weight="700" fill="#1F4E79">1c  WHA Validity Check</text>
+    <text x="48" y="294" font-size="10" fill="#1A1A1A">CTRL-VALID</text>
+    <text x="48" y="312" font-size="9" fill="#2E7D32" font-weight="600">Conformance testing</text>
+    <text x="48" y="324" font-size="9" fill="#595959" font-style="italic">Revocation, wallet unit attestation</text>
+  </g>
+  <!-- Step 1d — GAP flag (CRITICAL for C-SEQ-1 + C-SEQ-2) -->
+  <g>
+    <rect x="35"  y="339" width="250" height="72" fill="#FFF6F3" stroke="#C0392B" stroke-width="1.5" rx="4"/>
+    <rect x="35"  y="339" width="5"   height="72" fill="#2E7D32" rx="2"/>
+    <text x="48" y="356" font-size="11" font-weight="700" fill="#C0392B">1d  Request Parsing &amp; Policy  ★</text>
+    <text x="48" y="372" font-size="10" fill="#1A1A1A">POLCY · RPCHK · CNDXS · PRICE* · INTER*</text>
+    <text x="48" y="390" font-size="9" fill="#2E7D32" font-weight="600">Conformance + Inspection</text>
+    <text x="48" y="404" font-size="9" fill="#C0392B" font-style="italic" font-weight="600">Gap: CTRL-CNDXS absent  →  C-SEQ-2</text>
+  </g>
+
+  <!-- Arrow lane 1 -> lane 2 -->
+  <line x1="293" y1="375" x2="318" y2="375" stroke="#2E5E8C" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== LANE 2 — Wallet User Decision ========== -->
+  <!-- Step 2a -->
+  <g>
+    <rect x="325" y="105" width="250" height="68" fill="#FFFFFF" stroke="#8FB8DD" stroke-width="1" rx="4"/>
+    <rect x="325" y="105" width="5"   height="68" fill="#AF7AC5" rx="2"/>
+    <text x="338" y="122" font-size="11" font-weight="700" fill="#1F4E79">2a  Decision Presentation</text>
+    <text x="338" y="138" font-size="10" fill="#1A1A1A">CTRL-PRESN</text>
+    <text x="338" y="156" font-size="9" fill="#AF7AC5" font-weight="600">Interactive testing</text>
+    <text x="338" y="168" font-size="9" fill="#595959" font-style="italic">UI, decision rationale</text>
+  </g>
+  <!-- Step 2b — GAP (IMPORTANT, C-SEQ-5) -->
+  <g>
+    <rect x="325" y="183" width="250" height="72" fill="#FFF6F3" stroke="#E67E22" stroke-width="1.5" rx="4"/>
+    <rect x="325" y="183" width="5"   height="72" fill="#AF7AC5" rx="2"/>
+    <text x="338" y="200" font-size="11" font-weight="700" fill="#E67E22">2b  User Override Option  ▲</text>
+    <text x="338" y="216" font-size="10" fill="#1A1A1A">CTRL-OVRRD</text>
+    <text x="338" y="234" font-size="9" fill="#AF7AC5" font-weight="600">Interactive + Audit</text>
+    <text x="338" y="248" font-size="9" fill="#E67E22" font-style="italic" font-weight="600">Gap: override model absent  →  C-SEQ-5</text>
+  </g>
+  <!-- Step 2c -->
+  <g>
+    <rect x="325" y="265" width="250" height="68" fill="#FFFFFF" stroke="#8FB8DD" stroke-width="1" rx="4"/>
+    <rect x="325" y="265" width="5"   height="68" fill="#AF7AC5" rx="2"/>
+    <text x="338" y="282" font-size="11" font-weight="700" fill="#1F4E79">2c  User Approval / WHA Select</text>
+    <text x="338" y="298" font-size="10" fill="#1A1A1A">CTRL-WHASL</text>
+    <text x="338" y="316" font-size="9" fill="#AF7AC5" font-weight="600">Interactive testing</text>
+    <text x="338" y="328" font-size="9" fill="#595959" font-style="italic">UI, attribute-selection mechanism</text>
+  </g>
+  <!-- Step 2d -->
+  <g>
+    <rect x="325" y="343" width="250" height="68" fill="#FFFFFF" stroke="#8FB8DD" stroke-width="1" rx="4"/>
+    <rect x="325" y="343" width="5"   height="68" fill="#2E7D32" rx="2"/>
+    <text x="338" y="360" font-size="11" font-weight="700" fill="#1F4E79">2d  User Authentication</text>
+    <text x="338" y="376" font-size="10" fill="#1A1A1A">CTRL-ASLVL · CTRL-AUTHN</text>
+    <text x="338" y="394" font-size="9" fill="#2E7D32" font-weight="600">Conformance + Interactive</text>
+    <text x="338" y="406" font-size="9" fill="#595959" font-style="italic">WSCA/WSCD auth flow</text>
+  </g>
+
+  <!-- Arrow lane 2 -> lane 3 -->
+  <line x1="583" y1="375" x2="608" y2="375" stroke="#2E5E8C" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== LANE 3 — Wallet Response ========== -->
+  <!-- Step 3a -->
+  <g>
+    <rect x="615" y="105" width="250" height="68" fill="#FFFFFF" stroke="#8FB8DD" stroke-width="1" rx="4"/>
+    <rect x="615" y="105" width="5"   height="68" fill="#1F6F8B" rx="2"/>
+    <text x="628" y="122" font-size="11" font-weight="700" fill="#1F4E79">3a  Presentation to RP</text>
+    <text x="628" y="138" font-size="10" fill="#1A1A1A">CTRL-RSPGR · CTRL-RSPDN</text>
+    <text x="628" y="156" font-size="9" fill="#1F6F8B" font-weight="600">Specific + Inspection</text>
+    <text x="628" y="168" font-size="9" fill="#595959" font-style="italic">Response, cryptographic bindings</text>
+  </g>
+  <!-- Step 3b — GAP (IMPORTANT, C-SEQ-4) -->
+  <g>
+    <rect x="615" y="183" width="250" height="72" fill="#FFF6F3" stroke="#E67E22" stroke-width="1.5" rx="4"/>
+    <rect x="615" y="183" width="5"   height="72" fill="#7F7F7F" rx="2"/>
+    <text x="628" y="200" font-size="11" font-weight="700" fill="#E67E22">3b  Transaction Log Management  ▲</text>
+    <text x="628" y="216" font-size="10" fill="#1A1A1A">CTRL-RSPDN · CTRL-LOG</text>
+    <text x="628" y="234" font-size="9" fill="#7F7F7F" font-weight="600">Inspection + Audit</text>
+    <text x="628" y="248" font-size="9" fill="#E67E22" font-style="italic" font-weight="600">Gap: log mgmt absent  →  C-SEQ-4</text>
+  </g>
+
+  <!-- Foundation strip — CTRL-MTDMG as underlying dependency -->
+  <g>
+    <rect x="615" y="270" width="250" height="80" fill="#FFF6F3" stroke="#C0392B" stroke-width="1.5" rx="4"/>
+    <rect x="615" y="270" width="5"   height="80" fill="#7F7F7F" rx="2"/>
+    <text x="628" y="287" font-size="11" font-weight="700" fill="#C0392B">Foundation: Metadata Lifecycle  ★</text>
+    <text x="628" y="303" font-size="10" fill="#1A1A1A">CTRL-MTDMG</text>
+    <text x="628" y="321" font-size="9" fill="#7F7F7F" font-weight="600">Inspection + Audit</text>
+    <text x="628" y="335" font-size="9" fill="#C0392B" font-style="italic" font-weight="600">Gap: no lifecycle clause  →  C-SEQ-1</text>
+    <text x="628" y="347" font-size="9" fill="#595959" font-style="italic">Referenced by every control above</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(20, 440)">
+    <text x="0" y="0" font-size="11" font-weight="700" fill="#1F4E79">§X.2 activity type:</text>
+    <rect x="120" y="-10" width="12" height="12" fill="#2E7D32" rx="2"/>
+    <text x="138" y="0" font-size="10" fill="#1A1A1A">Conformance</text>
+    <rect x="210" y="-10" width="12" height="12" fill="#AF7AC5" rx="2"/>
+    <text x="228" y="0" font-size="10" fill="#1A1A1A">Interactive</text>
+    <rect x="290" y="-10" width="12" height="12" fill="#1F6F8B" rx="2"/>
+    <text x="308" y="0" font-size="10" fill="#1A1A1A">Specific</text>
+    <rect x="360" y="-10" width="12" height="12" fill="#7F7F7F" rx="2"/>
+    <text x="378" y="0" font-size="10" fill="#1A1A1A">Inspection / Audit</text>
+
+    <text x="480" y="0" font-size="11" font-weight="700" fill="#1F4E79">Gap indicator:</text>
+    <rect x="580" y="-10" width="12" height="12" fill="#FFF6F3" stroke="#C0392B" stroke-width="1.5" rx="2"/>
+    <text x="598" y="0" font-size="10" fill="#C0392B" font-weight="600">★ CRITICAL</text>
+    <rect x="680" y="-10" width="12" height="12" fill="#FFF6F3" stroke="#E67E22" stroke-width="1.5" rx="2"/>
+    <text x="698" y="0" font-size="10" fill="#E67E22" font-weight="600">▲ IMPORTANT</text>
+  </g>
+
+  <text x="20" y="478" font-size="9" fill="#7F7F7F" font-style="italic">Based on CEN/TS 18297 clause 6.2.2.6 (Access Control Flow and Control Mapping), WG20 working document N579. Conditional controls CTRL-PRICE and CTRL-INTER marked *.</text>
+</svg>

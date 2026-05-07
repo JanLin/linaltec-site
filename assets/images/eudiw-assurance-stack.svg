@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 560" role="img" aria-label="EUDI wallet assurance stack — four layers of evaluation with the decision layer shown as a proposed reference">
+  <title>EUDI Wallet Assurance Stack</title>
+  <desc>Four stacked layers of evaluation evidence used by ENISA's draft candidate scheme. Bottom to top: Cryptographic Protection (WSCA PP, WG17, EUCC AVA_VAN.5); Instance Hardening (wallet-instance PP, EUDIW AHWG, OWASP MASVS); PID On-boarding (CEN TS 18098, WG17); and — proposed as a reference in §X.1.4 — the Decision Layer (CEN/TS 18297, WG20) where the Wallet Access Control Engine evaluates a Relying Party request before any data is released.</desc>
+
+  <style>
+    .title { font: 600 20px -apple-system, "Segoe UI", Roboto, sans-serif; fill: #111827; }
+    .sub   { font: 400 13px -apple-system, "Segoe UI", Roboto, sans-serif; fill: #6b7280; }
+    .layer-name { font: 600 16px -apple-system, "Segoe UI", Roboto, sans-serif; fill: #111827; }
+    .layer-std  { font: 500 13px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #2563eb; }
+    .layer-desc { font: 400 13px -apple-system, "Segoe UI", Roboto, sans-serif; fill: #374151; }
+    .badge      { font: 600 11px -apple-system, "Segoe UI", Roboto, sans-serif; fill: #92400e; }
+    .arrow-lbl  { font: 500 12px -apple-system, "Segoe UI", Roboto, sans-serif; fill: #6b7280; }
+    .layer-box  { fill: #f9fafb; stroke: #e5e7eb; stroke-width: 1.5; }
+    .layer-top  { fill: #fffbeb; stroke: #f59e0b; stroke-width: 2; stroke-dasharray: 6 3; }
+    .badge-bg   { fill: #fef3c7; stroke: #f59e0b; stroke-width: 1; }
+    @media (prefers-color-scheme: dark) {
+      .title, .layer-name { fill: #f3f4f6; }
+      .sub, .layer-desc   { fill: #9ca3af; }
+      .layer-box  { fill: #1f2937; stroke: #374151; }
+      .layer-top  { fill: #422006; stroke: #f59e0b; }
+      .badge      { fill: #fde68a; }
+      .badge-bg   { fill: #422006; stroke: #f59e0b; }
+    }
+  </style>
+
+  <text x="410" y="32" class="title" text-anchor="middle">The EUDI wallet assurance stack</text>
+  <text x="410" y="52" class="sub"   text-anchor="middle">Four layers of evaluation evidence · bottom-up composition</text>
+
+  <!-- Decision layer (top, proposed reference) -->
+  <rect x="40" y="80" width="740" height="92" rx="8" class="layer-top"/>
+  <text x="60"  y="108" class="layer-name">Decision Layer</text>
+  <text x="60"  y="130" class="layer-std">CEN/TS 18297 · CEN TC 224 WG20</text>
+  <text x="60"  y="152" class="layer-desc">Wallet Access Control Engine: evaluates Relying Party request, applies wallet-held policy metadata, presents decision to user</text>
+  <rect x="600" y="92" width="164" height="22" rx="11" class="badge-bg"/>
+  <text x="682" y="107" class="badge" text-anchor="middle">PROPOSED REFERENCE</text>
+
+  <!-- PID on-boarding -->
+  <rect x="40" y="188" width="740" height="82" rx="8" class="layer-box"/>
+  <text x="60"  y="216" class="layer-name">PID On-boarding Layer</text>
+  <text x="60"  y="238" class="layer-std">CEN TS 18098 · CEN TC 224 WG17</text>
+  <text x="60"  y="258" class="layer-desc">Binding of Personal Identification Data to the wallet unit</text>
+
+  <!-- Instance hardening -->
+  <rect x="40" y="286" width="740" height="82" rx="8" class="layer-box"/>
+  <text x="60"  y="314" class="layer-name">Instance Hardening Layer</text>
+  <text x="60"  y="336" class="layer-std">Wallet-instance Protection Profile · OWASP MASVS</text>
+  <text x="60"  y="356" class="layer-desc">App hardening, runtime protection, device-posture defences</text>
+
+  <!-- Cryptographic protection -->
+  <rect x="40" y="384" width="740" height="82" rx="8" class="layer-box"/>
+  <text x="60"  y="412" class="layer-name">Cryptographic Protection Layer</text>
+  <text x="60"  y="434" class="layer-std">WSCA PP · CEN TC 224 WG17 · EUCC AVA_VAN.5</text>
+  <text x="60"  y="454" class="layer-desc">Keystores, signing, secure storage</text>
+
+  <!-- Caption at bottom -->
+  <text x="40"  y="500" class="arrow-lbl">Evidence composes upward: lower layers supply assurance that upper layers rely on.</text>
+  <text x="40"  y="520" class="arrow-lbl">The top layer is the one the user experiences — currently distributed across §8.2–8.6, not yet named as one evaluable surface.</text>
+</svg>

@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 620" role="img" aria-label="Scheme coverage — provider layer is consolidated; wallet-held decision layer is distributed across multiple sections; three proposed additions consolidate it.">
+  <title>Scheme coverage · what is consolidated, what is distributed, and three additions that consolidate it</title>
+  <desc>Left column shows what ENISA's scheme already verifies (the provider layer, inherited from ETSI EN 319 401). Right column shows what is currently distributed at the wallet-held decision layer rather than named as one consolidated surface. Three arrows at the bottom show the three proposed additions that consolidate the layer: reference CEN/TS 18297 in §X.1.4, add a WACE clause, and add CTRL-CNDXS conditions-of-use.</desc>
+
+  <style>
+    .title  { font: 600 20px -apple-system, "Segoe UI", Roboto, sans-serif; fill: #111827; }
+    .sub    { font: 400 13px -apple-system, "Segoe UI", Roboto, sans-serif; fill: #6b7280; }
+    .col-h  { font: 600 15px -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .col-h-ok   { fill: #065f46; }
+    .col-h-miss { fill: #9a3412; }
+    .item   { font: 400 13px -apple-system, "Segoe UI", Roboto, sans-serif; fill: #374151; }
+    .tag    { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .tag-ok   { fill: #047857; }
+    .tag-miss { fill: #c2410c; }
+    .fix-h  { font: 600 14px -apple-system, "Segoe UI", Roboto, sans-serif; fill: #111827; }
+    .fix-n  { font: 700 14px -apple-system, "Segoe UI", Roboto, sans-serif; fill: #1d4ed8; }
+    .fix-b  { font: 400 13px -apple-system, "Segoe UI", Roboto, sans-serif; fill: #374151; }
+    .col-ok   { fill: #f0fdf4; stroke: #86efac; stroke-width: 1.5; }
+    .col-miss { fill: #fff7ed; stroke: #fdba74; stroke-width: 1.5; }
+    .fix-box  { fill: #eff6ff; stroke: #93c5fd; stroke-width: 1.5; }
+    .arrow    { stroke: #1d4ed8; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    @media (prefers-color-scheme: dark) {
+      .title { fill: #f3f4f6; }
+      .sub   { fill: #9ca3af; }
+      .col-h-ok   { fill: #6ee7b7; }
+      .col-h-miss { fill: #fdba74; }
+      .item  { fill: #d1d5db; }
+      .tag-ok   { fill: #34d399; }
+      .tag-miss { fill: #fb923c; }
+      .fix-h, .fix-n { fill: #e5e7eb; }
+      .fix-b { fill: #cbd5e1; }
+      .col-ok   { fill: #052e1d; stroke: #065f46; }
+      .col-miss { fill: #3b1204; stroke: #c2410c; }
+      .fix-box  { fill: #172554; stroke: #3b82f6; }
+      .arrow    { stroke: #60a5fa; }
+    }
+  </style>
+
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <text x="410" y="32" class="title" text-anchor="middle">Scheme coverage — what is consolidated, what is distributed, and three additions that consolidate it</text>
+  <text x="410" y="52" class="sub" text-anchor="middle">ENISA EUDIW draft candidate scheme v0.4.614 · Security Requirements v0.5.614</text>
+
+  <!-- Column: CONSOLIDATED -->
+  <rect x="40" y="80" width="360" height="280" rx="10" class="col-ok"/>
+  <text x="60"  y="108" class="col-h col-h-ok">✓ Provider layer — consolidated</text>
+  <text x="60"  y="132" class="tag tag-ok">SecReq §7 · ETSI EN 319 401</text>
+
+  <text x="60"  y="164" class="item">• Physical and logical access to provider assets (§7.4)</text>
+  <text x="60"  y="188" class="item">• Incident, vulnerability and fraud management</text>
+  <text x="60"  y="212" class="item">• Development and change management</text>
+  <text x="60"  y="236" class="item">• Retention, disclosure and protection of information</text>
+  <text x="60"  y="260" class="item">• Audit per ETSI EN 319 403-1 (CAB requirements)</text>
+  <text x="60"  y="284" class="item">• Surveillance evaluation (annual)</text>
+
+  <text x="60"  y="324" class="tag tag-ok">Result:</text>
+  <text x="60"  y="344" class="item">The wallet provider is evaluable end-to-end.</text>
+
+  <!-- Column: DISTRIBUTED -->
+  <rect x="420" y="80" width="360" height="280" rx="10" class="col-miss"/>
+  <text x="440" y="108" class="col-h col-h-miss">△ Wallet decision layer — distributed</text>
+  <text x="440" y="132" class="tag tag-miss">Touched in §8.2–8.6, not consolidated</text>
+
+  <text x="440" y="164" class="item">• No Wallet Access Control Engine (WACE) clause</text>
+  <text x="440" y="188" class="item">• No CTRL-CNDXS (Relying-Party conditions of use)</text>
+  <text x="440" y="212" class="item">• No CTRL-OVRRD (structured user override)</text>
+  <text x="440" y="236" class="item">• No CTRL-LOG / CTRL-ULOGD consolidation</text>
+  <text x="440" y="260" class="item">• §7.4 label collides with wallet-held access control</text>
+  <text x="440" y="284" class="item">• No authoritative wallet-held metadata source named</text>
+
+  <text x="440" y="324" class="tag tag-miss">Result:</text>
+  <text x="440" y="344" class="item">CABs cannot evaluate the decision layer deterministically.</text>
+
+  <!-- Arrows from distributed → fixes -->
+  <g color="#1d4ed8">
+    <path class="arrow" d="M 205 395 L 205 430"/>
+    <path class="arrow" d="M 410 395 L 410 430"/>
+    <path class="arrow" d="M 615 395 L 615 430"/>
+  </g>
+
+  <!-- Three fixes row -->
+  <rect x="40"  y="440" width="240" height="140" rx="10" class="fix-box"/>
+  <text x="55"  y="468" class="fix-n">1</text>
+  <text x="80"  y="468" class="fix-h">Activate the reference</text>
+  <text x="55"  y="498" class="fix-b">Reference CEN/TS 18297</text>
+  <text x="55"  y="520" class="fix-b">in Scheme §X.1.4, alongside</text>
+  <text x="55"  y="542" class="fix-b">CEN TS 18098.</text>
+
+  <rect x="290" y="440" width="240" height="140" rx="10" class="fix-box"/>
+  <text x="305" y="468" class="fix-n">2</text>
+  <text x="330" y="468" class="fix-h">Add the WACE clause</text>
+  <text x="305" y="498" class="fix-b">Consolidate the decision</text>
+  <text x="305" y="520" class="fix-b">sequence and name CTRL-</text>
+  <text x="305" y="542" class="fix-b">MTDMG as authoritative.</text>
+
+  <rect x="540" y="440" width="240" height="140" rx="10" class="fix-box"/>
+  <text x="555" y="468" class="fix-n">3</text>
+  <text x="580" y="468" class="fix-h">Add CTRL-CNDXS</text>
+  <text x="555" y="498" class="fix-b">Evaluate RP conditions of</text>
+  <text x="555" y="520" class="fix-b">use against wallet-held</text>
+  <text x="555" y="542" class="fix-b">metadata at disclosure.</text>
+</svg>
