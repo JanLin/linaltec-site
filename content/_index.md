@@ -56,3 +56,23 @@ description: "Cybersecurity & Privacy Consulting — Securing digital identity. 
 </div>
 </div>
 
+<div class="service-block">
+<div class="service-icon">
+<svg viewBox="0 0 80 80" fill="none">
+  <rect x="10" y="14" width="60" height="52" rx="6" stroke="#1A1A2E" stroke-width="3"/>
+  <circle cx="26" cy="34" r="6" stroke="#00AEEF" stroke-width="2.5"/>
+  <circle cx="54" cy="34" r="6" stroke="#00AEEF" stroke-width="2.5"/>
+  <circle cx="40" cy="54" r="7" stroke="#00AEEF" stroke-width="2.5"/>
+  <line x1="32" y1="34" x2="48" y2="34" stroke="#00AEEF" stroke-width="2"/>
+  <line x1="29" y1="40" x2="36" y2="49" stroke="#00AEEF" stroke-width="2"/>
+  <line x1="51" y1="40" x2="44" y2="49" stroke="#00AEEF" stroke-width="2"/>
+  <polyline points="36,54 39,57 45,50" stroke="#1A1A2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</div>
+<div class="service-text">
+<h3>Agent Governance for the EU</h3>
+<p>Bringing ISMS discipline to the AI agents your organisation is already starting to deploy — risk treatment, role separation, audit trail, and human oversight built on ISO 27001/22301 foundations and aligned with ISO/IEC 42001 and the EU AI Act.</p>
+<p><a href="/services/#agent-governance">Learn more →</a></p>
+</div>
+</div>
+

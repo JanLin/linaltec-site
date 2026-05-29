@@ -1,7 +1,7 @@
 ---
 title: "Services"
 layout: "single"
-description: "Linaltec offers three service pillars: EUDI Wallet & Digital Identity Security, ISO 27001 & 22301 Certification (including GDPR compliance and DPIA), and Virtual Security Officer (vCISO) services."
+description: "Linaltec offers four service pillars: EUDI Wallet & Digital Identity Security, ISO 27001 & 22301 Certification (including GDPR compliance and DPIA), Virtual Security Officer (vCISO) services, and Agent Governance for the EU."
 url: "/services/"
 ---
 
@@ -108,6 +108,45 @@ Organisations with 50–500 employees that have achieved or are pursuing certifi
 - **Incident response coordination** — Establish and manage incident response processes so your team knows what to do when something goes wrong.
 - **Security awareness training** — Develop and deliver training programmes that build a security-conscious culture across your organisation.
 - **Supplier and third-party risk management** — Assess and monitor the security posture of your vendors and partners.
+
+---
+
+<div class="service-header">
+<svg viewBox="0 0 80 80" fill="none" class="service-header-icon">
+  <rect x="10" y="14" width="60" height="52" rx="6" stroke="#1A1A2E" stroke-width="3"/>
+  <circle cx="26" cy="34" r="6" stroke="#00AEEF" stroke-width="2.5"/>
+  <circle cx="54" cy="34" r="6" stroke="#00AEEF" stroke-width="2.5"/>
+  <circle cx="40" cy="54" r="7" stroke="#00AEEF" stroke-width="2.5"/>
+  <line x1="32" y1="34" x2="48" y2="34" stroke="#00AEEF" stroke-width="2"/>
+  <line x1="29" y1="40" x2="36" y2="49" stroke="#00AEEF" stroke-width="2"/>
+  <line x1="51" y1="40" x2="44" y2="49" stroke="#00AEEF" stroke-width="2"/>
+  <polyline points="36,54 39,57 45,50" stroke="#1A1A2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+## Agent Governance
+</div>
+
+AI agents are moving into operations faster than most organisations have governance for them. Risk management, data governance, human oversight, logging — the obligations under EU AI Act Articles 9–15 and the controls in ISO/IEC 42001 are familiar in shape to anyone running an ISO 27001 or 22301 programme.
+
+We help Nordic organisations build the governance layer before agents reach production:
+
+- **Agent-risk assessment** — extending your existing ISMS risk register to cover agent-specific failure modes: model selection, prompt provenance, tool permissions, runaway-cost containment.
+- **Control mapping** — ISO 27001 / 22301 controls mapped onto your agent stack, with the AI-specific gaps (42001 Annex A, AI Act Articles 9–15) called out for treatment.
+- **Boundary engineering** — filesystem, tool, channel, and escalation allowlists treated as access control, not as prompt suggestions.
+- **Custodian agents** — a security observer and a devops operator implemented as agents themselves, with the authority to interrupt, not just log.
+- **Privacy-first reference implementation** — for organisations where data residency or sensitivity rules out managed agent platforms, we maintain an on-prem reference harness ("OpenClaw") on which we test the controls we recommend. Same patterns run on customer-owned IaaS.
+
+This service sits next to our vCISO engagements. If we are already your ISMS lead, agent governance is an additional module on the existing retainer. If we are not, this is a sensible first step.
+
+**Typical engagements:**
+
+- *Gap analysis* — a focused 2–3 week assessment against ISO/IEC 42001 and the EU AI Act high-risk obligations, with a control map onto your existing ISMS. Fixed price.
+- *Implementation support* — 3–6 months alongside the team that owns the agent deployment, producing the documented controls, logs, and oversight procedures the auditor will want to see.
+- *vCISO add-on* — a module on an existing fractional CISO retainer, scaling up when agents enter production and down again afterwards.
+
+Adjacent to: [ISO 27001 & 22301](#iso-27001--22301-certification), [vCISO](#virtual-security-officer-vciso--isms-management).
+
+[Contact us](/contact/) to scope an agent-governance gap analysis.
 
 ---
 
