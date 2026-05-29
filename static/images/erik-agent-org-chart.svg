@@ -1,0 +1,123 @@
+<svg viewBox="0 110 1200 502" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <title>Erik's organisation — Jan as Operator, Erik (Mac Mini) as COO; five governance officers above five specialist teams</title>
+
+  <!-- Chart title -->
+  <text x="600" y="146" text-anchor="middle" fill="#1A1A2E" font-size="22" font-weight="700">Agent Organisation</text>
+
+  <!-- OPERATOR (Jan) — dead centre -->
+  <rect x="500" y="170" width="200" height="60" rx="6" fill="#1A1A2E"/>
+  <text x="600" y="193" text-anchor="middle" fill="#FFFFFF" font-size="10" letter-spacing="2.5" font-weight="600">OPERATOR</text>
+  <text x="600" y="217" text-anchor="middle" fill="#FFFFFF" font-size="16" font-weight="600">Jan Lindquist</text>
+
+  <!-- Peer connector Jan -> Erik (horizontal, no arrows) -->
+  <line x1="700" y1="200" x2="724" y2="200" stroke="#1A1A2E" stroke-width="1.5"/>
+
+  <!-- ERIK (COO) — just to the right of Jan -->
+  <rect x="724" y="166" width="200" height="68" rx="6" fill="#00AEEF"/>
+  <text x="824" y="188" text-anchor="middle" fill="#FFFFFF" font-size="10" letter-spacing="2" font-weight="600">CHIEF OPERATING OFFICER</text>
+  <text x="824" y="211" text-anchor="middle" fill="#FFFFFF" font-size="18" font-weight="700">Erik</text>
+  <text x="824" y="226" text-anchor="middle" fill="#FFFFFF" font-size="10">Mac Mini · on-prem · segregated</text>
+
+  <!-- Drop from Jan to the C-Suite header (Jan owns the org) -->
+  <line x1="600" y1="230" x2="600" y2="260" stroke="#1A1A2E" stroke-width="2"/>
+
+  <!-- C-Suite header bar -->
+  <rect x="60" y="260" width="1080" height="28" fill="#1A1A2E"/>
+  <text x="600" y="280" text-anchor="middle" fill="#FFFFFF" font-size="11" letter-spacing="3" font-weight="600">GOVERNANCE TEAM · C-SUITE</text>
+
+  <!-- C-Suite boxes (5 roles), each sits above its specialist team column -->
+
+  <!-- Col 1: Chief Architect (above Rotary) -->
+  <rect x="80" y="300" width="200" height="72" fill="#FFFFFF" stroke="#1A1A2E" stroke-width="2"/>
+  <rect x="80" y="300" width="6" height="72" fill="#1A1A2E"/>
+  <text x="98" y="324" fill="#1A1A2E" font-size="11" font-weight="700" letter-spacing="0.5">CHIEF ARCHITECT</text>
+  <text x="98" y="352" fill="#1A1A2E" font-size="11">architect</text>
+
+  <!-- Col 2: Chief of Staff (above Customer Services) -->
+  <rect x="290" y="300" width="200" height="72" fill="#FFFFFF" stroke="#1A1A2E" stroke-width="2"/>
+  <rect x="290" y="300" width="6" height="72" fill="#1A1A2E"/>
+  <text x="308" y="324" fill="#1A1A2E" font-size="11" font-weight="700" letter-spacing="0.5">CHIEF OF STAFF</text>
+  <text x="308" y="352" fill="#1A1A2E" font-size="11">interviewer</text>
+
+  <!-- Col 3: Chief Strategy Officer (above Knowledge) -->
+  <rect x="500" y="300" width="200" height="72" fill="#FFFFFF" stroke="#1A1A2E" stroke-width="2"/>
+  <rect x="500" y="300" width="6" height="72" fill="#1A1A2E"/>
+  <text x="518" y="324" fill="#1A1A2E" font-size="11" font-weight="700" letter-spacing="0.5">CHIEF STRATEGY OFFICER</text>
+  <text x="518" y="352" fill="#1A1A2E" font-size="11">business-development</text>
+
+  <!-- Col 4: Chief Product Officer (above Development) -->
+  <rect x="710" y="300" width="200" height="72" fill="#FFFFFF" stroke="#1A1A2E" stroke-width="2"/>
+  <rect x="710" y="300" width="6" height="72" fill="#1A1A2E"/>
+  <text x="728" y="324" fill="#1A1A2E" font-size="11" font-weight="700" letter-spacing="0.5">CHIEF PRODUCT OFFICER</text>
+  <text x="728" y="352" fill="#1A1A2E" font-size="11">product-manager</text>
+
+  <!-- Col 5: Chief Security Officer (top right, above Infrastructure) -->
+  <rect x="920" y="300" width="200" height="72" fill="#FFFFFF" stroke="#1A1A2E" stroke-width="2"/>
+  <rect x="920" y="300" width="6" height="72" fill="#1A1A2E"/>
+  <text x="938" y="324" fill="#1A1A2E" font-size="11" font-weight="700" letter-spacing="0.5">CHIEF SECURITY OFFICER</text>
+  <text x="938" y="352" fill="#1A1A2E" font-size="11">security-officer</text>
+
+  <!-- Connector C-Suite -> Specialist Teams (vertical stub + horizontal manifold) -->
+  <line x1="600" y1="372" x2="600" y2="398" stroke="#1A1A2E" stroke-width="2"/>
+  <line x1="164" y1="398" x2="1036" y2="398" stroke="#1A1A2E" stroke-width="2"/>
+  <line x1="164" y1="398" x2="164" y2="416" stroke="#1A1A2E" stroke-width="2"/>
+  <line x1="382" y1="398" x2="382" y2="416" stroke="#1A1A2E" stroke-width="2"/>
+  <line x1="600" y1="398" x2="600" y2="416" stroke="#1A1A2E" stroke-width="2"/>
+  <line x1="818" y1="398" x2="818" y2="416" stroke="#1A1A2E" stroke-width="2"/>
+  <line x1="1036" y1="398" x2="1036" y2="416" stroke="#1A1A2E" stroke-width="2"/>
+
+  <!-- "SPECIALIST TEAMS" label -->
+  <text x="60" y="392" fill="#1A1A2E" font-size="10" letter-spacing="3" font-weight="600">SPECIALIST TEAMS</text>
+
+  <!-- TEAM 1: ROTARY TEAM (brick red #B25240) — first row only -->
+  <rect x="60" y="416" width="208" height="28" fill="#B25240"/>
+  <text x="164" y="435" text-anchor="middle" fill="#FFFFFF" font-size="11" letter-spacing="2" font-weight="600">ROTARY TEAM</text>
+
+  <rect x="60" y="454" width="208" height="64" fill="#FFFFFF" stroke="#B25240" stroke-width="1.5"/>
+  <rect x="60" y="454" width="6" height="64" fill="#B25240"/>
+  <text x="76" y="475" fill="#1A1A2E" font-size="10" font-weight="700" letter-spacing="0.5">RYE PROGRAMME ASSISTANT</text>
+  <text x="76" y="502" fill="#1A1A2E" font-size="10">youth-chair</text>
+
+  <!-- TEAM 2: CUSTOMER SERVICES (teal #1F6F8B) — renamed agent -->
+  <rect x="278" y="416" width="208" height="28" fill="#1F6F8B"/>
+  <text x="382" y="435" text-anchor="middle" fill="#FFFFFF" font-size="11" letter-spacing="2" font-weight="600">CUSTOMER SERVICES</text>
+
+  <rect x="278" y="454" width="208" height="64" fill="#FFFFFF" stroke="#1F6F8B" stroke-width="1.5"/>
+  <rect x="278" y="454" width="6" height="64" fill="#1F6F8B"/>
+  <text x="294" y="475" fill="#1A1A2E" font-size="10" font-weight="700" letter-spacing="0.5">COMMUNICATION FRONT DESK</text>
+  <text x="294" y="502" fill="#1A1A2E" font-size="10">communication-dispatcher</text>
+
+  <!-- TEAM 3: KNOWLEDGE TEAM (olive #3F6E4A) — first row only -->
+  <rect x="496" y="416" width="208" height="28" fill="#3F6E4A"/>
+  <text x="600" y="435" text-anchor="middle" fill="#FFFFFF" font-size="11" letter-spacing="2" font-weight="600">KNOWLEDGE TEAM</text>
+
+  <rect x="496" y="454" width="208" height="64" fill="#FFFFFF" stroke="#3F6E4A" stroke-width="1.5"/>
+  <rect x="496" y="454" width="6" height="64" fill="#3F6E4A"/>
+  <text x="512" y="475" fill="#1A1A2E" font-size="10" font-weight="700" letter-spacing="0.5">KNOWLEDGE MANAGER</text>
+  <text x="512" y="502" fill="#1A1A2E" font-size="10">librarian</text>
+
+  <!-- TEAM 4: DEVELOPMENT (slate #4A5470) — developer + evaluator -->
+  <rect x="714" y="416" width="208" height="28" fill="#4A5470"/>
+  <text x="818" y="435" text-anchor="middle" fill="#FFFFFF" font-size="11" letter-spacing="2" font-weight="600">DEVELOPMENT</text>
+
+  <rect x="714" y="454" width="208" height="64" fill="#FFFFFF" stroke="#4A5470" stroke-width="1.5"/>
+  <rect x="714" y="454" width="6" height="64" fill="#4A5470"/>
+  <text x="730" y="475" fill="#1A1A2E" font-size="10" font-weight="700" letter-spacing="0.5">DEVELOPER</text>
+  <text x="730" y="502" fill="#1A1A2E" font-size="10">developer</text>
+
+  <rect x="714" y="528" width="208" height="64" fill="#FFFFFF" stroke="#4A5470" stroke-width="1.5"/>
+  <rect x="714" y="528" width="6" height="64" fill="#4A5470"/>
+  <text x="730" y="549" fill="#1A1A2E" font-size="10" font-weight="700" letter-spacing="0.5">EVALUATOR</text>
+  <text x="730" y="576" fill="#1A1A2E" font-size="10">evaluator</text>
+
+  <!-- TEAM 5: INFRASTRUCTURE (ochre #B07A1E) — Scotty / devops only -->
+  <rect x="932" y="416" width="208" height="28" fill="#B07A1E"/>
+  <text x="1036" y="435" text-anchor="middle" fill="#FFFFFF" font-size="11" letter-spacing="2" font-weight="600">INFRASTRUCTURE</text>
+
+  <rect x="932" y="454" width="208" height="64" fill="#FFFFFF" stroke="#B07A1E" stroke-width="1.5"/>
+  <rect x="932" y="454" width="6" height="64" fill="#B07A1E"/>
+  <text x="948" y="475" fill="#1A1A2E" font-size="10" font-weight="700" letter-spacing="0.5">DEVOPS</text>
+  <text x="948" y="502" fill="#1A1A2E" font-size="10" font-weight="600">Scotty</text>
+  <text x="980" y="502" fill="#1A1A2E" font-size="10">· devops</text>
+
+</svg>
