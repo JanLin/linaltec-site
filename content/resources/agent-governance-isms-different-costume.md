@@ -19,7 +19,7 @@ He runs OpenClaw — the local agent runtime I use as a reference implementation
 
 ![Agent organisation chart — Jan (Operator) sits at the centre with Erik (Mac Mini, COO) just to the right working in parallel; five governance officers below above five specialist teams, each officer aligned to the team they oversee (Architect over Rotary, Chief of Staff over Customer Services, Strategy over Knowledge, Product over Development, Security top-right over Infrastructure)](/images/erik-agent-org-chart.svg)
 
-The year before Erik I spent going deep on what large language models actually do well and where they stop. The conclusion that kept surfacing through both — the deep dive and the late nights — is the same: an LLM is just another tool. As the operator you have to keep a short leash on it, or the output drifts.
+Before Erik arrived in early 2026, I'd spent the previous year using ChatGPT and then Claude for everyday work — drafting emails, developing strategy, some vibe coding. The conclusion that surfaced through both — the year of practical use and the four months of late nights with Erik — is the same: an LLM is just another tool. As the operator you have to keep a short leash on it, or the output drifts.
 
 I've watched a pattern repeat in conversations with Nordic CISOs and ISMS leads over the same period: somebody on their team has started using AI agents — for ticket triage, for draft documentation, for first-pass code review — and the governance question lands in their lap with no warning. The agent is already deployed. The risk register has nothing on it. The auditor is going to ask about it in nine months.
 
