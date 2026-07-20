@@ -1,1 +1,12 @@
 <script defer src="https://cloud.umami.is/script.js" data-website-id="ca1faa43-e025-4a96-8836-7bc8c0a22efd"></script>
+
+{{- /* hreflang x-default: the English version of this page (PaperMod's head.html
+       already emits a self + translations hreflang set via .AllTranslations). */}}
+{{- $default := . }}
+{{- range .AllTranslations }}{{ if eq .Lang "en" }}{{ $default = . }}{{ end }}{{ end }}
+<link rel="alternate" hreflang="x-default" href="{{ $default.Permalink }}">
+
+{{- /* og:locale:alternate for the other language(s) of this page */}}
+{{- range .Translations }}
+<meta property="og:locale:alternate" content="{{ .Language.LanguageCode }}">
+{{- end }}

@@ -7,6 +7,10 @@ url: "/credentials/"
 
 ## Standards Bodies & Working Groups
 
+### Business Wallet Expert Task Force
+
+Approved member of the **technical task force for the European Business Wallet**, contributing to the technical groundwork for business-to-business digital identity in the EU.
+
 ### ISO/IEC JTC1 SC27 WG5
 
 Active contributor to international standards for information security, cybersecurity, and privacy protection. SC27 WG5 focuses on identity management and privacy technologies.
@@ -21,7 +25,7 @@ Co-editor of **prCEN TS 18297** — the European standard defining access reques
 
 ### SIS — Swedish Institute for Standards
 
-Active participant in Swedish national standards work and organiser of standards seminars in Stockholm, bridging international standards development with Nordic industry needs.
+Convenor of **SIS/TK 318 AG 51** and active participant in Swedish national standards work, organising standards seminars in Stockholm and bridging international standards development with Nordic industry needs.
 
 ---
 

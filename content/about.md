@@ -19,10 +19,11 @@ Before establishing Linaltec's current consulting practice, Jan served as Senior
 
 Jan is actively involved in international and European standards development:
 
+- **Business Wallet Expert Task Force** — Approved member of the technical task force for the European Business Wallet
 - **ISO/IEC JTC1 SC27 WG5** — Contributing to international information security and privacy standards
 - **ISO/IEC 27560** — Lead editor of the consent record information structure standard
 - **CEN TC224 WG20** — Co-editor of prCEN TS 18297, defining access request security controls for European Digital Identity wallets
-- **SIS (Swedish Institute for Standards)** — Active participant and organiser of standards seminars in Stockholm
+- **SIS/TK 318 AG 51** — Convenor of the working group under SIS (Swedish Institute for Standards), and organiser of standards seminars in Stockholm
 - **StandICT Fellow** — Recipient of the European ICT standardisation fellowship
 
 ### Awards & Recognition
@@ -58,10 +59,11 @@ Jan is a regular speaker at European security and identity conferences:
 
 ### Standards Bodies & Working Groups
 
+- **Business Wallet Expert Task Force** — Approved member of the technical task force for the European Business Wallet
 - **ISO/IEC JTC1 SC27 WG5** — Active contributor to international standards for information security, cybersecurity, and privacy protection
 - **CEN TC224 WG20** — Co-editor of prCEN TS 18297, defining access request security controls for EUDI wallets
 - **ISO/IEC 27560** — Lead editor of the international standard for consent record information structure
-- **SIS (Swedish Institute for Standards)** — Active participant and organiser of standards seminars in Stockholm
+- **SIS/TK 318 AG 51** — Convenor of the working group under SIS (Swedish Institute for Standards), and organiser of standards seminars in Stockholm
 
 ### Fellowships & Awards
 

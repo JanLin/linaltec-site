@@ -1,0 +1,22 @@
+# UI strings — English
+
+[latest_resources]
+other = "Latest from Resources"
+
+[view_all_posts]
+other = "View all posts →"
+
+[learn_more]
+other = "Learn more →"
+
+[get_in_touch]
+other = "Get in Touch"
+
+[get_in_touch_text]
+other = "Ready to discuss your security and privacy challenges? Whether you need ISO certification support, GDPR compliance guidance, a Data Protection Impact Assessment, agent governance, or ongoing security leadership — let's talk."
+
+[contact_us]
+other = "Contact us →"
+
+[powered_by]
+other = "Powered by"

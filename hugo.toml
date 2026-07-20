@@ -1,23 +1,32 @@
 baseURL = "https://janlin.github.io/linaltec-site/"
-languageCode = "en-us"
 title = "Linaltec AB"
 theme = "PaperMod"
-paginate = 10
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
+
+[pagination]
+  pagerSize = 10
 
 [params]
-  description = "Cybersecurity & Privacy Consulting"
+  description = "Cybersecurity & Privacy Consulting — ISO 27001 certification, vCISO, and AI agent governance."
   author = "Jan Lindquist"
   defaultTheme = "light"
+  displayFullLangName = true
   ShowReadingTime = true
   ShowShareButtons = false
   ShowPostNavLinks = true
   ShowBreadCrumbs = false
   ShowCodeCopyButtons = true
+  images = ["images/og-card.png"]
 
   [params.label]
     text = ""
     icon = "images/logo.png"
     iconHeight = 35
+
+  [params.schema]
+    publisherType = "Organization"
+    sameAs = ["https://www.linkedin.com/in/janlindquist/"]
 
   [[params.socialIcons]]
     name = "linkedin"
@@ -27,58 +36,135 @@ paginate = 10
     name = "email"
     url = "mailto:jan@linaltec.com"
 
-[menu]
-  [[menu.main]]
-    identifier = "services"
-    name = "Services"
-    url = "/services/"
-    weight = 10
+[languages]
+  [languages.en]
+    languageCode = "en-GB"
+    languageName = "English"
+    weight = 1
+    title = "Linaltec AB"
+    [languages.en.params]
+      description = "Cybersecurity & Privacy Consulting — ISO 27001 certification, vCISO, and AI agent governance."
 
-  [[menu.main]]
-    identifier = "about"
-    name = "About"
-    url = "/about/"
-    weight = 40
+    [[languages.en.menu.main]]
+      identifier = "services"
+      name = "Services"
+      url = "services/"
+      weight = 10
 
-  [[menu.main]]
-    identifier = "resources"
-    name = "Resources"
-    url = "/resources/"
-    weight = 30
+    [[languages.en.menu.main]]
+      identifier = "tools"
+      name = "Tools"
+      url = "tools/"
+      weight = 20
 
+    [[languages.en.menu.main]]
+      identifier = "tools-27560"
+      parent = "tools"
+      name = "ISO 27560 Receipt Explorer"
+      url = "tools/27560-receipt-explorer/"
+      weight = 10
 
-  [[menu.main]]
-    identifier = "tools"
-    name = "Tools"
-    url = "/tools/"
-    weight = 20
+    [[languages.en.menu.main]]
+      identifier = "tools-wallet-access-control"
+      parent = "tools"
+      name = "Wallet Access Control Demo"
+      url = "tools/wallet-access-control/"
+      weight = 20
 
-  [[menu.main]]
-    identifier = "tools-27560"
-    parent = "tools"
-    name = "ISO 27560 Receipt Explorer"
-    url = "/tools/27560-receipt-explorer/"
-    weight = 10
+    [[languages.en.menu.main]]
+      identifier = "resources"
+      name = "Resources"
+      url = "resources/"
+      weight = 30
 
-  [[menu.main]]
-    identifier = "tools-wallet-access-control"
-    parent = "tools"
-    name = "Wallet Access Control Demo"
-    url = "/tools/wallet-access-control/"
-    weight = 20
+    [[languages.en.menu.main]]
+      identifier = "about"
+      name = "About"
+      url = "about/"
+      weight = 40
 
-  [[menu.main]]
-    identifier = "contact"
-    name = "Contact"
-    url = "/contact/"
-    weight = 50
+    [[languages.en.menu.main]]
+      identifier = "contact"
+      name = "Contact"
+      url = "contact/"
+      weight = 50
 
-  [[menu.main]]
-    identifier = "search"
-    name = ""
-    url = "/search/"
-    weight = 60
-    pre = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>'
+    [[languages.en.menu.main]]
+      identifier = "search"
+      name = ""
+      url = "search/"
+      weight = 60
+      pre = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>'
+
+  [languages.sv]
+    languageCode = "sv-SE"
+    languageName = "Svenska"
+    weight = 2
+    title = "Linaltec AB"
+    [languages.sv.params]
+      description = "Konsulttjänster inom cybersäkerhet och dataskydd — ISO 27001-certifiering, vCISO och styrning av AI-agenter."
+
+    # Resources and Tools are English-only; entries marked crossLang = true link
+    # across to the English sections (rendered without the /sv/ language prefix)
+    # rather than exposing empty Swedish list pages.
+    [[languages.sv.menu.main]]
+      identifier = "services"
+      name = "Tjänster"
+      url = "services/"
+      weight = 10
+
+    [[languages.sv.menu.main]]
+      identifier = "tools"
+      name = "Verktyg"
+      url = "tools/"
+      weight = 20
+      [languages.sv.menu.main.params]
+        crossLang = true
+
+    [[languages.sv.menu.main]]
+      identifier = "tools-27560"
+      parent = "tools"
+      name = "ISO 27560 Receipt Explorer"
+      url = "tools/27560-receipt-explorer/"
+      weight = 10
+      [languages.sv.menu.main.params]
+        crossLang = true
+
+    [[languages.sv.menu.main]]
+      identifier = "tools-wallet-access-control"
+      parent = "tools"
+      name = "Wallet Access Control Demo"
+      url = "tools/wallet-access-control/"
+      weight = 20
+      [languages.sv.menu.main.params]
+        crossLang = true
+
+    [[languages.sv.menu.main]]
+      identifier = "resources"
+      name = "Resurser"
+      url = "resources/"
+      weight = 30
+      [languages.sv.menu.main.params]
+        crossLang = true
+
+    [[languages.sv.menu.main]]
+      identifier = "about"
+      name = "Om oss"
+      url = "about/"
+      weight = 40
+
+    [[languages.sv.menu.main]]
+      identifier = "contact"
+      name = "Kontakt"
+      url = "contact/"
+      weight = 50
+
+    [[languages.sv.menu.main]]
+      identifier = "search"
+      name = ""
+      url = "search/"
+      weight = 60
+      pre = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>'
 
 [taxonomies]
   tag = "tags"
