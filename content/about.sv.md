@@ -6,7 +6,7 @@ description: "Om Jan Lindquist och Linaltec AB — konsulttjänster inom cybers�
 
 ## Om Linaltec
 
-Linaltec AB grundades 2015 av Jan Lindquist och har sitt säte i Stockholm. Företaget erbjuder konsulttjänster inom cybersäkerhet och dataskydd med fokus på europeisk digital identitet, ledningssystem för informationssäkerhet och internationell standardisering.
+Linaltec AB grundades 2015 av Jan Lindquist och har sitt huvudkontor i Stockholm. Företaget erbjuder konsulttjänster inom cybersäkerhet och dataskydd med fokus på europeisk digital identitet, ledningssystem för informationssäkerhet och internationell standardisering.
 
 ## Om Jan Lindquist
 
