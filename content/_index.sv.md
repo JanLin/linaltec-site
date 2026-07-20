@@ -1,10 +1,10 @@
 ---
 title: "Linaltec AB"
 layout: "home"
-description: "Cybersecurity & Privacy Consulting — ISO 27001 certification, vCISO, and AI agent governance."
+description: "Konsulttjänster inom cybersäkerhet och dataskydd — ISO 27001-certifiering, vCISO och styrning av AI-agenter."
 ---
 
-## Our Services
+## Våra tjänster
 
 <div class="service-block">
 <div class="service-icon">
@@ -17,9 +17,9 @@ description: "Cybersecurity & Privacy Consulting — ISO 27001 certification, vC
 </svg>
 </div>
 <div class="service-text">
-<h3>ISO 27001 & 22301 Certification</h3>
-<p>Achieve and maintain ISO certification, ensure GDPR compliance, and conduct Data Protection Impact Assessments — with practical guidance from gap analysis through to successful audit.</p>
-<p><a href="/services/#iso-27001--22301-certification">Learn more →</a></p>
+<h3>Certifiering enligt ISO 27001 och ISO 22301</h3>
+<p>Uppnå och behåll ISO-certifiering, säkerställ efterlevnad av GDPR och genomför konsekvensbedömningar avseende dataskydd (DPIA) — med praktisk vägledning från gapanalys hela vägen till godkänd revision.</p>
+<p><a href="/sv/services/#certifiering-enligt-iso-27001-och-iso-22301">Läs mer →</a></p>
 </div>
 </div>
 
@@ -34,9 +34,9 @@ description: "Cybersecurity & Privacy Consulting — ISO 27001 certification, vC
 </svg>
 </div>
 <div class="service-text">
-<h3>Virtual Security Officer (vCISO)</h3>
-<p>Ongoing ISMS management and security leadership without the full-time hire. Your fractional CISO.</p>
-<p><a href="/services/#virtual-security-officer-vciso--isms-management">Learn more →</a></p>
+<h3>Virtuell säkerhetschef (vCISO)</h3>
+<p>Löpande förvaltning av ert ledningssystem för informationssäkerhet och säkerhetsledning — utan en heltidsrekrytering. Er CISO på deltid.</p>
+<p><a href="/sv/services/#virtuell-säkerhetschef-vciso--isms-förvaltning">Läs mer →</a></p>
 </div>
 </div>
 
@@ -54,9 +54,9 @@ description: "Cybersecurity & Privacy Consulting — ISO 27001 certification, vC
 </svg>
 </div>
 <div class="service-text">
-<h3>Agent Governance for the EU</h3>
-<p>Bringing ISMS discipline to the AI agents your organisation is already starting to deploy — risk treatment, role separation, audit trail, and human oversight built on ISO 27001/22301 foundations and aligned with ISO/IEC 42001 and the EU AI Act.</p>
-<p><a href="/services/#agent-governance">Learn more →</a></p>
+<h3>Styrning av AI-agenter för EU</h3>
+<p>Vi tillämpar ISMS-disciplin på de AI-agenter er organisation redan börjar införa — riskbehandling, rollseparation, spårbarhet och mänsklig tillsyn, byggt på ISO 27001/22301 och i linje med ISO/IEC 42001 och EU:s AI-förordning.</p>
+<p><a href="/sv/services/#styrning-av-ai-agenter">Läs mer →</a></p>
 </div>
 </div>
 
@@ -70,8 +70,8 @@ description: "Cybersecurity & Privacy Consulting — ISO 27001 certification, vC
 </svg>
 </div>
 <div class="service-text">
-<h3>EUDI Wallet & Digital Identity Security</h3>
-<p>Protect your digital wallet implementation with expertise rooted in European standards and mobile application security.</p>
-<p><a href="/services/#eudi-wallet--digital-identity-security">Learn more →</a></p>
+<h3>EUDI-plånbok & säkerhet för digital identitet</h3>
+<p>Skydda er implementation av digitala plånböcker med expertis förankrad i europeiska standarder och mobil applikationssäkerhet.</p>
+<p><a href="/sv/services/#eudi-plånbok--säkerhet-för-digital-identitet">Läs mer →</a></p>
 </div>
 </div>

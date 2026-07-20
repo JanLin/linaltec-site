@@ -1,0 +1,24 @@
+# UI strings — Swedish
+# Blog posts are English-only; "Latest from Resources" on the Swedish homepage
+# points across to the English section.
+
+[latest_resources]
+other = "Senaste från Resurser"
+
+[view_all_posts]
+other = "Visa alla inlägg →"
+
+[learn_more]
+other = "Läs mer →"
+
+[get_in_touch]
+other = "Kontakta oss"
+
+[get_in_touch_text]
+other = "Redo att diskutera era utmaningar inom säkerhet och dataskydd? Oavsett om ni behöver stöd inför ISO-certifiering, vägledning kring GDPR, en konsekvensbedömning (DPIA), styrning av AI-agenter eller löpande säkerhetsledning — hör av er."
+
+[contact_us]
+other = "Kontakta oss →"
+
+[powered_by]
+other = "Drivs med"

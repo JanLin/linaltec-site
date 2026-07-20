@@ -1,44 +1,8 @@
 ---
 title: "Services"
 layout: "single"
-description: "Linaltec offers four service pillars: EUDI Wallet & Digital Identity Security, ISO 27001 & 22301 Certification (including GDPR compliance and DPIA), Virtual Security Officer (vCISO) services, and Agent Governance for the EU."
+description: "Linaltec offers four service pillars: ISO 27001 & 22301 Certification (including GDPR compliance and DPIA), Virtual Security Officer (vCISO) services, Agent Governance for the EU, and EUDI Wallet & Digital Identity Security."
 url: "/services/"
----
-
-<div class="service-header">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none" class="service-header-icon">
-  <path d="M40 8L14 20v20c0 16.6 11.1 32.1 26 36 14.9-3.9 26-19.4 26-36V20L40 8z" stroke="#1A1A2E" stroke-width="3" fill="none"/>
-  <rect x="28" y="30" width="24" height="18" rx="2" stroke="#00AEEF" stroke-width="2.5"/>
-  <circle cx="40" cy="37" r="3.5" stroke="#00AEEF" stroke-width="2"/>
-  <line x1="40" y1="41" x2="40" y2="45" stroke="#00AEEF" stroke-width="2" stroke-linecap="round"/>
-</svg>
-
-## EUDI Wallet & Digital Identity Security
-</div>
-
-Linaltec sits at the intersection of European digital identity regulation and practical application security. Drawing on hands-on product management experience with mobile application security (Cryptomathic MASC), active standards contributions (CEN TS 18297, ISO 27560), and deep understanding of the eIDAS 2.0 architecture, we help organisations build secure, standards-compliant digital identity solutions.
-
-### Who this is for
-
-Wallet providers, national identity agencies, fintech companies, and organisations implementing eIDAS 2.0.
-
-### What we offer
-
-- **EUDI wallet security assessment and vulnerability analysis** — Identify and address security gaps in your wallet implementation before they become incidents.
-- **Mobile application protection strategy** — Practical guidance on protecting wallet apps from reverse engineering, emulator attacks, and runtime manipulation.
-- **Privacy-by-design consulting** — Embed privacy protections into your digital wallet architecture from the ground up.
-- **Standards alignment advisory** — Ensure your implementation meets CEN TS 18297, ISO/CEN wallet certification requirements, and eIDAS 2.0 compliance.
-- **Consent management implementation** — Design and implement consent flows aligned with ISO/IEC 27560.
-- **Access control framework design** — Define secure interactions between wallets and relying parties.
-
-### Why Linaltec
-
-- Published 4-part blog series on EUDI wallet vulnerabilities (Cryptomathic)
-- EIC 2025 keynote presentation on wallet access control
-- Involvement in Belgium's EUDI wallet project via Cryptomathic MASC
-- Co-editor of prCEN TS 18297 (access request security controls)
-- Best research paper at ENISA Annual Privacy Forum 2024
-
 ---
 
 <div class="service-header">
@@ -136,6 +100,8 @@ We help Nordic organisations build the governance layer before agents reach prod
 - **Custodian agents** — a security observer and a devops operator implemented as agents themselves, with the authority to interrupt, not just log.
 - **Privacy-first reference implementation** — for organisations where data residency or sensitivity rules out managed agent platforms, we maintain an on-prem reference harness ("OpenClaw") on which we test the controls we recommend. Same patterns run on customer-owned IaaS.
 
+A typical engagement delivers an inventory of the agents in scope, a risk-register entry per agent, a documented oversight and escalation policy, and evidence mapped to your existing ISMS controls.
+
 This service sits next to our vCISO engagements. If we are already your ISMS lead, agent governance is an additional module on the existing retainer. If we are not, this is a sensible first step.
 
 **Typical engagements:**
@@ -147,6 +113,42 @@ This service sits next to our vCISO engagements. If we are already your ISMS lea
 Adjacent to: [ISO 27001 & 22301](#iso-27001--22301-certification), [vCISO](#virtual-security-officer-vciso--isms-management).
 
 [Contact us](/contact/) to scope an agent-governance gap analysis.
+
+---
+
+<div class="service-header">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none" class="service-header-icon">
+  <path d="M40 8L14 20v20c0 16.6 11.1 32.1 26 36 14.9-3.9 26-19.4 26-36V20L40 8z" stroke="#1A1A2E" stroke-width="3" fill="none"/>
+  <rect x="28" y="30" width="24" height="18" rx="2" stroke="#00AEEF" stroke-width="2.5"/>
+  <circle cx="40" cy="37" r="3.5" stroke="#00AEEF" stroke-width="2"/>
+  <line x1="40" y1="41" x2="40" y2="45" stroke="#00AEEF" stroke-width="2" stroke-linecap="round"/>
+</svg>
+
+## EUDI Wallet & Digital Identity Security
+</div>
+
+Linaltec sits at the intersection of European digital identity regulation and practical application security. Drawing on hands-on product management experience with mobile application security (Cryptomathic MASC), active standards contributions (CEN TS 18297, ISO 27560), and deep understanding of the eIDAS 2.0 architecture, we help organisations build secure, standards-compliant digital identity solutions.
+
+### Who this is for
+
+Wallet providers, national identity agencies, fintech companies, and organisations implementing eIDAS 2.0.
+
+### What we offer
+
+- **EUDI wallet security assessment and vulnerability analysis** — Identify and address security gaps in your wallet implementation before they become incidents.
+- **Mobile application protection strategy** — Practical guidance on protecting wallet apps from reverse engineering, emulator attacks, and runtime manipulation.
+- **Privacy-by-design consulting** — Embed privacy protections into your digital wallet architecture from the ground up.
+- **Standards alignment advisory** — Ensure your implementation meets CEN TS 18297, ISO/CEN wallet certification requirements, and eIDAS 2.0 compliance.
+- **Consent management implementation** — Design and implement consent flows aligned with ISO/IEC 27560.
+- **Access control framework design** — Define secure interactions between wallets and relying parties.
+
+### Why Linaltec
+
+- Published 4-part blog series on EUDI wallet vulnerabilities (Cryptomathic)
+- EIC 2025 keynote presentation on wallet access control
+- Involvement in Belgium's EUDI wallet project via Cryptomathic MASC
+- Co-editor of prCEN TS 18297 (access request security controls)
+- Best research paper at ENISA Annual Privacy Forum 2024
 
 ---
 

@@ -93,12 +93,14 @@
         {{- $currentPage := . }}
         <ul id="menu">
             {{- range site.Menus.main }}
-            {{- $menu_item_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) | absLangURL }}
+            {{- $url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) }}
+            {{- /* crossLang entries link to the default-language (English) section */}}
+            {{- $menu_item_url := cond (eq (.Params.crossLang | default false) true) ($url | absURL) ($url | absLangURL) }}
             {{- $page_url:= $currentPage.Permalink | absLangURL }}
             {{- $is_search := eq (site.GetPage .KeyName).Layout `search` }}
             {{- if .HasChildren }}
             <li class="menu-dropdown">
-                <a href="{{ .URL | absLangURL }}" title="{{ .Title | default .Name }}">
+                <a href="{{ $menu_item_url }}" title="{{ .Title | default .Name }}">
                     <span {{- if eq $menu_item_url $page_url }} class="active" {{- end }}>
                         {{- .Name -}}
                         <svg class="dropdown-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12"
@@ -110,8 +112,10 @@
                 </a>
                 <ul class="submenu">
                     {{- range .Children }}
+                    {{- $child_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) }}
+                    {{- $child_href := cond (eq (.Params.crossLang | default false) true) ($child_url | absURL) ($child_url | absLangURL) }}
                     <li>
-                        <a href="{{ .URL | absLangURL }}" title="{{ .Title | default .Name }}">
+                        <a href="{{ $child_href }}" title="{{ .Title | default .Name }}">
                             {{- .Name -}}
                         </a>
                     </li>
@@ -120,7 +124,7 @@
             </li>
             {{- else }}
             <li>
-                <a href="{{ .URL | absLangURL }}" title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
+                <a href="{{ $menu_item_url }}" title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
                 {{- cond $is_search (" accesskey=/" | safeHTMLAttr) ("" | safeHTMLAttr ) }}>
                     <span {{- if eq $menu_item_url $page_url }} class="active" {{- end }}>
                         {{- .Pre }}

@@ -8,7 +8,9 @@
 </div>
 {{- end }}
 
-<!-- Latest from Resources -->
+<!-- Latest from Resources (blog posts are English-only; the Swedish site links across) -->
+{{- $defaultSite := .Sites.Default }}
+{{- $resourcesPage := $defaultSite.GetPage "/resources" }}
 <div class="post-content">
 <div class="latest-resources">
   <div class="service-block">
@@ -21,19 +23,19 @@
       </svg>
     </div>
     <div class="service-text">
-      <h2>Latest from Resources</h2>
+      <h2>{{ i18n "latest_resources" }}</h2>
     </div>
   </div>
   <div class="latest-posts-row">
-    {{- range first 3 (where .Site.RegularPages "Section" "resources") }}
+    {{- range first 3 (where $defaultSite.RegularPages "Section" "resources") }}
     <div class="latest-post-card">
       <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
-      <time>{{ .Date.Format "January 2, 2006" }}</time>
+      <time>{{ time.Format ":date_long" .Date }}</time>
       <p>{{ .Summary | plainify | truncate 120 }}</p>
     </div>
     {{- end }}
   </div>
-  <p><a href="{{ "resources/" | absURL }}">View all posts →</a></p>
+  <p><a href="{{ with $resourcesPage }}{{ .Permalink }}{{ else }}{{ "resources/" | absURL }}{{ end }}">{{ i18n "view_all_posts" }}</a></p>
 </div>
 
 <!-- Get in Touch -->
@@ -46,9 +48,9 @@
     </svg>
   </div>
   <div class="service-text">
-    <h2>Get in Touch</h2>
-    <p>Ready to discuss your security and privacy challenges? Whether you need a wallet security assessment, GDPR compliance guidance, a Data Protection Impact Assessment, ISO certification support, or ongoing security leadership — let's talk.</p>
-    <p><a href="{{ "contact/" | absURL }}">Contact us →</a></p>
+    <h2>{{ i18n "get_in_touch" }}</h2>
+    <p>{{ i18n "get_in_touch_text" }}</p>
+    <p><a href="{{ "contact/" | absLangURL }}">{{ i18n "contact_us" }}</a></p>
   </div>
 </div>
 </div>
