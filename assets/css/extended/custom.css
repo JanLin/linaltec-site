@@ -432,3 +432,16 @@ h1, h2, h3, h4 {
     gap: 1rem;
   }
 }
+
+/* Post tables: vertical rule after the first column, so the leading
+   option in a comparison table reads as a label rather than data. */
+.post-content table th:first-child,
+.post-content table:not(.highlighttable, .highlight table, .gist .highlight) td:first-child {
+  border-right: 1px solid var(--border);
+  padding-right: 12px;
+}
+
+.post-content table th:nth-child(2),
+.post-content table:not(.highlighttable, .highlight table, .gist .highlight) td:nth-child(2) {
+  padding-left: 12px;
+}
