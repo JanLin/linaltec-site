@@ -1,4 +1,4 @@
-baseURL = "https://janlin.github.io/linaltec-site/"
+baseURL = "https://linaltec.com/"
 title = "Linaltec AB"
 theme = "PaperMod"
 defaultContentLanguage = "en"
